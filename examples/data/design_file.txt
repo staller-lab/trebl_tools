@@ -1,0 +1,8 @@
+# Placeholder design file for TREBL examples
+# This file contains AD barcode sequences for design validation
+# Format: One AD sequence per line (no header)
+# Replace with your actual AD design sequences
+
+PLACEHOLDER_AD_SEQUENCE_1
+PLACEHOLDER_AD_SEQUENCE_2
+PLACEHOLDER_AD_SEQUENCE_3

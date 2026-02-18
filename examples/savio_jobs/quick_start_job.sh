@@ -66,7 +66,7 @@ from trebl_tools import (
 # ==========================================
 # CONFIGURATION - UPDATE THESE PATHS
 # ==========================================
-DESIGN_FILE = None  # No design file for this example
+DESIGN_FILE = "data/design_file.txt"
 STEP1_SEQ_FILE = "data/step1_ChopTFs_sample.fastq"
 STEP2_AD_SEQ_FILE = "data/step2_ChopTFs_AD_sample.fastq"
 STEP2_RT_SEQ_FILE = "data/step2_ChopTFs_RT_sample.fastq"
@@ -180,7 +180,7 @@ step2 = pipeline.run_step_2(
     reverse_complement=True,
     reads_threshold_AD=10,
     reads_threshold_RT=10,
-    step1_map_csv_path=f"{OUTPUT_DIR}/step1_AD_AD_BC_RT_BC_designed.csv"
+    step1_map_csv_path=f"{OUTPUT_DIR}/step1_AD_AD_BC_RT_BC.csv"
 )
 
 AD_step2 = step2["AD_step2"]
@@ -195,12 +195,12 @@ print(f"  - RT Step 2: {len(RT_step2)} entries")
 # ==========================================
 print("\n[5/6] Running TREBL experiment analysis...")
 
-# Collect sequencing files
-trebl_AD_seq_files = glob.glob(AD_SEQ_FILES_PATTERN)
-trebl_RT_seq_files = glob.glob(RT_SEQ_FILES_PATTERN)
+# Use sequencing files defined in configuration
+trebl_AD_seq_files = AD_SEQ_FILES
+trebl_RT_seq_files = RT_SEQ_FILES
 
-print(f"  - Found {len(trebl_AD_seq_files)} AD files")
-print(f"  - Found {len(trebl_RT_seq_files)} RT files")
+print(f"  - Using {len(trebl_AD_seq_files)} AD files")
+print(f"  - Using {len(trebl_RT_seq_files)} RT files")
 
 AD_bc_objects = [AD, AD_BC]
 RT_bc_objects = [RT_BC]
@@ -223,7 +223,7 @@ trebl_results = pipeline.trebl_experiment_analysis(
     RT_seq_files=trebl_RT_seq_files,
     RT_bc_objects=RT_bc_objects,
     reverse_complement=True,
-    step1_map_csv_path=f"{OUTPUT_DIR}/step1_AD_AD_BC_RT_BC_designed.csv",
+    step1_map_csv_path=f"{OUTPUT_DIR}/step1_AD_AD_BC_RT_BC.csv",
     AD_umi_object=AD_UMI,
     RT_umi_object=RT_UMI,
     umi_deduplication='simple'  # Quick start: simple deduplication only
@@ -240,7 +240,7 @@ print(f"  - RT results: {len(RT_results)} entries")
 # ==========================================
 print("\n[6/6] Analysis complete!")
 print(f"  - Results saved to: {OUTPUT_DIR}")
-print(f"  - Database file: quick_start.db")
+print(f"  - Database file: db/quick_start.db")
 
 EOF
 

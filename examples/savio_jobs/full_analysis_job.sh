@@ -69,12 +69,12 @@ from trebl_tools import (
 # ==========================================
 # CONFIGURATION - UPDATE THESE PATHS
 # ==========================================
-DESIGN_FILE = "/path/to/your/design_file.txt"
-STEP1_SEQ_FILE = "/path/to/your/step1_sequencing_file.fastq"
-STEP2_AD_SEQ_FILE = "/path/to/your/step2_AD_file.fastq"
-STEP2_RT_SEQ_FILE = "/path/to/your/step2_RT_file.fastq"
-AD_SEQ_FILES_PATTERN = "/path/to/AD_assembled/*"
-RT_SEQ_FILES_PATTERN = "/path/to/RT_assembled/*"
+DESIGN_FILE = "data/design_file.txt"
+STEP1_SEQ_FILE = "data/step1_ChopTFs_sample.fastq"
+STEP2_AD_SEQ_FILE = "data/step2_ChopTFs_AD_sample.fastq"
+STEP2_RT_SEQ_FILE = "data/step2_ChopTFs_RT_sample.fastq"
+AD_SEQ_FILES = ["data/trebl_experiment_ChopTFs_AD_10.fastq", "data/trebl_experiment_ChopTFs_AD_60.fastq"]
+RT_SEQ_FILES = ["data/trebl_experiment_ChopTFs_RT_10.fastq", "data/trebl_experiment_ChopTFs_RT_60.fastq"]
 OUTPUT_DIR = "output/full_analysis"
 
 # ==========================================
@@ -82,7 +82,7 @@ OUTPUT_DIR = "output/full_analysis"
 # ==========================================
 print("\n[1/6] Initializing pipeline...")
 pipeline = pipelines.TreblPipeline(
-    db_path="full_analysis.db",
+    db_path="db/full_analysis.db",
     design_file_path=DESIGN_FILE,
     error_correction=True,  # Full analysis: enable error correction
     output_path=OUTPUT_DIR
@@ -183,7 +183,7 @@ step2 = pipeline.run_step_2(
     reverse_complement=True,
     reads_threshold_AD=10,
     reads_threshold_RT=10,
-    step1_map_csv_path=f"{OUTPUT_DIR}/step1_AD_AD_BC_RT_BC_error_corrected_designed.csv"
+    step1_map_csv_path=f"{OUTPUT_DIR}/step1_AD_AD_BC_RT_BC_error_corrected.csv"
 )
 
 AD_step2 = step2["AD_step2"]
@@ -198,12 +198,12 @@ print(f"  - RT Step 2: {len(RT_step2)} entries")
 # ==========================================
 print("\n[5/6] Running TREBL experiment analysis with both UMI deduplication methods...")
 
-# Collect sequencing files
-trebl_AD_seq_files = glob.glob(AD_SEQ_FILES_PATTERN)
-trebl_RT_seq_files = glob.glob(RT_SEQ_FILES_PATTERN)
+# Use sequencing files defined in configuration
+trebl_AD_seq_files = AD_SEQ_FILES
+trebl_RT_seq_files = RT_SEQ_FILES
 
-print(f"  - Found {len(trebl_AD_seq_files)} AD files")
-print(f"  - Found {len(trebl_RT_seq_files)} RT files")
+print(f"  - Using {len(trebl_AD_seq_files)} AD files")
+print(f"  - Using {len(trebl_RT_seq_files)} RT files")
 
 AD_bc_objects = [AD, AD_BC]
 RT_bc_objects = [RT_BC]
@@ -227,7 +227,7 @@ trebl_results = pipeline.trebl_experiment_analysis(
     RT_seq_files=trebl_RT_seq_files,
     RT_bc_objects=RT_bc_objects,
     reverse_complement=True,
-    step1_map_csv_path=f"{OUTPUT_DIR}/step1_AD_AD_BC_RT_BC_error_corrected_designed.csv",
+    step1_map_csv_path=f"{OUTPUT_DIR}/step1_AD_AD_BC_RT_BC_error_corrected.csv",
     AD_umi_object=AD_UMI,
     RT_umi_object=RT_UMI,
     umi_deduplication='both'  # Full analysis: both simple and directional deduplication
@@ -253,7 +253,7 @@ print(f"RT Step 2 entries: {len(RT_step2)}")
 print(f"AD results entries: {len(AD_results)}")
 print(f"RT results entries: {len(RT_results)}")
 print(f"Output directory: {OUTPUT_DIR}")
-print(f"Database file: full_analysis.db")
+print(f"Database file: db/full_analysis.db")
 print("-" * 50)
 
 print("\nAnalysis complete!")
