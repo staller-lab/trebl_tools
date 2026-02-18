@@ -1,40 +1,38 @@
-import dask.dataframe as dd
 import pandas as pd
+
 
 class Barcode:
     """Represents a barcode with extraction pattern specifications.
-    
+
     This class defines the parameters needed to extract a specific barcode
     from DNA sequences, including the flanking sequences and expected length.
-    
+
     Args:
         name (str): Identifier for the barcode that will be used as column name.
         preceder (str): DNA sequence pattern that precedes the barcode.
         post (str): DNA sequence pattern that follows the barcode.
         length (int): Expected length of the barcode sequence.
-        
+
     Example:
         >>> # Create a barcode object for a 20bp sequence between "ATCG" and "GCTA"
         >>> ad_barcode = Barcode(
         ...     name="AD_BC",
         ...     preceder="ATCG",
-        ...     post="GCTA", 
+        ...     post="GCTA",
         ...     length=20
         ... )
         >>> print(f"Barcode: {ad_barcode.name}, Length: {ad_barcode.length}")
         Barcode: AD_BC, Length: 20
-        
+
     Note:
         The preceder and post sequences are used in regex pattern matching,
         so special regex characters should be escaped if they appear literally
         in the DNA sequences.
     """
 
-    
-
     def __init__(self, name, preceder, post, length):
         """Initialize a Barcode object with extraction parameters.
-        
+
         Args:
             name (str): Barcode identifier for column naming.
             preceder (str): DNA sequence preceding the barcode.
@@ -45,7 +43,8 @@ class Barcode:
         self.preceder = preceder
         self.post = post
         self.length = length
-        
+
+
 def add_barcode(seq_df, bc_object):
     """Extract a barcode from sequences using pattern matching.
 
@@ -54,13 +53,13 @@ def add_barcode(seq_df, bc_object):
     indicating whether the extracted sequence matches the expected length.
 
     Args:
-        seq_df (pd.DataFrame or dask.DataFrame): DataFrame containing a 'sequence' column
+        seq_df (pd.DataFrame ): DataFrame containing a 'sequence' column
             with DNA sequences to process.
         bc_object (Barcode): Barcode object containing extraction parameters
             (name, preceder, post, length).
 
     Returns:
-        pd.DataFrame or dask.DataFrame: Updated DataFrame with two new columns:
+        pd.DataFrame : Updated DataFrame with two new columns:
             - {bc_object.name}: Extracted barcode sequences
             - {bc_object.name}_qual: Boolean quality flag (True if length matches expected)
 
@@ -73,18 +72,23 @@ def add_barcode(seq_df, bc_object):
         0  AAAXXXCCC  XXX       True
         1  AAAYYYCCC  YYY       True
         2    AAAXCCC    X      False
-        
+
     Note:
         Uses greedy regex matching by default. Sequences that don't match
         the pattern or don't meet the length requirement will have NaN
         values that are converted to False for the quality flag.
     """
     regex = f"{bc_object.preceder}(.*){bc_object.post}"
-    subseq_series = seq_df['sequence'].str.extract(regex)[0].str.slice(0, bc_object.length)
+    subseq_series = (
+        seq_df["sequence"].str.extract(regex)[0].str.slice(0, bc_object.length)
+    )
     seq_df[bc_object.name] = subseq_series
-    seq_df[bc_object.name + "_qual"] = seq_df[bc_object.name].str.len() == bc_object.length
+    seq_df[bc_object.name + "_qual"] = (
+        seq_df[bc_object.name].str.len() == bc_object.length
+    )
     seq_df[bc_object.name + "_qual"] = seq_df[bc_object.name + "_qual"].fillna(False)
     return seq_df
+
 
 def add_umi(seq_df, umi_length=12):
     """Extract UMI (Unique Molecular Identifier) from the end of sequences.
@@ -94,13 +98,13 @@ def add_umi(seq_df, umi_length=12):
     after barcode regions.
 
     Args:
-        seq_df (pd.DataFrame or dask.DataFrame): DataFrame containing a 'sequence' column
+        seq_df (pd.DataFrame ): DataFrame containing a 'sequence' column
             with DNA sequences.
         umi_length (int, optional): Number of bases to extract from sequence end
             as the UMI. Defaults to 12.
 
     Returns:
-        pd.DataFrame or dask.DataFrame: Updated DataFrame with new 'UMI' column
+        pd.DataFrame : Updated DataFrame with new 'UMI' column
             containing the extracted UMI sequences.
 
     Example:
@@ -110,18 +114,21 @@ def add_umi(seq_df, umi_length=12):
                    sequence   UMI
         0  ATCGATCGATCGATCG  ATCG
         1  GCTAGCTAGCTAGCTA  GCTA
-        
+
     Note:
         Currently hardcoded to extract the last 12 bases regardless of the
         umi_length parameter. This appears to be a bug that should be fixed
         to use the umi_length parameter.
-        
+
     Todo:
         Fix implementation to use umi_length parameter instead of hardcoded -12.
     """
-    seq_df['UMI'] = seq_df['sequence'].str.slice(-12,)
+    seq_df["UMI"] = seq_df["sequence"].str.slice(
+        -12,
+    )
     return seq_df
-    
+
+
 def add_multiple_barcodes(bc_objects, seq_df):
     """Extract multiple barcodes from sequences in a single operation.
 
@@ -132,11 +139,11 @@ def add_multiple_barcodes(bc_objects, seq_df):
     Args:
         bc_objects (list[Barcode]): List of Barcode objects defining the
             barcodes to extract.
-        seq_df (pd.DataFrame or dask.DataFrame): DataFrame containing sequences
+        seq_df (pd.DataFrame ): DataFrame containing sequences
             in a 'sequence' column.
 
     Returns:
-        pd.DataFrame or dask.DataFrame: Updated DataFrame with columns for
+        pd.DataFrame : Updated DataFrame with columns for
             each extracted barcode and corresponding quality flags:
             - {barcode.name}: Extracted barcode sequence
             - {barcode.name}_qual: Boolean quality flag for each barcode
@@ -148,12 +155,12 @@ def add_multiple_barcodes(bc_objects, seq_df):
         >>> result_df = add_multiple_barcodes([bc1, bc2], df)
         >>> print(result_df.columns.tolist())
         ['sequence', 'BC1', 'BC1_qual', 'BC2', 'BC2_qual']
-        
+
     Note:
         Barcodes are processed sequentially in the order provided.
         Creates a copy of the input DataFrame to avoid modifying the original.
         Each barcode extraction is independent and uses the same source sequences.
-        
+
     Warning:
         If barcodes have overlapping patterns or are located in overlapping
         regions, the extraction order may affect results.
