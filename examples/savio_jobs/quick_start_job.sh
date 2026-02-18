@@ -127,6 +127,10 @@ RT_UMI = finder.Barcode(
     length=12
 )
 
+# Separate barcode objects for AD and RT
+AD_bc_objects = [AD, AD_BC]
+RT_bc_objects = [RT_BC]
+
 # ==========================================
 # Step 1: TREBL Mapping
 # ==========================================
@@ -155,9 +159,6 @@ print(f"  - Step 1 complete: {len(step1_map)} entries")
 # Step 2: TREBL Step 2 Mapping
 # ==========================================
 print("\n[4/6] Running Step 2 mapping...")
-
-AD_bc_objects = [AD, AD_BC]
-RT_bc_objects = [RT_BC]
 
 # Plot Step 2 reads distribution
 print("  - Plotting Step 2 reads distribution...")
