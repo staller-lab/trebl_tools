@@ -68,6 +68,8 @@ from trebl_tools import (
 # ==========================================
 DESIGN_FILE = "/path/to/your/design_file.txt"
 STEP1_SEQ_FILE = "/path/to/your/step1_sequencing_file.fastq"
+STEP2_AD_SEQ_FILE = "/path/to/your/step2_AD_file.fastq"
+STEP2_RT_SEQ_FILE = "/path/to/your/step2_RT_file.fastq"
 AD_SEQ_FILES_PATTERN = "/path/to/AD_assembled/*"
 RT_SEQ_FILES_PATTERN = "/path/to/RT_assembled/*"
 OUTPUT_DIR = "output/quick_start"
@@ -75,7 +77,7 @@ OUTPUT_DIR = "output/quick_start"
 # ==========================================
 # Initialize Pipeline
 # ==========================================
-print("\n[1/5] Initializing pipeline...")
+print("\n[1/6] Initializing pipeline...")
 pipeline = pipelines.TreblPipeline(
     db_path="quick_start.db",
     design_file_path=DESIGN_FILE,
@@ -86,7 +88,7 @@ pipeline = pipelines.TreblPipeline(
 # ==========================================
 # Define Barcodes
 # ==========================================
-print("\n[2/5] Defining barcodes...")
+print("\n[2/6] Defining barcodes...")
 AD = finder.Barcode(
     name="AD",
     preceder="GGCTAGC",
@@ -128,7 +130,7 @@ RT_UMI = finder.Barcode(
 # ==========================================
 # Step 1: TREBL Mapping
 # ==========================================
-print("\n[3/5] Running Step 1 mapping...")
+print("\n[3/6] Running Step 1 mapping...")
 
 # Plot reads distribution
 print("  - Plotting reads distribution...")
@@ -150,9 +152,47 @@ step1_map = pipeline.run_step_1(
 print(f"  - Step 1 complete: {len(step1_map)} entries")
 
 # ==========================================
+# Step 2: TREBL Step 2 Mapping
+# ==========================================
+print("\n[4/6] Running Step 2 mapping...")
+
+AD_bc_objects = [AD, AD_BC]
+RT_bc_objects = [RT_BC]
+
+# Plot Step 2 reads distribution
+print("  - Plotting Step 2 reads distribution...")
+pipeline.step2_reads_distribution(
+    AD_seq_file=STEP2_AD_SEQ_FILE,
+    AD_bc_objects=AD_bc_objects,
+    RT_seq_file=STEP2_RT_SEQ_FILE,
+    RT_bc_objects=RT_bc_objects,
+    reverse_complement=True
+)
+
+# Run Step 2 mapping
+print("  - Running Step 2 mapping...")
+step2 = pipeline.run_step_2(
+    AD_seq_file=STEP2_AD_SEQ_FILE,
+    AD_bc_objects=AD_bc_objects,
+    RT_seq_file=STEP2_RT_SEQ_FILE,
+    RT_bc_objects=RT_bc_objects,
+    reverse_complement=True,
+    reads_threshold_AD=10,
+    reads_threshold_RT=10,
+    step1_map_csv_path=f"{OUTPUT_DIR}/step1_AD_AD_BC_RT_BC_designed.csv"
+)
+
+AD_step2 = step2["AD_step2"]
+RT_step2 = step2["RT_step2"]
+step1_overlap = step2["step1_overlap"]
+
+print(f"  - AD Step 2: {len(AD_step2)} entries")
+print(f"  - RT Step 2: {len(RT_step2)} entries")
+
+# ==========================================
 # TREBL Experiment Analysis
 # ==========================================
-print("\n[4/5] Running TREBL experiment analysis...")
+print("\n[5/6] Running TREBL experiment analysis...")
 
 # Collect sequencing files
 trebl_AD_seq_files = glob.glob(AD_SEQ_FILES_PATTERN)
@@ -197,7 +237,7 @@ print(f"  - RT results: {len(RT_results)} entries")
 # ==========================================
 # Complete
 # ==========================================
-print("\n[5/5] Analysis complete!")
+print("\n[6/6] Analysis complete!")
 print(f"  - Results saved to: {OUTPUT_DIR}")
 print(f"  - Database file: quick_start.db")
 
