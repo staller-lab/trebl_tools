@@ -1,3 +1,9 @@
+import sys
+
+sys.path = [
+    p for p in sys.path if "/.local/lib" not in p
+]  # Use conda env installation of duckdb
+
 import duckdb
 import pandas as pd
 import matplotlib

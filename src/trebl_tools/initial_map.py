@@ -1,4 +1,10 @@
 from pathlib import Path
+import sys
+
+sys.path = [
+    p for p in sys.path if "/.local/lib" not in p
+]  # Use conda env installation of duckdb
+
 import duckdb
 from trebl_tools.preprocess import time_it   
 

@@ -1,3 +1,9 @@
+import sys
+
+sys.path = [
+    p for p in sys.path if "/.local/lib" not in p
+]  # Use conda env installation of duckdb
+
 import duckdb                # For connecting to your DuckDB database
 import pandas as pd          # For DataFrame manipulation
 import numpy as np           # For numerical operations (e.g., np.round, np.isfinite)
