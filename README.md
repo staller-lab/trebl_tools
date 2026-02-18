@@ -16,7 +16,7 @@ conda create -n trebl_env python=3.11
 conda activate trebl_env
 
 # 2. Install necessary conda packages (bioinformatics tools)
-conda install -c bioconda bowtie2 samtools umi_tools fastp
+conda install -c bioconda umi_tools fastp
 
 # 3. Clone the repository
 git clone https://github.com/staller-lab/trebl_tools.git
