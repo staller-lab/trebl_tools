@@ -63,13 +63,15 @@ venv.bak/
 .DS_Store
 Thumbs.db
 
+# Examples output and db folders (keep folders, ignore contents except .gitkeep)
+examples/output/**
+!examples/output/quick_start/
+!examples/output/quick_start/.gitkeep
+!examples/output/full_analysis/
+!examples/output/full_analysis/.gitkeep
+examples/db/*
+!examples/db/.gitkeep
+
 # DuckDB
 *.duckdb
 *.db
-
-# Examples output and db folders (keep folders, ignore contents except .gitkeep)
-examples/output/**
-!examples/output/quick_start/.gitkeep
-!examples/output/full_analysis/.gitkeep
-examples/db/**
-!examples/db/.gitkeep
