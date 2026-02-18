@@ -2,29 +2,40 @@
 
 This analysis is designed to run on Savio to handle large data and computations. You can either run the code in a jupyter notebook on OOD or submit a job (see [Advanced Usage](advanced_usage.md) for submitting as a job).
 
-## Setting up Jupyter on Savio
+## Recommended: Create Your Own Conda Environment
 
-1. Start a jupyter server session on Savio.
-
-2. From the terminal, run this command:
+We recommend creating your own conda environment for better package management and easier Jupyter integration:
 
 ```bash
-python -m ipykernel install --user --name trebl_env --prefix /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/conda/trebl_env
+# 1. Create a new conda environment with Python 3.11
+conda create -n trebl_env python=3.11
+conda activate trebl_env
+
+# 2. Install necessary conda packages (bioinformatics tools)
+conda install -c bioconda umi_tools fastp
+
+# 3. Install trebl_tools and its Python dependencies from git (v0.1.0-beta)
+pip install git+https://github.com/staller-lab/trebl_tools.git@v0.1.0-beta
+
+# 4. Install Jupyter kernel using your conda environment
+python -m ipykernel install --user --name trebl_env
+
+# 5. Verify kernel is installed
+jupyter kernelspec list
 ```
 
-3. Then, open a notebook and select "trebl_env" as the kernel.
+## Using Jupyter on Savio
 
-## Required Imports
+1. Start a jupyter server session on Savio OOD
 
-Copy and paste the following imports in the first cell:
+2. Open a notebook and select "trebl_env" as the kernel
+
+3. The trebl_tools package will be available to import directly:
 
 ```python
 import sys
 import os
 import glob
-
-# Points to conda python path for correct package installs
-sys.path.insert(0, "/global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/conda/trebl_env/lib/python3.11/site-packages")
 
 import pandas as pd
 import numpy as np
@@ -33,9 +44,7 @@ import seaborn as sns
 import duckdb
 from tqdm import tqdm
 
-# Points to location of scripts
-sys.path.append("/global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/TREBL/")
-from scripts import (
+from trebl_tools import (
     initial_map,
     map_refiner,
     complexity,
@@ -47,5 +56,3 @@ from scripts import (
     pipelines
 )
 ```
-
-**Note:** The `.yaml` file corresponding to the conda environment can be found in the repository.

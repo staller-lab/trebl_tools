@@ -66,12 +66,12 @@ from trebl_tools import (
 # ==========================================
 # CONFIGURATION - UPDATE THESE PATHS
 # ==========================================
-DESIGN_FILE = "/path/to/your/design_file.txt"
-STEP1_SEQ_FILE = "/path/to/your/step1_sequencing_file.fastq"
-STEP2_AD_SEQ_FILE = "/path/to/your/step2_AD_file.fastq"
-STEP2_RT_SEQ_FILE = "/path/to/your/step2_RT_file.fastq"
-AD_SEQ_FILES_PATTERN = "/path/to/AD_assembled/*"
-RT_SEQ_FILES_PATTERN = "/path/to/RT_assembled/*"
+DESIGN_FILE = None  # No design file for this example
+STEP1_SEQ_FILE = "data/step1_ChopTFs_sample.fastq"
+STEP2_AD_SEQ_FILE = "data/step2_ChopTFs_AD_sample.fastq"
+STEP2_RT_SEQ_FILE = "data/step2_ChopTFs_RT_sample.fastq"
+AD_SEQ_FILES = ["data/trebl_experiment_ChopTFs_AD_10.fastq", "data/trebl_experiment_ChopTFs_AD_60.fastq"]
+RT_SEQ_FILES = ["data/trebl_experiment_ChopTFs_RT_10.fastq", "data/trebl_experiment_ChopTFs_RT_60.fastq"]
 OUTPUT_DIR = "output/quick_start"
 
 # ==========================================
@@ -79,7 +79,7 @@ OUTPUT_DIR = "output/quick_start"
 # ==========================================
 print("\n[1/6] Initializing pipeline...")
 pipeline = pipelines.TreblPipeline(
-    db_path="quick_start.db",
+    db_path="db/quick_start.db",
     design_file_path=DESIGN_FILE,
     error_correction=False,  # Quick start: no error correction
     output_path=OUTPUT_DIR

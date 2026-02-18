@@ -22,8 +22,8 @@ conda install -c bioconda umi_tools fastp
 git clone https://github.com/staller-lab/trebl_tools.git
 cd trebl_tools
 
-# 4. Install trebl_tools and its Python dependencies from git
-pip install -e .
+# 4. Install trebl_tools and its Python dependencies from git (v0.1.0-beta)
+pip install git+https://github.com/staller-lab/trebl_tools.git@v0.1.0-beta
 
 # 5. Install Jupyter kernel using your conda environment
 python -m ipykernel install --user --name trebl_env
