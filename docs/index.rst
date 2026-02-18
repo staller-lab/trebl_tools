@@ -1,48 +1,39 @@
 TREBL Tools Documentation
 =========================
 
-Tools for TREBL analysis.
+Tools for TREBL (Transcriptional REporter Barcode Library) analysis and barcode processing.
 
 **For Staller Lab members on Savio.**
 
-Installation
-------------
-
-.. code-block:: bash
-
-   git clone https://github.com/staller-lab/trebl_tools.git
-   cd trebl_tools
-   pip install --user -e .
-
-Quick Start
+Quick Links
 -----------
 
-.. code-block:: python
+* :doc:`user_guide/introduction` - Learn what TREBL-seq is
+* :doc:`user_guide/installation` - Get started with installation
+* :doc:`user_guide/analysis_setup` - Set up your analysis pipeline
 
-   from trebl_tools import Barcode, TreblPipeline
+User Guide
+==========
 
-   # Define barcodes
-   ad_bc = Barcode(name="AD_BC", preceder="ATCG", post="GCTA", length=20)
+.. toctree::
+   :maxdepth: 2
+   :caption: User Guide
 
-   # Run pipeline
-   pipeline = TreblPipeline(
-       db_path="experiment.duckdb",
-       output_dir="results/"
-   )
-
-   pipeline.trebl_experiment_analysis(
-       AD_seq_files=["AD.fastq"],
-       REP_seq_files=["REP.fastq"],
-       AD_bc_objects=[ad_bc],
-       REP_bc_objects=[ad_bc],
-       design_file_path="design.csv"
-   )
+   user_guide/introduction
+   user_guide/installation
+   user_guide/preprocessing
+   user_guide/analysis_setup
+   user_guide/step1
+   user_guide/step2
+   user_guide/trebl_experiment
+   user_guide/advanced_usage
 
 API Reference
 =============
 
 .. toctree::
    :maxdepth: 2
+   :caption: API Documentation
 
    modules
 
