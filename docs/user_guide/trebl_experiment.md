@@ -137,7 +137,66 @@ trebl_results = pipeline.trebl_experiment_analysis(
 
 ### Calculating Activity Scores
 
-After completing the TREBL experiment analysis, you can calculate final activity scores from the output data. This step will be documented in a future update.
+After completing the TREBL experiment analysis, calculate final activity scores by integrating AD and RT data through the Step 1 mapping. This produces gene-level activity metrics across timepoints and replicates.
+
+```python
+# Calculate activity scores
+activity_scores = pipeline.calculate_activity_scores(
+    step1_path="output/step1.csv",          # Path to Step 1 mapping CSV
+    AD_bc_objects=AD_bc_objects,            # AD barcode objects
+    RT_bc_objects=RT_bc_objects,            # RT barcode objects
+    time_regex=r"_t(\d+)",                  # Regex to extract timepoint
+    rep_regex=r"_r(\d+)"                    # Regex to extract replicate
+)
+```
+
+#### Understanding the Parameters
+
+- **`step1_path`**: Path to the Step 1 CSV file that maps AD barcodes to genes
+- **`AD_bc_objects`** and **`RT_bc_objects`**: Same barcode objects used in previous steps
+- **`time_regex`** and **`rep_regex`**: Regular expressions to extract metadata from sample names
+
+#### Regex Convention for Time and Replicate Extraction
+
+The function uses regular expressions to parse metadata from your sample filenames:
+
+**Time Regex** (`r"_t(\d+)"`):
+- Captures the numeric timepoint value from sample names
+- Pattern matches: `_t` followed by one or more digits
+- Example: `ChopTFs_AD_t10_r2.fastq` → extracts timepoint = `10`
+- The parentheses `(\d+)` create a capture group for the numeric value
+
+**Replicate Regex** (`r"_r(\d+)"`):
+- Captures the numeric replicate identifier from sample names  
+- Pattern matches: `_r` followed by one or more digits
+- Example: `ChopTFs_AD_t10_r2.fastq` → extracts replicate = `2`
+- The parentheses `(\d+)` create a capture group for the numeric value
+
+**Important**: Your sample names must follow this naming convention:
+- Include `_tXX` where XX is the timepoint (e.g., `_t0`, `_t10`, `_t60`)
+- Include `_rX` where X is the replicate number (e.g., `_r1`, `_r2`, `_r3`)
+- Example valid names: `sample_t24_r1.fastq`, `experiment_AD_t0_r2.fastq`, `data_t120_r3.fastq`
+
+If your naming convention differs, adjust the regex patterns accordingly. For example:
+- For `sample_time10_rep2.fastq` use: `time_regex=r"_time(\d+)"`, `rep_regex=r"_rep(\d+)"`
+- For `sample_T10_R2.fastq` use: `time_regex=r"_T(\d+)"`, `rep_regex=r"_R(\d+)"`
+
+#### Output
+
+The function returns a multi-indexed DataFrame with:
+- **Index**: (AD sequence, replicate) pairs
+- **Columns**: Hierarchical structure with (timepoint, metric)
+
+**Metrics calculated per timepoint**:
+- `bc_activity_avg`: Mean per-barcode activity (RT_UMI / AD_UMI)
+- `bc_activity_std`: Standard deviation of per-barcode activity
+- `pooled_activity`: Gene-level activity (sum of RT_UMI / sum of AD_UMI)
+
+**Files saved** (if `output_path` configured):
+- `bc_activities.csv`: Raw per-barcode activity scores
+- `AD_activities.csv`: Consolidated activity scores table
+
+The function integrates AD and RT experiment results to calculate activity ratios, providing both barcode-level (averaged) and gene-level (pooled) activity assessments.
 
 ### Cleanup
 
