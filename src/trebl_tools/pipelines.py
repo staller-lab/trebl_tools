@@ -3,7 +3,7 @@ from pathlib import Path
 import duckdb
 import os
 import pandas as pd
-from scripts import initial_map, map_refiner, complexity, finder, preprocess, error_correct, plotting, umi_deduplicate
+from trebl_tools import initial_map, map_refiner, complexity, finder, preprocess, error_correct, plotting, umi_deduplicate
 
 import math
 import seaborn as sns

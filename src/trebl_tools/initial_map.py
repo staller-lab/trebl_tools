@@ -1,6 +1,6 @@
 from pathlib import Path
 import duckdb
-from scripts.preprocess import time_it   
+from trebl_tools.preprocess import time_it   
 
 class InitialMapper:
     """Extract and map barcodes from DNA sequences in FASTQ or TXT files.

@@ -1,6 +1,6 @@
 import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from scripts.preprocess import time_it
+from trebl_tools.preprocess import time_it
 from pathlib import Path
 import pandas as pd
 import matplotlib

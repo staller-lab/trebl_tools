@@ -1,0 +1,789 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>trebl_tools.umi_deduplicate &mdash; TREBL Tools 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            TREBL Tools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TREBL Tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">trebl_tools.umi_deduplicate</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for trebl_tools.umi_deduplicate</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>                <span class="c1"># For connecting to your DuckDB database</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>          <span class="c1"># For DataFrame manipulation</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>           <span class="c1"># For numerical operations (e.g., np.round, np.isfinite)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>        <span class="c1"># For plotting (barplot, styling)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">finder</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dask.dataframe</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MPLBACKEND&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Agg&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools.preprocess</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">error_correct</span>
+
+<div class="viewcode-block" id="UMIDeduplicator">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UMIDeduplicator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unified UMI Deduplication class combining simple counts and full UMI-tools pipeline.</span>
+<span class="sd">    </span>
+<span class="sd">    This class provides comprehensive UMI (Unique Molecular Identifier) deduplication</span>
+<span class="sd">    functionality, supporting both simple counting methods and advanced UMI-tools</span>
+<span class="sd">    directional deduplication workflows.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        db_path (str): Path to the DuckDB database file.</span>
+<span class="sd">        bc_objects (list): List of barcode objects with name and length attributes.</span>
+<span class="sd">        step_name (str): Name identifier for this processing step.</span>
+<span class="sd">        descriptor (str): Additional descriptor for table naming.</span>
+<span class="sd">        step1_map_name (str): Name of the step1 mapping table in the database.</span>
+<span class="sd">        fastq_path (str): Path to the input FASTQ file.</span>
+<span class="sd">        output_path (str): Directory path for output files.</span>
+<span class="sd">        refined_map_suffix (str): Suffix for the final refined mapping table (last step from map refiner).</span>
+<span class="sd">        </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        db_path (str): Path to DuckDB database.</span>
+<span class="sd">        con (duckdb.DuckDBPyConnection): Database connection object.</span>
+<span class="sd">        bc_objects (list): Barcode objects.</span>
+<span class="sd">        cols (list): List of barcode column names.</span>
+<span class="sd">        step_name (str): Processing step identifier.</span>
+<span class="sd">        table_prefix (str): Generated prefix for database tables.</span>
+<span class="sd">        base (str): Base filename derived from FASTQ path.</span>
+<span class="sd">        </span>
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; bc_objs = [barcode1, barcode2]</span>
+<span class="sd">        &gt;&gt;&gt; dedup = UMIDeduplicator(</span>
+<span class="sd">        ...     db_path=&quot;data.db&quot;,</span>
+<span class="sd">        ...     bc_objects=bc_objs,</span>
+<span class="sd">        ...     step_name=&quot;trebl_experiment&quot;,</span>
+<span class="sd">        ...     descriptor=&quot;test&quot;,</span>
+<span class="sd">        ...     step1_map_name=&quot;step1_map&quot;,</span>
+<span class="sd">        ...     fastq_path=&quot;sample.fastq.gz&quot;,</span>
+<span class="sd">        ...     output_path=&quot;results/&quot;,</span>
+<span class="sd">        ...     refined_map_suffix=&quot;quality_designed&quot;</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; merged_df = dedup.run_both_deduplications()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_path</span><span class="p">,</span> <span class="n">bc_objects</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">,</span> <span class="n">step1_map_name</span><span class="p">,</span>
+                 <span class="n">fastq_path</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">refined_map_suffix</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_path</span> <span class="o">=</span> <span class="n">db_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bc_objects</span> <span class="o">=</span> <span class="n">bc_objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">bc</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="n">bc_objects</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_name</span> <span class="o">=</span> <span class="n">step_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">descriptor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step1_map_name</span> <span class="o">=</span> <span class="n">step1_map_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="n">output_path</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">refined_map_suffix</span> <span class="o">=</span> <span class="n">refined_map_suffix</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
+        <span class="k">if</span> <span class="n">descriptor</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">descriptor</span><span class="si">}</span><span class="s2">_&quot;</span>
+
+        <span class="c1"># UMI-tools specific attributes</span>
+        <span class="k">if</span> <span class="n">fastq_path</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fastq_path</span><span class="p">)</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.fastq&quot;</span><span class="p">,</span> <span class="s2">&quot;.gz&quot;</span><span class="p">,</span> <span class="s2">&quot;.assembled&quot;</span><span class="p">]:</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">suffix</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fastq_path</span> <span class="o">=</span> <span class="n">fastq_path</span>
+ 
+<div class="viewcode-block" id="UMIDeduplicator.counts_per_umi">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.counts_per_umi">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">counts_per_umi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return DataFrame with simple counts of each UMI per barcode combination.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: DataFrame with columns for barcode(s), UMI, and read counts.</span>
+<span class="sd">                Sorted by barcode combinations and read counts (descending).</span>
+<span class="sd">                </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; counts_df = dedup.counts_per_umi()</span>
+<span class="sd">            &gt;&gt;&gt; print(counts_df.head())</span>
+<span class="sd">               ADBC2  HawkBCs      UMI  reads</span>
+<span class="sd">            0  AAAA      TTTT  ACGTACGT     15</span>
+<span class="sd">            1  AAAA      TTTT  TGCATGCA      8</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">select_cols_sql</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>  <span class="c1"># e.g., &quot;ADBC2, HawkBCs&quot;</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT </span><span class="si">{</span><span class="n">select_cols_sql</span><span class="si">}</span><span class="s2">, UMI, COUNT(*) AS reads</span>
+<span class="s2">            FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">refined_map_suffix</span><span class="si">}</span>
+<span class="s2">            GROUP BY </span><span class="si">{</span><span class="n">select_cols_sql</span><span class="si">}</span><span class="s2">, UMI</span>
+<span class="s2">            ORDER BY </span><span class="si">{</span><span class="n">select_cols_sql</span><span class="si">}</span><span class="s2">, reads DESC</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">df_counts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchdf</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">df_counts</span></div>
+
+        
+    <span class="c1"># --------- Methods from SimpleUMIDeduplicator ---------</span>
+<div class="viewcode-block" id="UMIDeduplicator.unique_umis_per_barcodes">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.unique_umis_per_barcodes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unique_umis_per_barcodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Count unique UMIs per barcode combination and save as new table.</span>
+<span class="sd">        </span>
+<span class="sd">        Creates a new table in the database containing the count of distinct UMIs</span>
+<span class="sd">        for each barcode combination. </span>
+<span class="sd">        </span>
+<span class="sd">        Note:</span>
+<span class="sd">            This method creates a new table with suffix &#39;_umis_collapsed&#39; and</span>
+<span class="sd">            sets the alias_name attribute to &#39;count&#39; for the count column.</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; dedup.unique_umis_per_barcodes()</span>
+<span class="sd">            # Creates table: trebl_experiment_ADBC2_HawkBCs_test_quality_designed_umis_collapsed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+                
+        <span class="c1"># Include individual columns in SELECT and GROUP BY</span>
+        <span class="n">select_cols_sql</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_table_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">refined_map_suffix</span><span class="si">}</span><span class="s2">_umis_collapsed&quot;</span>
+        
+        <span class="c1">#print(f&quot;Counting unique UMIs per barcode(s) and saving as {self.new_table_name}...&quot;)</span>
+        
+        <span class="c1"># Build the alias</span>
+        <span class="c1">#self.alias_name = f&quot;{&#39;_&#39;.join(self.cols)}_umis_unique&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alias_name</span> <span class="o">=</span> <span class="s1">&#39;count&#39;</span>
+        
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            CREATE OR REPLACE TABLE </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">new_table_name</span><span class="si">}</span><span class="s2"> AS</span>
+<span class="s2">            SELECT </span><span class="si">{</span><span class="n">select_cols_sql</span><span class="si">}</span><span class="s2">, </span>
+<span class="s2">                   COUNT(DISTINCT UMI) AS </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">alias_name</span><span class="si">}</span>
+<span class="s2">            FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">refined_map_suffix</span><span class="si">}</span>
+<span class="s2">            GROUP BY </span><span class="si">{</span><span class="n">select_cols_sql</span><span class="si">}</span>
+<span class="s2">            ORDER BY </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">alias_name</span><span class="si">}</span><span class="s2"> DESC</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UMIDeduplicator.merge_simple_with_step1_map">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.merge_simple_with_step1_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">merge_simple_with_step1_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Merge simple UMI counts with step1 mapping table.</span>
+<span class="sd">        </span>
+<span class="sd">        Performs an inner join between the UMI count table and the step1 mapping</span>
+<span class="sd">        table on barcode columns. Filters out quality and designed columns.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            save (bool, optional): Whether to save results to CSV file. </span>
+<span class="sd">                Defaults to True.</span>
+<span class="sd">                </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: Merged DataFrame with UMI counts and step1 mapping data.</span>
+<span class="sd">                Includes an &#39;info&#39; column with the step_name value.</span>
+<span class="sd">                </span>
+<span class="sd">        Note:</span>
+<span class="sd">            Removes columns named &quot;Designed&quot; and columns containing &quot;_qual&quot;.</span>
+<span class="sd">            CSV filename format: {base}_{barcode_cols}_umis_unique_with_step1_map.csv</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; merged_df = dedup.merge_simple_with_step1_map(save=True)</span>
+<span class="sd">            Saved to results/sample_ADBC2_HawkBCs_umis_unique_with_step1_map.csv</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">select_cols_sql</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>  <span class="c1"># e.g., AD_BC, RPTR_BC</span>
+        
+        <span class="n">join_condition</span> <span class="o">=</span> <span class="s2">&quot; AND &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;a.</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2"> = b.</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">])</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT b.*, a.&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">alias_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="s2">            FROM &quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">new_table_name</span><span class="si">}</span><span class="s2">&quot; AS a</span>
+<span class="s2">            INNER JOIN &quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">step1_map_name</span><span class="si">}</span><span class="s2">&quot; AS b</span>
+<span class="s2">            ON </span><span class="si">{</span><span class="n">join_condition</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span>        
+        <span class="n">merged_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchdf</span><span class="p">()</span>
+        <span class="n">merged_df</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_name</span>
+
+        <span class="n">filtered_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">merged_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="o">!=</span> <span class="s2">&quot;Designed&quot;</span> <span class="ow">and</span> <span class="s2">&quot;_qual&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">col</span> <span class="ow">and</span> <span class="n">col</span> <span class="o">!=</span> <span class="s2">&quot;count&quot;</span><span class="p">]</span>
+        <span class="n">merged_df</span> <span class="o">=</span> <span class="n">merged_df</span><span class="p">[</span><span class="n">filtered_cols</span><span class="p">]</span>
+            
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="ow">and</span> <span class="n">save</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># Ensure the output directory exists</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+            <span class="c1"># Build a safe filename</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span><span class="si">}</span><span class="s2">_umis_unique_with_step1_map.csv&quot;</span><span class="p">)</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">merged_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved to </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="n">merged_df</span></div>
+
+
+<div class="viewcode-block" id="UMIDeduplicator.save_simple_deduplication">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.save_simple_deduplication">[docs]</a>
+    <span class="nd">@time_it</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_simple_deduplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save simple UMI deduplication results to TSV files.</span>
+<span class="sd">        </span>
+<span class="sd">        Saves two files:</span>
+<span class="sd">        1. Simple UMI counts per barcode combination</span>
+<span class="sd">        2. Read counts per individual UMI</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: DataFrame containing the simple UMI counts.</span>
+<span class="sd">            </span>
+<span class="sd">        Note:</span>
+<span class="sd">            Files are saved with tab separation (.tsv format).</span>
+<span class="sd">            Output filenames: {base}_simple_umi_counts.tsv and {base}_reads_per_umi.tsv</span>
+<span class="sd">            Execution time is automatically logged via @time_it decorator.</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; result_df = dedup.save_simple_deduplication()</span>
+<span class="sd">            Saved to results/sample_simple_umi_counts.tsv</span>
+<span class="sd">            Saved to results/sample_reads_per_umi.tsv</span>
+<span class="sd">            Done in 2.34 seconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT * FROM &quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">new_table_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="s2">        &quot;&quot;&quot;</span>        
+        <span class="n">merged_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchdf</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">:</span>
+            <span class="c1"># Ensure the output directory exists</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">:</span>
+                <span class="n">output_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                
+            <span class="n">counts_per_bc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">merged_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">counts_per_bc</span><span class="si">}</span><span class="s2">_simple_umi_counts.tsv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved to </span><span class="si">{</span><span class="n">counts_per_bc</span><span class="si">}</span><span class="s2">_simple_umi_counts.tsv&quot;</span><span class="p">)</span>
+
+            <span class="n">counts_per_umi_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">counts_per_umi</span><span class="p">()</span>
+            <span class="n">counts_per_umi_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">counts_per_bc</span><span class="si">}</span><span class="s2">_reads_per_umi.tsv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved to </span><span class="si">{</span><span class="n">counts_per_bc</span><span class="si">}</span><span class="s2">_reads_per_umi.tsv&quot;</span><span class="p">)</span>            
+                        
+        <span class="k">return</span> <span class="n">merged_df</span></div>
+
+
+<div class="viewcode-block" id="UMIDeduplicator.run_simple_deduplication">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.run_simple_deduplication">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_simple_deduplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the simple UMI deduplication workflow.</span>
+<span class="sd">        </span>
+<span class="sd">        Runs the basic UMI counting approach by calling unique_umis_per_barcodes().</span>
+<span class="sd">        This method only counts distinct UMIs per barcode combination without</span>
+<span class="sd">        considering UMI similarity or directional information.</span>
+<span class="sd">        </span>
+<span class="sd">        Note:</span>
+<span class="sd">            This is the faster, simpler alternative to the full UMI-tools pipeline.</span>
+<span class="sd">            Results can be retrieved using merge_simple_with_step1_map() or </span>
+<span class="sd">            save_simple_deduplication().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unique_umis_per_barcodes</span><span class="p">()</span></div>
+
+        <span class="c1">#return self.merge_simple_with_step1_map()</span>
+
+<div class="viewcode-block" id="UMIDeduplicator.show_tables">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.show_tables">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Display all tables in the connected DuckDB database.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: DataFrame listing all table names in the database.</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; tables_df = dedup.show_tables()</span>
+<span class="sd">            &gt;&gt;&gt; print(tables_df)</span>
+<span class="sd">                     name</span>
+<span class="sd">            0  step1_map</span>
+<span class="sd">            1  trebl_experiment_ADBC2_HawkBCs_quality_designed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SHOW TABLES&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchdf</span><span class="p">()</span></div>
+
+
+    <span class="c1"># --------- Methods from UMIToolsDeduplicator ---------</span>
+<div class="viewcode-block" id="UMIDeduplicator.generate_fastq">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.generate_fastq">[docs]</a>
+    <span class="nd">@preprocess</span><span class="o">.</span><span class="n">time_it</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_fastq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_umi_extracted.fastq&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate FASTQ file with UMIs in headers and concatenated barcodes as sequences.</span>
+<span class="sd">        Used for UMI-tools directional deduplication workflow.</span>
+<span class="sd">        </span>
+<span class="sd">        Creates a FASTQ file where:</span>
+<span class="sd">        - Read ID contains the UMI sequence</span>
+<span class="sd">        - Read sequence is concatenated barcode columns</span>
+<span class="sd">        - Quality scores are placeholder &#39;I&#39; characters</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            suffix (str, optional): Suffix for output FASTQ filename. </span>
+<span class="sd">                Defaults to &quot;_umi_extracted.fastq&quot;.</span>
+<span class="sd">                </span>
+<span class="sd">        Note:</span>
+<span class="sd">            Only includes reads with valid UMI and barcode sequences.</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; dedup.generate_fastq(&quot;_custom_suffix.fastq&quot;)</span>
+<span class="sd">            Generating FASTQ with UMIs in header and barcodes as sequence...</span>
+<span class="sd">            Writing FASTQ to results/sample_custom_suffix.fastq (1000 reads)...</span>
+<span class="sd">            FASTQ complete: results/sample_custom_suffix.fastq</span>
+<span class="sd">            Done in 1.23 seconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generating FASTQ with UMIs in header and barcodes as sequence...&quot;</span><span class="p">)</span>
+    
+        <span class="c1"># Concatenate barcode columns</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">concat_expr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">concat_expr</span> <span class="o">=</span> <span class="s2">&quot; || &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>  <span class="c1"># no separator</span>
+    
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT UMI, </span><span class="si">{</span><span class="n">concat_expr</span><span class="si">}</span><span class="s2"> AS barcode_seq</span>
+<span class="s2">            FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">refined_map_suffix</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="c1">#display(result)</span>
+        
+        <span class="c1"># Prepare output path</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">:</span>
+            <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing FASTQ to </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">n_rows</span><span class="si">}</span><span class="s2"> reads)...&quot;</span><span class="p">)</span>
+    
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">umi</span><span class="p">,</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Writing FASTQ&quot;</span><span class="p">):</span>
+                <span class="c1"># Only keep rows with both a barcode and umi</span>
+                <span class="k">if</span> <span class="n">umi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">seq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">umi</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">header</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;@</span><span class="si">{</span><span class="n">umi</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">plus</span> <span class="o">=</span> <span class="s2">&quot;+&quot;</span>
+                    <span class="n">qual</span> <span class="o">=</span> <span class="s2">&quot;I&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>  
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">seq</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">plus</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">qual</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">umi_fastq</span> <span class="o">=</span> <span class="n">output_file</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FASTQ complete: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">umi_fastq</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UMIDeduplicator.generate_barcode_fasta_and_index">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.generate_barcode_fasta_and_index">[docs]</a>
+    <span class="nd">@preprocess</span><span class="o">.</span><span class="n">time_it</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_barcode_fasta_and_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span> <span class="o">=</span> <span class="s2">&quot;_barcodes&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate FASTA reference of unique barcodes and create bowtie2 index.</span>
+<span class="sd">        Used for UMI-tools directional deduplication workflow to align reads to barcode sequences.</span>
+<span class="sd">        </span>
+<span class="sd">        Creates a FASTA file containing all unique concatenated barcode sequences</span>
+<span class="sd">        and builds a bowtie2 index for alignment. The FASTA file is removed after</span>
+<span class="sd">        indexing to save space.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            suffix (str, optional): Suffix for FASTA filename. Defaults to &quot;_barcodes&quot;.</span>
+<span class="sd">            </span>
+<span class="sd">        Note:</span>
+<span class="sd">            Requires bowtie2 to be available via module system.</span>
+<span class="sd">            Uses 32 threads for index building (BOWTIE2_INDEX_BUILDER_THREADS).</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; dedup.generate_barcode_fasta_and_index(&quot;_ref&quot;)</span>
+<span class="sd">            Saving unique barcode(s) as reference file...</span>
+<span class="sd">            Creating table of unique concatenated barcodes: trebl_experiment_ADBC2_unique_barcodes</span>
+<span class="sd">            Writing FASTA to results/sample_ref.fa...</span>
+<span class="sd">            Indexing FASTA with bowtie2-build, prefix: results/sample_ref_index</span>
+<span class="sd">            Done in 5.67 seconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saving unique barcode(s) as reference file...&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">concat_expr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">concat_expr</span> <span class="o">=</span> <span class="s2">&quot; || &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>  <span class="c1"># no separator</span>
+    
+        <span class="n">new_table_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">unique_barcodes&quot;</span>
+    
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            CREATE OR REPLACE TABLE </span><span class="si">{</span><span class="n">new_table_name</span><span class="si">}</span><span class="s2"> AS</span>
+<span class="s2">            SELECT DISTINCT </span><span class="si">{</span><span class="n">concat_expr</span><span class="si">}</span><span class="s2"> AS barcode</span>
+<span class="s2">            FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">refined_map_suffix</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+    
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating table of unique concatenated barcodes: </span><span class="si">{</span><span class="n">new_table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">:</span>
+            <span class="c1"># Ensure output_path ends with a slash safely</span>
+            <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">.fa&quot;</span><span class="p">)</span>
+            
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">.fa&quot;</span><span class="p">)</span>
+
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing FASTA to </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Fetch all barcodes from DuckDB</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT barcode FROM </span><span class="si">{</span><span class="n">new_table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">barcode</span><span class="p">,)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                <span class="c1"># Use the barcode itself as the header</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&gt;</span><span class="si">{</span><span class="n">barcode</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">barcode</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Index the fasta file too            </span>
+        <span class="n">bowtie2_index_prefix</span> <span class="o">=</span> <span class="n">output_file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.fa&quot;</span><span class="p">,</span> <span class="s2">&quot;_index&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bowtie2_index_prefix</span> <span class="o">=</span> <span class="n">bowtie2_index_prefix</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Indexing FASTA with bowtie2-build, prefix: </span><span class="si">{</span><span class="n">bowtie2_index_prefix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Run bowtie2-build via module load in a bash shell</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        module load bio/bowtie2/2.5.1-gcc-11.4.0</span>
+<span class="s2">        export BOWTIE2_INDEX_BUILDER_THREADS=32</span>
+<span class="s2">        bowtie2-build </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">bowtie2_index_prefix</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;/bin/bash&quot;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UMIDeduplicator.align_sort_and_deduplicate_umis">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.align_sort_and_deduplicate_umis">[docs]</a>
+    <span class="nd">@preprocess</span><span class="o">.</span><span class="n">time_it</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">align_sort_and_deduplicate_umis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the complete UMI-tools alignment and deduplication pipeline.</span>
+<span class="sd">        </span>
+<span class="sd">        Runs the full UMI-tools workflow:</span>
+<span class="sd">        1. Aligns FASTQ to barcode reference using bowtie2</span>
+<span class="sd">        2. Converts SAM to BAM format</span>
+<span class="sd">        3. Sorts and indexes BAM file</span>
+<span class="sd">        4. Deduplicates UMIs using UMI-tools directional method</span>
+<span class="sd">        5. Generates final count table</span>
+<span class="sd">        6. Cleans up intermediate files</span>
+<span class="sd">        </span>
+<span class="sd">        Note:</span>
+<span class="sd">            Requires conda environment with umi_tools and system modules for</span>
+<span class="sd">            bowtie2 and samtools. Uses 32 threads for alignment and sorting.</span>
+<span class="sd">            Creates and executes a temporary bash script for the pipeline.</span>
+<span class="sd">            All intermediate files are automatically cleaned up.</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            subprocess.CalledProcessError: If any step in the pipeline fails.</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; dedup.align_sort_and_deduplicate_umis()</span>
+<span class="sd">            Aligning .FASTQ to reference .FA ...</span>
+<span class="sd">            Converting SAM -&gt; BAM ...</span>
+<span class="sd">            Sorting BAM ...</span>
+<span class="sd">            Indexing BAM ...</span>
+<span class="sd">            Deduplicating UMIs ...</span>
+<span class="sd">            Saving final counts...</span>
+<span class="sd">            Cleaning up intermediate files...</span>
+<span class="sd">            UMI workflow complete!</span>
+<span class="sd">            Done in 5.23 minutes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">:</span>
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            
+        <span class="n">sam_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">_umi_extracted.sam&quot;</span><span class="p">)</span>
+        <span class="n">bam_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">_umi_extracted.bam&quot;</span><span class="p">)</span>
+        <span class="n">sorted_bam</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">_umi_extracted.sorted.bam&quot;</span><span class="p">)</span>
+        <span class="n">dedup_bam</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">_umi_deduplicated.bam&quot;</span><span class="p">)</span>
+        <span class="c1">#dedup_stats = os.path.join(output_dir, f&quot;{self.base}_deduplicated_stats&quot;)</span>
+        <span class="n">counts_per_bc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Create the bash script</span>
+        <span class="n">script_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">_umi_pipeline.sh&quot;</span><span class="p">)</span>
+
+        <span class="n">bc_len</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">_</span><span class="o">.</span><span class="n">length</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bc_objects</span><span class="p">])</span>
+        
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">script_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;#!/bin/bash</span>
+<span class="s2">    source activate /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/conda/umi_tools</span>
+<span class="s2">    module load bio/bowtie2/2.5.1-gcc-11.4.0</span>
+<span class="s2">    module load bio/samtools/1.17-gcc-11.4.0</span>
+<span class="s2">    </span>
+<span class="s2">    echo &quot;Aligning .FASTQ to reference .FA ...&quot;</span>
+<span class="s2">    </span>
+<span class="s2">    bowtie2 -p 32 -x </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bowtie2_index_prefix</span><span class="si">}</span><span class="s2"> -U </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">umi_fastq</span><span class="si">}</span><span class="s2"> -S </span><span class="si">{</span><span class="n">sam_file</span><span class="si">}</span><span class="s2"> --norc --end-to-end --very-sensitive -N 0 -L </span><span class="si">{</span><span class="n">bc_len</span><span class="si">}</span><span class="s2"> -k 1 --score-min L,0,0</span>
+<span class="s2">  </span>
+<span class="s2">    echo &quot;Converting SAM -&gt; BAM ...&quot;</span>
+<span class="s2">    samtools view -b </span><span class="si">{</span><span class="n">sam_file</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="n">bam_file</span><span class="si">}</span>
+<span class="s2">    </span>
+<span class="s2">    echo &quot;Sorting BAM ...&quot;</span>
+<span class="s2">    samtools sort -@ 32 </span><span class="si">{</span><span class="n">bam_file</span><span class="si">}</span><span class="s2"> -o </span><span class="si">{</span><span class="n">sorted_bam</span><span class="si">}</span>
+<span class="s2">    </span>
+<span class="s2">    echo &quot;Indexing BAM ...&quot;</span>
+<span class="s2">    samtools index </span><span class="si">{</span><span class="n">sorted_bam</span><span class="si">}</span>
+<span class="s2">    </span>
+<span class="s2">    echo &quot;Deduplicating UMIs ...&quot;</span>
+<span class="s2">    umi_tools dedup -I </span><span class="si">{</span><span class="n">sorted_bam</span><span class="si">}</span><span class="s2"> -S </span><span class="si">{</span><span class="n">dedup_bam</span><span class="si">}</span>
+
+<span class="s2">    echo &quot;Saving final counts...&quot;</span>
+<span class="s2">    samtools index </span><span class="si">{</span><span class="n">dedup_bam</span><span class="si">}</span>
+<span class="s2">    umi_tools count -I </span><span class="si">{</span><span class="n">dedup_bam</span><span class="si">}</span><span class="s2"> -S </span><span class="si">{</span><span class="n">counts_per_bc</span><span class="si">}</span><span class="s2">_directional_umi_counts.tsv --per-contig &amp;</span>
+<span class="s2">    wait</span>
+<span class="s2">    </span>
+<span class="s2">    echo &quot;Cleaning up intermediate files...&quot;</span>
+<span class="s2">    rm </span><span class="si">{</span><span class="n">sam_file</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">bam_file</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sorted_bam</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sorted_bam</span><span class="si">}</span><span class="s2">.bai </span><span class="si">{</span><span class="n">dedup_bam</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">dedup_bam</span><span class="si">}</span><span class="s2">.bai </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">umi_fastq</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bowtie2_index_prefix</span><span class="si">}</span><span class="s2">*</span>
+
+<span class="s2">    echo &quot;UMI workflow complete!&quot;</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Make the script executable</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">script_path</span><span class="p">,</span> <span class="mo">0o711</span><span class="p">)</span>
+    
+        <span class="c1"># Run the script</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bash </span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;/bin/bash&quot;</span><span class="p">)</span>
+    
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">script_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UMIDeduplicator.run_umi_tools_deduplication">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.run_umi_tools_deduplication">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_umi_tools_deduplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the complete UMI-tools deduplication workflow.</span>
+<span class="sd">        </span>
+<span class="sd">        Runs the full UMI-tools pipeline by calling:</span>
+<span class="sd">        1. generate_fastq() - Create FASTQ with UMIs in headers</span>
+<span class="sd">        2. generate_barcode_fasta_and_index() - Create reference and index</span>
+<span class="sd">        3. align_sort_and_deduplicate_umis() - Complete alignment and deduplication</span>
+<span class="sd">        </span>
+<span class="sd">        Note:</span>
+<span class="sd">            This is the comprehensive, slower method that uses UMI-tools</span>
+<span class="sd">            directional deduplication algorithm. Results in more accurate</span>
+<span class="sd">            deduplication compared to simple counting methods.</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; dedup.run_umi_tools_deduplication()</span>
+<span class="sd">            # Executes complete pipeline automatically</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generate_fastq</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generate_barcode_fasta_and_index</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">align_sort_and_deduplicate_umis</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="UMIDeduplicator.merge_complex_with_step1_map">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.merge_complex_with_step1_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">merge_complex_with_step1_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Merge UMI-tools directional deduplication results with step1 mapping table.</span>
+<span class="sd">        </span>
+<span class="sd">        Reads the UMI-tools output TSV file and merges it with the step1 mapping</span>
+<span class="sd">        table on barcode columns. Renames columns to follow naming conventions.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            save (bool, optional): Whether to save merged results to CSV. </span>
+<span class="sd">                Defaults to True.</span>
+<span class="sd">                </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: Merged DataFrame with directional UMI counts and </span>
+<span class="sd">                step1 mapping information.</span>
+<span class="sd">                </span>
+<span class="sd">        Note:</span>
+<span class="sd">            Expects UMI-tools output file: {base}_directional_umi_counts.tsv</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; merged_df = dedup.merge_complex_with_step1_map(save=True)</span>
+<span class="sd">            Saved to results/sample_ADBC2_HawkBCs_umis_directional_deduplic_with_step1_map.csv</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">:</span>
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            
+        <span class="n">counts_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">_directional_umi_counts.tsv&quot;</span><span class="p">)</span>
+        <span class="n">final_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">counts_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Rename columns to match barcode naming convention</span>
+        <span class="n">final_counts</span> <span class="o">=</span> <span class="n">final_counts</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;gene&quot;</span><span class="p">:</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">),</span> 
+            <span class="s2">&quot;count&quot;</span><span class="p">:</span>  <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span><span class="si">}</span><span class="s2">_umis_directional_deduplic&quot;</span>
+        <span class="p">})</span>
+        
+        <span class="c1"># Read step1 map from DuckDB</span>
+        <span class="n">step1_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SELECT * FROM &quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">step1_map_name</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchdf</span><span class="p">()</span>
+        
+        <span class="c1"># Merge on barcode columns</span>
+        <span class="n">merge_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">final_counts</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">step1_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        <span class="n">merged_df</span> <span class="o">=</span> <span class="n">step1_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">final_counts</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">merge_cols</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span>  
+        
+        <span class="c1"># Optional: filter out unwanted columns like before</span>
+        <span class="n">filtered_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">merged_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="o">!=</span> <span class="s2">&quot;Designed&quot;</span> <span class="ow">and</span> <span class="s2">&quot;_qual&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">col</span> <span class="ow">and</span> <span class="n">col</span> <span class="o">!=</span> <span class="s2">&quot;count&quot;</span><span class="p">]</span>
+        <span class="n">merged_df</span> <span class="o">=</span> <span class="n">merged_df</span><span class="p">[</span><span class="n">filtered_cols</span><span class="p">]</span>
+        
+        <span class="c1"># Add info column</span>
+        <span class="n">merged_df</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_name</span>
+    
+        <span class="c1"># Save CSV if output_path specified</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="ow">and</span> <span class="n">save</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span><span class="si">}</span><span class="s2">_umis_directional_deduplic_with_step1_map.csv&quot;</span><span class="p">)</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">merged_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved to </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+        <span class="k">return</span> <span class="n">merged_df</span></div>
+
+    
+<div class="viewcode-block" id="UMIDeduplicator.run_both_deduplications">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.run_both_deduplications">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_both_deduplications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute both simple and UMI-tools deduplication methods and merge results.</span>
+<span class="sd">        </span>
+<span class="sd">        Runs both deduplication approaches:</span>
+<span class="sd">        1. Simple UMI counting (unique_umis_per_barcodes)</span>
+<span class="sd">        2. UMI-tools directional deduplication (run_umi_tools_deduplication)</span>
+<span class="sd">        </span>
+<span class="sd">        Then merges both results with the step1 mapping table if available.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame or None: If step1_map_name is provided, returns merged</span>
+<span class="sd">                DataFrame with both deduplication results. Otherwise, saves</span>
+<span class="sd">                simple deduplication results only and returns None.</span>
+<span class="sd">                </span>
+<span class="sd">        Note:</span>
+<span class="sd">            This method provides comprehensive UMI analysis by comparing both</span>
+<span class="sd">            approaches. The merged output contains results from both methods</span>
+<span class="sd">            for comparison and validation.</span>
+<span class="sd">            Output filename: {base}_{barcode_cols}_umis_deduplic_with_step1_map.csv</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; merged_df = dedup.run_both_deduplications()</span>
+<span class="sd">            Starting simple deduplication.</span>
+<span class="sd">            Finished simple deduplication.</span>
+<span class="sd">            </span>
+<span class="sd">            Starting UMI Tools directional deduplication.</span>
+<span class="sd">            # ... UMI-tools pipeline output ...</span>
+<span class="sd">            Finished UMI Tools directional deduplication.</span>
+<span class="sd">            </span>
+<span class="sd">            Saved to results/sample_ADBC2_HawkBCs_umis_deduplic_with_step1_map.csv</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting simple deduplication.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unique_umis_per_barcodes</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finished simple deduplication.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting UMI Tools directional deduplication.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_umi_tools_deduplication</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finished UMI Tools directional deduplication.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">step1_map_name</span><span class="p">:</span>
+            <span class="n">df1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_simple_with_step1_map</span><span class="p">(</span><span class="n">save</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">df2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_complex_with_step1_map</span><span class="p">(</span><span class="n">save</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+            <span class="n">merged_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">&#39;outer&#39;</span><span class="p">)</span>
+        
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span><span class="si">}</span><span class="s2">_umis_deduplic_with_step1_map.csv&quot;</span><span class="p">)</span>
+                <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+                <span class="n">merged_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved to </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+            <span class="k">return</span> <span class="n">merged_df</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save_simple_deduplication</span><span class="p">()</span></div>
+</div>
+
+            <span class="c1"># Need to save the simple deduplication result</span>
+            
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Staller Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

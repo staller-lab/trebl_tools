@@ -11,8 +11,8 @@ import shutil
 import pathlib
 import dask.dataframe as dd
 
-from scripts import preprocess
-from scripts import finder
+from trebl_tools import preprocess
+from trebl_tools import finder
 
 class ComplexityChecker:
     """Analyze barcode complexity and coverage between different processing steps.

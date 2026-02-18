@@ -1,0 +1,15 @@
+version: 2  # Use Read the Docs config v2
+
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.11"  # Use Python 3.11 (matches your package requirement)
+
+sphinx:
+  configuration: docs/conf.py  # Where to find Sphinx config
+
+python:
+  install:
+    - requirements: docs/requirements.txt  # Install Sphinx, theme, etc.
+    - method: pip
+      path: .  # Install your package (trebl_tools) so autodoc works

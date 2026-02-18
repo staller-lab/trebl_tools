@@ -5,8 +5,8 @@ import seaborn as sns        # For plotting (barplot, styling)
 import matplotlib
 import os
 import matplotlib.pyplot as plt
-from scripts import preprocess
-from scripts import finder
+from trebl_tools import preprocess
+from trebl_tools import finder
 import tempfile
 import os
 import re
@@ -17,8 +17,8 @@ from pathlib import Path
 import subprocess
 os.environ["MPLBACKEND"] = "Agg"
 from tqdm import tqdm
-from scripts.preprocess import time_it
-from scripts import error_correct
+from trebl_tools.preprocess import time_it
+from trebl_tools import error_correct
 
 class UMIDeduplicator:
     """Unified UMI Deduplication class combining simple counts and full UMI-tools pipeline.

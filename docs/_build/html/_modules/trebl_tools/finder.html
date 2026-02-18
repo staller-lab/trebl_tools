@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>trebl_tools.finder &mdash; TREBL Tools 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            TREBL Tools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TREBL Tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">trebl_tools.finder</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for trebl_tools.finder</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">dask.dataframe</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<div class="viewcode-block" id="Barcode">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.finder.Barcode">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Barcode</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a barcode with extraction pattern specifications.</span>
+<span class="sd">    </span>
+<span class="sd">    This class defines the parameters needed to extract a specific barcode</span>
+<span class="sd">    from DNA sequences, including the flanking sequences and expected length.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): Identifier for the barcode that will be used as column name.</span>
+<span class="sd">        preceder (str): DNA sequence pattern that precedes the barcode.</span>
+<span class="sd">        post (str): DNA sequence pattern that follows the barcode.</span>
+<span class="sd">        length (int): Expected length of the barcode sequence.</span>
+<span class="sd">        </span>
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; # Create a barcode object for a 20bp sequence between &quot;ATCG&quot; and &quot;GCTA&quot;</span>
+<span class="sd">        &gt;&gt;&gt; ad_barcode = Barcode(</span>
+<span class="sd">        ...     name=&quot;AD_BC&quot;,</span>
+<span class="sd">        ...     preceder=&quot;ATCG&quot;,</span>
+<span class="sd">        ...     post=&quot;GCTA&quot;, </span>
+<span class="sd">        ...     length=20</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; print(f&quot;Barcode: {ad_barcode.name}, Length: {ad_barcode.length}&quot;)</span>
+<span class="sd">        Barcode: AD_BC, Length: 20</span>
+<span class="sd">        </span>
+<span class="sd">    Note:</span>
+<span class="sd">        The preceder and post sequences are used in regex pattern matching,</span>
+<span class="sd">        so special regex characters should be escaped if they appear literally</span>
+<span class="sd">        in the DNA sequences.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    
+
+<div class="viewcode-block" id="Barcode.__init__">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.finder.Barcode.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">preceder</span><span class="p">,</span> <span class="n">post</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a Barcode object with extraction parameters.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Barcode identifier for column naming.</span>
+<span class="sd">            preceder (str): DNA sequence preceding the barcode.</span>
+<span class="sd">            post (str): DNA sequence following the barcode.</span>
+<span class="sd">            length (int): Expected length of barcode sequence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preceder</span> <span class="o">=</span> <span class="n">preceder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">post</span> <span class="o">=</span> <span class="n">post</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span></div>
+</div>
+
+        
+<div class="viewcode-block" id="add_barcode">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.finder.add_barcode">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_barcode</span><span class="p">(</span><span class="n">seq_df</span><span class="p">,</span> <span class="n">bc_object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract a barcode from sequences using pattern matching.</span>
+
+<span class="sd">    Extracts barcode sequences located between specified preceder and post</span>
+<span class="sd">    patterns. Creates both the barcode column and a quality flag column</span>
+<span class="sd">    indicating whether the extracted sequence matches the expected length.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        seq_df (pd.DataFrame or dask.DataFrame): DataFrame containing a &#39;sequence&#39; column</span>
+<span class="sd">            with DNA sequences to process.</span>
+<span class="sd">        bc_object (Barcode): Barcode object containing extraction parameters</span>
+<span class="sd">            (name, preceder, post, length).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame or dask.DataFrame: Updated DataFrame with two new columns:</span>
+<span class="sd">            - {bc_object.name}: Extracted barcode sequences</span>
+<span class="sd">            - {bc_object.name}_qual: Boolean quality flag (True if length matches expected)</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({&quot;sequence&quot;: [&quot;AAAXXXCCC&quot;, &quot;AAAYYYCCC&quot;, &quot;AAAXCCC&quot;]})</span>
+<span class="sd">        &gt;&gt;&gt; bc = Barcode(name=&quot;TEST&quot;, preceder=&quot;AAA&quot;, post=&quot;CCC&quot;, length=3)</span>
+<span class="sd">        &gt;&gt;&gt; result_df = add_barcode(df, bc)</span>
+<span class="sd">        &gt;&gt;&gt; print(result_df)</span>
+<span class="sd">           sequence TEST  TEST_qual</span>
+<span class="sd">        0  AAAXXXCCC  XXX       True</span>
+<span class="sd">        1  AAAYYYCCC  YYY       True</span>
+<span class="sd">        2    AAAXCCC    X      False</span>
+<span class="sd">        </span>
+<span class="sd">    Note:</span>
+<span class="sd">        Uses greedy regex matching by default. Sequences that don&#39;t match</span>
+<span class="sd">        the pattern or don&#39;t meet the length requirement will have NaN</span>
+<span class="sd">        values that are converted to False for the quality flag.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bc_object</span><span class="o">.</span><span class="n">preceder</span><span class="si">}</span><span class="s2">(.*)</span><span class="si">{</span><span class="n">bc_object</span><span class="o">.</span><span class="n">post</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">subseq_series</span> <span class="o">=</span> <span class="n">seq_df</span><span class="p">[</span><span class="s1">&#39;sequence&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">regex</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bc_object</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+    <span class="n">seq_df</span><span class="p">[</span><span class="n">bc_object</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">subseq_series</span>
+    <span class="n">seq_df</span><span class="p">[</span><span class="n">bc_object</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_qual&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seq_df</span><span class="p">[</span><span class="n">bc_object</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="n">bc_object</span><span class="o">.</span><span class="n">length</span>
+    <span class="n">seq_df</span><span class="p">[</span><span class="n">bc_object</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_qual&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seq_df</span><span class="p">[</span><span class="n">bc_object</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_qual&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">seq_df</span></div>
+
+
+<div class="viewcode-block" id="add_umi">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.finder.add_umi">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_umi</span><span class="p">(</span><span class="n">seq_df</span><span class="p">,</span> <span class="n">umi_length</span><span class="o">=</span><span class="mi">12</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract UMI (Unique Molecular Identifier) from the end of sequences.</span>
+
+<span class="sd">    Extracts the last `umi_length` bases from each sequence as the UMI.</span>
+<span class="sd">    This is typically used when UMIs are located at the 3&#39; end of reads</span>
+<span class="sd">    after barcode regions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        seq_df (pd.DataFrame or dask.DataFrame): DataFrame containing a &#39;sequence&#39; column</span>
+<span class="sd">            with DNA sequences.</span>
+<span class="sd">        umi_length (int, optional): Number of bases to extract from sequence end</span>
+<span class="sd">            as the UMI. Defaults to 12.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame or dask.DataFrame: Updated DataFrame with new &#39;UMI&#39; column</span>
+<span class="sd">            containing the extracted UMI sequences.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({&quot;sequence&quot;: [&quot;ATCGATCGATCGATCG&quot;, &quot;GCTAGCTAGCTAGCTA&quot;]})</span>
+<span class="sd">        &gt;&gt;&gt; result_df = add_umi(df, umi_length=4)</span>
+<span class="sd">        &gt;&gt;&gt; print(result_df)</span>
+<span class="sd">                   sequence   UMI</span>
+<span class="sd">        0  ATCGATCGATCGATCG  ATCG</span>
+<span class="sd">        1  GCTAGCTAGCTAGCTA  GCTA</span>
+<span class="sd">        </span>
+<span class="sd">    Note:</span>
+<span class="sd">        Currently hardcoded to extract the last 12 bases regardless of the</span>
+<span class="sd">        umi_length parameter. This appears to be a bug that should be fixed</span>
+<span class="sd">        to use the umi_length parameter.</span>
+<span class="sd">        </span>
+<span class="sd">    Todo:</span>
+<span class="sd">        Fix implementation to use umi_length parameter instead of hardcoded -12.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">seq_df</span><span class="p">[</span><span class="s1">&#39;UMI&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seq_df</span><span class="p">[</span><span class="s1">&#39;sequence&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">12</span><span class="p">,)</span>
+    <span class="k">return</span> <span class="n">seq_df</span></div>
+
+    
+<div class="viewcode-block" id="add_multiple_barcodes">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.finder.add_multiple_barcodes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_multiple_barcodes</span><span class="p">(</span><span class="n">bc_objects</span><span class="p">,</span> <span class="n">seq_df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract multiple barcodes from sequences in a single operation.</span>
+
+<span class="sd">    Applies barcode extraction for all specified barcode objects to the</span>
+<span class="sd">    input DataFrame. This is a convenience function for processing multiple</span>
+<span class="sd">    barcodes in a batch operation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        bc_objects (list[Barcode]): List of Barcode objects defining the</span>
+<span class="sd">            barcodes to extract.</span>
+<span class="sd">        seq_df (pd.DataFrame or dask.DataFrame): DataFrame containing sequences</span>
+<span class="sd">            in a &#39;sequence&#39; column.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame or dask.DataFrame: Updated DataFrame with columns for</span>
+<span class="sd">            each extracted barcode and corresponding quality flags:</span>
+<span class="sd">            - {barcode.name}: Extracted barcode sequence</span>
+<span class="sd">            - {barcode.name}_qual: Boolean quality flag for each barcode</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; df = pd.DataFrame({&quot;sequence&quot;: [&quot;AAAXXXCCCYYYTTT&quot;, &quot;AAAABBBCCCDDTTT&quot;]})</span>
+<span class="sd">        &gt;&gt;&gt; bc1 = Barcode(name=&quot;BC1&quot;, preceder=&quot;AAA&quot;, post=&quot;CCC&quot;, length=3)</span>
+<span class="sd">        &gt;&gt;&gt; bc2 = Barcode(name=&quot;BC2&quot;, preceder=&quot;CCC&quot;, post=&quot;TTT&quot;, length=3)</span>
+<span class="sd">        &gt;&gt;&gt; result_df = add_multiple_barcodes([bc1, bc2], df)</span>
+<span class="sd">        &gt;&gt;&gt; print(result_df.columns.tolist())</span>
+<span class="sd">        [&#39;sequence&#39;, &#39;BC1&#39;, &#39;BC1_qual&#39;, &#39;BC2&#39;, &#39;BC2_qual&#39;]</span>
+<span class="sd">        </span>
+<span class="sd">    Note:</span>
+<span class="sd">        Barcodes are processed sequentially in the order provided.</span>
+<span class="sd">        Creates a copy of the input DataFrame to avoid modifying the original.</span>
+<span class="sd">        Each barcode extraction is independent and uses the same source sequences.</span>
+<span class="sd">        </span>
+<span class="sd">    Warning:</span>
+<span class="sd">        If barcodes have overlapping patterns or are located in overlapping</span>
+<span class="sd">        regions, the extraction order may affect results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">seq_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">bc_object</span> <span class="ow">in</span> <span class="n">bc_objects</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">add_barcode</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">bc_object</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Staller Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
