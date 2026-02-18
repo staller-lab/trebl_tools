@@ -118,12 +118,19 @@ examples/
 
 ## Customization
 
-All example files use placeholder sequences and paths. Before running, you must:
+The example files are pre-configured to use sample data from the `data/` folder:
 
-1. **Update file paths** to point to your actual sequencing data
-2. **Update barcode sequences** if your experiment uses different flanking sequences
-3. **Adjust resource allocation** based on your dataset size
-4. **Update the design file path** to your AD design sequences
+- **Step 1 data**: `data/step1_ChopTFs_sample.fastq`
+- **Step 2 data**: `data/step2_ChopTFs_AD_sample.fastq` and `data/step2_ChopTFs_RT_sample.fastq`
+- **TREBL experiment data**: `data/trebl_experiment_ChopTFs_AD_*.fastq` and `data/trebl_experiment_ChopTFs_RT_*.fastq`
+- **Design file**: `data/design_file.txt` (placeholder - replace with your AD design sequences)
+
+To run with your own data:
+
+1. **Update file paths** in the notebooks or job scripts to point to your actual sequencing data
+2. **Update the design file** (`data/design_file.txt`) with your AD design sequences (one per line)
+3. **Update barcode sequences** if your experiment uses different flanking sequences
+4. **Adjust resource allocation** based on your dataset size
 
 ## Output Files
 
@@ -147,7 +154,7 @@ Both workflows generate:
 - `trebl_experiment_loss_*.png` - Loss summaries for AD and RT
 
 ### Database
-- `*.db` - DuckDB database file (can be deleted after analysis)
+- `db/*.db` - DuckDB database files stored in the `db/` folder (can be deleted after analysis)
 
 ## Troubleshooting
 
