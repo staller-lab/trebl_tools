@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>trebl_tools.umi_deduplicate &mdash; TREBL Tools 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
@@ -39,8 +39,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/advanced_usage.html">Advanced Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">trebl_tools</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -66,31 +80,31 @@
            <div itemprop="articleBody">
              
   <h1>Source code for trebl_tools.umi_deduplicate</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>                <span class="c1"># For connecting to your DuckDB database</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>          <span class="c1"># For DataFrame manipulation</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>           <span class="c1"># For numerical operations (e.g., np.round, np.isfinite)</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>        <span class="c1"># For plotting (barplot, styling)</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">finder</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">dask.dataframe</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span></span><span class="kn">import</span> <span class="nn">duckdb</span>                <span class="c1"># For connecting to your DuckDB database</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>          <span class="c1"># For DataFrame manipulation</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>           <span class="c1"># For numerical operations (e.g., np.round, np.isfinite)</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>        <span class="c1"># For plotting (barplot, styling)</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">trebl_tools</span> <span class="kn">import</span> <span class="n">preprocess</span>
+<span class="kn">from</span> <span class="nn">trebl_tools</span> <span class="kn">import</span> <span class="n">finder</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MPLBACKEND&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Agg&quot;</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools.preprocess</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">error_correct</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">trebl_tools.preprocess</span> <span class="kn">import</span> <span class="n">time_it</span>
+<span class="kn">from</span> <span class="nn">trebl_tools</span> <span class="kn">import</span> <span class="n">error_correct</span>
 
 <div class="viewcode-block" id="UMIDeduplicator">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">UMIDeduplicator</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">UMIDeduplicator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Unified UMI Deduplication class combining simple counts and full UMI-tools pipeline.</span>
 <span class="sd">    </span>
 <span class="sd">    This class provides comprehensive UMI (Unique Molecular Identifier) deduplication</span>
@@ -131,7 +145,7 @@
 <span class="sd">        &gt;&gt;&gt; merged_df = dedup.run_both_deduplications()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_path</span><span class="p">,</span> <span class="n">bc_objects</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">,</span> <span class="n">step1_map_name</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_path</span><span class="p">,</span> <span class="n">bc_objects</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">,</span> <span class="n">step1_map_name</span><span class="p">,</span>
                  <span class="n">fastq_path</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">refined_map_suffix</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db_path</span> <span class="o">=</span> <span class="n">db_path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="p">)</span>
@@ -160,7 +174,7 @@
  
 <div class="viewcode-block" id="UMIDeduplicator.counts_per_umi">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.counts_per_umi">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">counts_per_umi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">counts_per_umi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return DataFrame with simple counts of each UMI per barcode combination.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
@@ -190,7 +204,7 @@
     <span class="c1"># --------- Methods from SimpleUMIDeduplicator ---------</span>
 <div class="viewcode-block" id="UMIDeduplicator.unique_umis_per_barcodes">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.unique_umis_per_barcodes">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">unique_umis_per_barcodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">unique_umis_per_barcodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Count unique UMIs per barcode combination and save as new table.</span>
 <span class="sd">        </span>
 <span class="sd">        Creates a new table in the database containing the count of distinct UMIs</span>
@@ -230,7 +244,7 @@
 
 <div class="viewcode-block" id="UMIDeduplicator.merge_simple_with_step1_map">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.merge_simple_with_step1_map">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">merge_simple_with_step1_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">merge_simple_with_step1_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Merge simple UMI counts with step1 mapping table.</span>
 <span class="sd">        </span>
 <span class="sd">        Performs an inner join between the UMI count table and the step1 mapping</span>
@@ -284,7 +298,7 @@
 <div class="viewcode-block" id="UMIDeduplicator.save_simple_deduplication">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.save_simple_deduplication">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_simple_deduplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">save_simple_deduplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save simple UMI deduplication results to TSV files.</span>
 <span class="sd">        </span>
 <span class="sd">        Saves two files:</span>
@@ -333,7 +347,7 @@
 
 <div class="viewcode-block" id="UMIDeduplicator.run_simple_deduplication">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.run_simple_deduplication">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">run_simple_deduplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run_simple_deduplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the simple UMI deduplication workflow.</span>
 <span class="sd">        </span>
 <span class="sd">        Runs the basic UMI counting approach by calling unique_umis_per_barcodes().</span>
@@ -351,7 +365,7 @@
 
 <div class="viewcode-block" id="UMIDeduplicator.show_tables">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.show_tables">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">show_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">show_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display all tables in the connected DuckDB database.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
@@ -371,7 +385,7 @@
 <div class="viewcode-block" id="UMIDeduplicator.generate_fastq">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.generate_fastq">[docs]</a>
     <span class="nd">@preprocess</span><span class="o">.</span><span class="n">time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate_fastq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_umi_extracted.fastq&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">generate_fastq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_umi_extracted.fastq&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate FASTQ file with UMIs in headers and concatenated barcodes as sequences.</span>
 <span class="sd">        Used for UMI-tools directional deduplication workflow.</span>
 <span class="sd">        </span>
@@ -436,7 +450,7 @@
 <div class="viewcode-block" id="UMIDeduplicator.generate_barcode_fasta_and_index">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.generate_barcode_fasta_and_index">[docs]</a>
     <span class="nd">@preprocess</span><span class="o">.</span><span class="n">time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate_barcode_fasta_and_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span> <span class="o">=</span> <span class="s2">&quot;_barcodes&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">generate_barcode_fasta_and_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span> <span class="o">=</span> <span class="s2">&quot;_barcodes&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate FASTA reference of unique barcodes and create bowtie2 index.</span>
 <span class="sd">        Used for UMI-tools directional deduplication workflow to align reads to barcode sequences.</span>
 <span class="sd">        </span>
@@ -516,7 +530,7 @@
 <div class="viewcode-block" id="UMIDeduplicator.align_sort_and_deduplicate_umis">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.align_sort_and_deduplicate_umis">[docs]</a>
     <span class="nd">@preprocess</span><span class="o">.</span><span class="n">time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">align_sort_and_deduplicate_umis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">align_sort_and_deduplicate_umis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the complete UMI-tools alignment and deduplication pipeline.</span>
 <span class="sd">        </span>
 <span class="sd">        Runs the full UMI-tools workflow:</span>
@@ -610,7 +624,7 @@
 
 <div class="viewcode-block" id="UMIDeduplicator.run_umi_tools_deduplication">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.run_umi_tools_deduplication">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">run_umi_tools_deduplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run_umi_tools_deduplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the complete UMI-tools deduplication workflow.</span>
 <span class="sd">        </span>
 <span class="sd">        Runs the full UMI-tools pipeline by calling:</span>
@@ -634,7 +648,7 @@
 
 <div class="viewcode-block" id="UMIDeduplicator.merge_complex_with_step1_map">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.merge_complex_with_step1_map">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">merge_complex_with_step1_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">merge_complex_with_step1_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Merge UMI-tools directional deduplication results with step1 mapping table.</span>
 <span class="sd">        </span>
 <span class="sd">        Reads the UMI-tools output TSV file and merges it with the step1 mapping</span>
@@ -696,7 +710,7 @@
     
 <div class="viewcode-block" id="UMIDeduplicator.run_both_deduplications">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.umi_deduplicate.UMIDeduplicator.run_both_deduplications">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">run_both_deduplications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run_both_deduplications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute both simple and UMI-tools deduplication methods and merge results.</span>
 <span class="sd">        </span>
 <span class="sd">        Runs both deduplication approaches:</span>

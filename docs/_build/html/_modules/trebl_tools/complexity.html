@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>trebl_tools.complexity &mdash; TREBL Tools 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
@@ -39,8 +39,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/advanced_usage.html">Advanced Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">trebl_tools</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -66,25 +80,25 @@
            <div itemprop="articleBody">
              
   <h1>Source code for trebl_tools.complexity</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>                <span class="c1"># For connecting to your DuckDB database</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>          <span class="c1"># For DataFrame manipulation</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>           <span class="c1"># For numerical operations (e.g., np.round, np.isfinite)</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>        <span class="c1"># For plotting (barplot, styling)</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">dask.dataframe</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dd</span>
+<span></span><span class="kn">import</span> <span class="nn">duckdb</span>                <span class="c1"># For connecting to your DuckDB database</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>          <span class="c1"># For DataFrame manipulation</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>           <span class="c1"># For numerical operations (e.g., np.round, np.isfinite)</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>        <span class="c1"># For plotting (barplot, styling)</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">finder</span>
+<span class="kn">from</span> <span class="nn">trebl_tools</span> <span class="kn">import</span> <span class="n">preprocess</span>
+<span class="kn">from</span> <span class="nn">trebl_tools</span> <span class="kn">import</span> <span class="n">finder</span>
 
 <div class="viewcode-block" id="ComplexityChecker">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.complexity.ComplexityChecker">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ComplexityChecker</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">ComplexityChecker</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyze barcode complexity and coverage between different processing steps.</span>
 <span class="sd">    </span>
 <span class="sd">    This class compares barcode sequences between the initial mapping table</span>
@@ -132,7 +146,7 @@
     
 <div class="viewcode-block" id="ComplexityChecker.__init__">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.complexity.ComplexityChecker.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">db_path</span><span class="p">,</span>
         <span class="n">step_name</span><span class="p">,</span>
@@ -158,7 +172,7 @@
         
 <div class="viewcode-block" id="ComplexityChecker.show_tables">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.complexity.ComplexityChecker.show_tables">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">show_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">show_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display all tables in the connected DuckDB database.</span>
 <span class="sd">        </span>
 <span class="sd">        Prints a list of all table names in the database for reference</span>
@@ -177,7 +191,7 @@
             
 <div class="viewcode-block" id="ComplexityChecker.count_overlap_one_barcode_group">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.complexity.ComplexityChecker.count_overlap_one_barcode_group">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">count_overlap_one_barcode_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">barcode_group</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">count_overlap_one_barcode_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">barcode_group</span><span class="p">):</span>
         <span class="n">bc_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">barcode</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">barcode</span> <span class="ow">in</span> <span class="n">barcode_group</span><span class="p">]</span>
         <span class="n">table_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bc_columns</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
 
@@ -201,7 +215,7 @@
 
 <div class="viewcode-block" id="ComplexityChecker.count_overlap">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.complexity.ComplexityChecker.count_overlap">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">count_overlap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">count_overlap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate overlap statistics for a single barcode group.</span>
 <span class="sd">        </span>
 <span class="sd">        Compares unique barcode combinations between the initial mapping table</span>

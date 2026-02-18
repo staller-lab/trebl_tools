@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TREBL Tools Documentation &mdash; TREBL Tools 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="trebl_tools" href="modules.html" /> 
+    <link rel="next" title="What is TREBL?" href="user_guide/introduction.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,7 +41,19 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/advanced_usage.html">Advanced Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">trebl_tools</a></li>
 </ul>
 
@@ -71,43 +83,68 @@
              
   <section id="trebl-tools-documentation">
 <h1>TREBL Tools Documentation<a class="headerlink" href="#trebl-tools-documentation" title="Link to this heading"></a></h1>
-<p>Tools for TREBL analysis.</p>
+<p>Tools for TREBL (Transcriptional REporter Barcode Library) analysis and barcode processing.</p>
 <p><strong>For Staller Lab members on Savio.</strong></p>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/staller-lab/trebl_tools.git
-<span class="nb">cd</span><span class="w"> </span>trebl_tools
-pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>-e<span class="w"> </span>.
-</pre></div>
-</div>
+<section id="quick-links">
+<h2>Quick Links<a class="headerlink" href="#quick-links" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="user_guide/introduction.html"><span class="doc">What is TREBL?</span></a> - Learn what TREBL-seq is</p></li>
+<li><p><a class="reference internal" href="user_guide/installation.html"><span class="doc">Installation</span></a> - Get started with installation</p></li>
+<li><p><a class="reference internal" href="user_guide/analysis_setup.html"><span class="doc">Analysis Setup</span></a> - Set up your analysis pipeline</p></li>
+</ul>
 </section>
-<section id="quick-start">
-<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">Barcode</span><span class="p">,</span> <span class="n">TreblPipeline</span>
-
-<span class="c1"># Define barcodes</span>
-<span class="n">ad_bc</span> <span class="o">=</span> <span class="n">Barcode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;AD_BC&quot;</span><span class="p">,</span> <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;ATCG&quot;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="s2">&quot;GCTA&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-
-<span class="c1"># Run pipeline</span>
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">TreblPipeline</span><span class="p">(</span>
-    <span class="n">db_path</span><span class="o">=</span><span class="s2">&quot;experiment.duckdb&quot;</span><span class="p">,</span>
-    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;results/&quot;</span>
-<span class="p">)</span>
-
-<span class="n">pipeline</span><span class="o">.</span><span class="n">trebl_experiment_analysis</span><span class="p">(</span>
-    <span class="n">AD_seq_files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;AD.fastq&quot;</span><span class="p">],</span>
-    <span class="n">REP_seq_files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;REP.fastq&quot;</span><span class="p">],</span>
-    <span class="n">AD_bc_objects</span><span class="o">=</span><span class="p">[</span><span class="n">ad_bc</span><span class="p">],</span>
-    <span class="n">REP_bc_objects</span><span class="o">=</span><span class="p">[</span><span class="n">ad_bc</span><span class="p">],</span>
-    <span class="n">design_file_path</span><span class="o">=</span><span class="s2">&quot;design.csv&quot;</span>
-<span class="p">)</span>
-</pre></div>
-</div>
 </section>
+<section id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/installation.html#setting-up-jupyter-on-savio">Setting up Jupyter on Savio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/installation.html#required-imports">Required Imports</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/preprocessing.html">Preprocessing Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/preprocessing.html#for-paired-end-reads">For Paired End Reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/preprocessing.html#for-single-end-reads">For Single End Reads</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/analysis_setup.html">Analysis Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/analysis_setup.html#initialize-the-pipeline">Initialize the Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/analysis_setup.html#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/analysis_setup.html#tips">Tips</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/step1.html">Step 1: TREBL Mapping</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/step1.html#copy-paste-ready-block">Copy-Paste Ready Block</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/step1.html#code-blocks-explained">Code Blocks Explained</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/step2.html#copy-paste-ready-block">Copy-Paste Ready Block</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/step2.html#code-blocks-explained">Code Blocks Explained</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/trebl_experiment.html#copy-paste-ready-block">Copy-Paste Ready Block</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/trebl_experiment.html#code-blocks-explained">Code Blocks Explained</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/trebl_experiment.html#final-steps">Final Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/advanced_usage.html">Advanced Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/advanced_usage.html#automatic-threshold-barcode-error-correction">Automatic Threshold Barcode Error Correction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/advanced_usage.html#trebl-experiment-without-umis">TREBL Experiment without UMIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/advanced_usage.html#repeating-an-analysis-step-with-multiple-datasets">Repeating an Analysis Step with Multiple Datasets</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </section>
 <section id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">trebl_tools</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="trebl_tools.html">trebl_tools package</a></li>
@@ -129,7 +166,7 @@ pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w">
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-right" title="trebl_tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="user_guide/introduction.html" class="btn btn-neutral float-right" title="What is TREBL?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

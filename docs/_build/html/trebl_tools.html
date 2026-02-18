@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>trebl_tools package &mdash; TREBL Tools 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
@@ -41,7 +41,19 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/advanced_usage.html">Advanced Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">trebl_tools</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">trebl_tools package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
@@ -142,7 +154,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="trebl_tools.complexity.ComplexityChecker">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">trebl_tools.complexity.</span></span><span class="sig-name descname"><span class="pre">ComplexityChecker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step1_map_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_suffix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">barcode_groups</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trebl_tools/complexity.html#ComplexityChecker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.complexity.ComplexityChecker" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Analyze barcode complexity and coverage between different processing steps.</p>
 <p>This class compares barcode sequences between the initial mapping table
 (designed sequences) and processed datasets to assess library coverage,
@@ -150,13 +162,13 @@ identify missing sequences, and evaluate processing efficiency.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>db_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the DuckDB database containing mapping tables.</p></li>
-<li><p><strong>step_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Identifier for the processing step being analyzed.</p></li>
-<li><p><strong>step1_map_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the initial mapping table in the database
+<li><p><strong>db_path</strong> (<em>str</em>) – Path to the DuckDB database containing mapping tables.</p></li>
+<li><p><strong>step_name</strong> (<em>str</em>) – Identifier for the processing step being analyzed.</p></li>
+<li><p><strong>step1_map_name</strong> (<em>str</em>) – Name of the initial mapping table in the database
 containing the designed barcode sequences.</p></li>
-<li><p><strong>step_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Suffix of the processed table to compare against
+<li><p><strong>step_suffix</strong> (<em>str</em>) – Suffix of the processed table to compare against
 the initial mapping (e.g., “quality_designed”).</p></li>
-<li><p><strong>barcode_groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – List of barcode groups to analyze. Each group
+<li><p><strong>barcode_groups</strong> (<em>list</em>) – List of barcode groups to analyze. Each group
 can be either a single Barcode object or a list of Barcode objects
 for multi-barcode analyses.</p></li>
 </ul>
@@ -198,11 +210,11 @@ a ‘name’ attribute for SQL column identification.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>db_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to DuckDB database file.</p></li>
-<li><p><strong>step_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Processing step identifier.</p></li>
-<li><p><strong>step1_map_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Initial mapping table name.</p></li>
-<li><p><strong>step_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Processed table suffix.</p></li>
-<li><p><strong>barcode_groups</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – List of barcode groups for analysis.</p></li>
+<li><p><strong>db_path</strong> (<em>str</em>) – Path to DuckDB database file.</p></li>
+<li><p><strong>step_name</strong> (<em>str</em>) – Processing step identifier.</p></li>
+<li><p><strong>step1_map_name</strong> (<em>str</em>) – Initial mapping table name.</p></li>
+<li><p><strong>step_suffix</strong> (<em>str</em>) – Processed table suffix.</p></li>
+<li><p><strong>barcode_groups</strong> (<em>list</em>) – List of barcode groups for analysis.</p></li>
 </ul>
 </dd>
 </dl>
@@ -216,7 +228,7 @@ a ‘name’ attribute for SQL column identification.</p>
 and a processed table to determine coverage and overlap metrics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>barcode_group</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of Barcode objects to analyze
+<dd class="field-odd"><p><strong>barcode_group</strong> (<em>list</em><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of Barcode objects to analyze
 as a group. For single barcode analysis, pass a list with one element.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -284,9 +296,9 @@ with UMI-tools. Handles both single file inputs and lists of files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_fastq_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – Path to single FASTQ file or list
+<li><p><strong>input_fastq_list</strong> (<em>str</em><em> or </em><em>list</em><em>[</em><em>str</em><em>]</em>) – Path to single FASTQ file or list
 of FASTQ file paths to concatenate.</p></li>
-<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Directory where temporary concatenated file
+<li><p><strong>output_dir</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory where temporary concatenated file
 will be created.</p></li>
 </ul>
 </dd>
@@ -298,7 +310,7 @@ will be created.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -324,7 +336,7 @@ that shows the relationship between original sequences and their
 canonical (corrected) forms for downstream error correction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>whitelist_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to the whitelist text file generated
+<dd class="field-odd"><p><strong>whitelist_path</strong> (<em>str</em><em> or </em><em>Path</em>) – Path to the whitelist text file generated
 by UMI-tools. Expected format: tab-separated with columns
 [canonical, collapsed, largest_count, counts].</p>
 </dd>
@@ -361,7 +373,7 @@ Currently hardcoded to not perform reverse complement transformation.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="trebl_tools.error_correct.rc_and_swap">
-<span class="sig-prename descclassname"><span class="pre">trebl_tools.error_correct.</span></span><span class="sig-name descname"><span class="pre">rc_and_swap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preceder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">post</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'str'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'str'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trebl_tools/error_correct.html#rc_and_swap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.error_correct.rc_and_swap" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">trebl_tools.error_correct.</span></span><span class="sig-name descname"><span class="pre">rc_and_swap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preceder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'str'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'str'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trebl_tools/error_correct.html#rc_and_swap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.error_correct.rc_and_swap" title="Link to this definition"></a></dt>
 <dd><p>Generate reverse complement patterns for barcode extraction.</p>
 <p>Transforms preceder and post patterns for reverse complement mode by
 reverse complementing and swapping their positions. This is used when
@@ -369,9 +381,9 @@ sequences need to be processed in reverse orientation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>preceder</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Original DNA sequence pattern that precedes the barcode.</p></li>
-<li><p><strong>post</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Original DNA sequence pattern that follows the barcode.</p></li>
-<li><p><strong>length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Length parameter (currently unused but maintained for compatibility).</p></li>
+<li><p><strong>preceder</strong> (<em>str</em>) – Original DNA sequence pattern that precedes the barcode.</p></li>
+<li><p><strong>post</strong> (<em>str</em>) – Original DNA sequence pattern that follows the barcode.</p></li>
+<li><p><strong>length</strong> (<em>int</em>) – Length parameter (currently unused but maintained for compatibility).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -385,7 +397,7 @@ sequences need to be processed in reverse orientation.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>]</p>
+<dd class="field-odd"><p>tuple[str, str]</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -412,12 +424,12 @@ group similar sequences for error correction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fastq_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Path to FASTQ file containing extracted barcodes.</p></li>
-<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Directory to save whitelist outputs including
+<li><p><strong>fastq_path</strong> (<em>str</em><em> or </em><em>Path</em>) – Path to FASTQ file containing extracted barcodes.</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory to save whitelist outputs including
 log files, whitelist text files, and diagnostic plots.</p></li>
-<li><p><strong>set_cell_number</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Force a specific number of expected
+<li><p><strong>set_cell_number</strong> (<em>int</em><em>, </em><em>optional</em>) – Force a specific number of expected
 cell barcodes instead of using automatic knee detection. Defaults to None.</p></li>
-<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Prefix for output file naming. If None, uses
+<li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – Prefix for output file naming. If None, uses
 the FASTQ filename stem. Defaults to None.</p></li>
 </ul>
 </dd>
@@ -433,10 +445,10 @@ the FASTQ filename stem. Defaults to None.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/subprocess.html#subprocess.CalledProcessError" title="(in Python v3.14)"><strong>subprocess.CalledProcessError</strong></a> – If UMI-tools whitelist command fails.</p>
+<dd class="field-even"><p><strong>subprocess.CalledProcessError</strong> – If UMI-tools whitelist command fails.</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -467,17 +479,17 @@ with a single dummy UMI base. Requires UMI-tools conda environment.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="trebl_tools.finder.Barcode">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">trebl_tools.finder.</span></span><span class="sig-name descname"><span class="pre">Barcode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preceder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trebl_tools/finder.html#Barcode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.finder.Barcode" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Represents a barcode with extraction pattern specifications.</p>
 <p>This class defines the parameters needed to extract a specific barcode
 from DNA sequences, including the flanking sequences and expected length.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Identifier for the barcode that will be used as column name.</p></li>
-<li><p><strong>preceder</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – DNA sequence pattern that precedes the barcode.</p></li>
-<li><p><strong>post</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – DNA sequence pattern that follows the barcode.</p></li>
-<li><p><strong>length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Expected length of the barcode sequence.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Identifier for the barcode that will be used as column name.</p></li>
+<li><p><strong>preceder</strong> (<em>str</em>) – DNA sequence pattern that precedes the barcode.</p></li>
+<li><p><strong>post</strong> (<em>str</em>) – DNA sequence pattern that follows the barcode.</p></li>
+<li><p><strong>length</strong> (<em>int</em>) – Expected length of the barcode sequence.</p></li>
 </ul>
 </dd>
 </dl>
@@ -506,10 +518,10 @@ in the DNA sequences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Barcode identifier for column naming.</p></li>
-<li><p><strong>preceder</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – DNA sequence preceding the barcode.</p></li>
-<li><p><strong>post</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – DNA sequence following the barcode.</p></li>
-<li><p><strong>length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Expected length of barcode sequence.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Barcode identifier for column naming.</p></li>
+<li><p><strong>preceder</strong> (<em>str</em>) – DNA sequence preceding the barcode.</p></li>
+<li><p><strong>post</strong> (<em>str</em>) – DNA sequence following the barcode.</p></li>
+<li><p><strong>length</strong> (<em>int</em>) – Expected length of barcode sequence.</p></li>
 </ul>
 </dd>
 </dl>
@@ -576,7 +588,7 @@ barcodes in a batch operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of Barcode objects defining the
+<li><p><strong>bc_objects</strong> (<em>list</em><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of Barcode objects defining the
 barcodes to extract.</p></li>
 <li><p><strong>seq_df</strong> (<em>pd.DataFrame</em><em> or </em><em>dask.DataFrame</em>) – DataFrame containing sequences
 in a ‘sequence’ column.</p></li>
@@ -629,7 +641,7 @@ after barcode regions.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>seq_df</strong> (<em>pd.DataFrame</em><em> or </em><em>dask.DataFrame</em>) – DataFrame containing a ‘sequence’ column
 with DNA sequences.</p></li>
-<li><p><strong>umi_length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of bases to extract from sequence end
+<li><p><strong>umi_length</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of bases to extract from sequence end
 as the UMI. Defaults to 12.</p></li>
 </ul>
 </dd>
@@ -659,6 +671,10 @@ as the UMI. Defaults to 12.</p></li>
 umi_length parameter. This appears to be a bug that should be fixed
 to use the umi_length parameter.</p>
 </div>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Fix implementation to use umi_length parameter instead of hardcoded -12.</p>
+</div>
 </dd></dl>
 
 </section>
@@ -667,7 +683,7 @@ to use the umi_length parameter.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="trebl_tools.initial_map.InitialMapper">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">trebl_tools.initial_map.</span></span><span class="sig-name descname"><span class="pre">InitialMapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bc_objects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse_complement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">umi_object</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trebl_tools/initial_map.html#InitialMapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.initial_map.InitialMapper" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Extract and map barcodes from DNA sequences in FASTQ or TXT files.</p>
 <p>This class reads sequence files, optionally reverse-complements them,
 extracts barcodes and UMIs based on specified patterns, and merges with
@@ -675,19 +691,19 @@ a design file to produce an initial mapping table stored in DuckDB.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>db_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to DuckDB database file where tables will be created.</p></li>
-<li><p><strong>seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – Path(s) to input FASTQ or sequence files.
+<li><p><strong>db_path</strong> (<em>str</em>) – Path to DuckDB database file where tables will be created.</p></li>
+<li><p><strong>seq_file</strong> (<em>str</em><em> or </em><em>list</em><em>[</em><em>str</em><em>]</em>) – Path(s) to input FASTQ or sequence files.
 Supports both single files and lists of multiple files.</p></li>
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – List of barcode objects, each with attributes:
+<li><p><strong>bc_objects</strong> (<em>list</em>) – List of barcode objects, each with attributes:
 - name (str): Column name for the barcode
 - preceder (str): Sequence pattern before the barcode
 - post (str): Sequence pattern after the barcode
 - length (int): Expected barcode length</p></li>
-<li><p><strong>step_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Identifier used as prefix for database table names.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to reverse complement sequences before mapping.</p></li>
-<li><p><strong>design_file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Path to CSV file containing designed sequences
+<li><p><strong>step_name</strong> (<em>str</em>) – Identifier used as prefix for database table names.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether to reverse complement sequences before mapping.</p></li>
+<li><p><strong>design_file_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to CSV file containing designed sequences
 for validation. Expected to have sequences in first column.</p></li>
-<li><p><strong>umi_object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><em>object</em></a><em>, </em><em>optional</em>) – UMI extraction object with same attributes
+<li><p><strong>umi_object</strong> (<em>object</em><em>, </em><em>optional</em>) – UMI extraction object with same attributes
 as barcode objects. Defaults to None.</p></li>
 </ul>
 </dd>
@@ -728,13 +744,13 @@ barcode based on expected length matching.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>db_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to DuckDB database file.</p></li>
-<li><p><strong>seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – Input sequence file path(s).</p></li>
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – List of barcode extraction objects.</p></li>
-<li><p><strong>step_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Step identifier for table naming.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to reverse complement sequences.</p></li>
-<li><p><strong>design_file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to design validation file.</p></li>
-<li><p><strong>umi_object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><em>object</em></a><em>, </em><em>optional</em>) – UMI extraction object.</p></li>
+<li><p><strong>db_path</strong> (<em>str</em>) – Path to DuckDB database file.</p></li>
+<li><p><strong>seq_file</strong> (<em>str</em><em> or </em><em>list</em><em>[</em><em>str</em><em>]</em>) – Input sequence file path(s).</p></li>
+<li><p><strong>bc_objects</strong> (<em>list</em>) – List of barcode extraction objects.</p></li>
+<li><p><strong>step_name</strong> (<em>str</em>) – Step identifier for table naming.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether to reverse complement sequences.</p></li>
+<li><p><strong>design_file_path</strong> (<em>str</em>) – Path to design validation file.</p></li>
+<li><p><strong>umi_object</strong> (<em>object</em><em>, </em><em>optional</em>) – UMI extraction object.</p></li>
 </ul>
 </dd>
 </dl>
@@ -767,14 +783,14 @@ Mapping complete.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="trebl_tools.initial_map.InitialMapper.create_test_map">
-<span class="sig-name descname"><span class="pre">create_test_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_n_reads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trebl_tools/initial_map.html#InitialMapper.create_test_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.initial_map.InitialMapper.create_test_map" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_test_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_n_reads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trebl_tools/initial_map.html#InitialMapper.create_test_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.initial_map.InitialMapper.create_test_map" title="Link to this definition"></a></dt>
 <dd><p>Run the mapping pipeline on a limited number of reads for testing.</p>
 <p>Executes the barcode extraction pipeline on a subset of sequences
 for rapid testing and validation. Skips if initial mapping table
 already exists.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>test_n_reads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Maximum number of reads to process
+<dd class="field-odd"><p><strong>test_n_reads</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of reads to process
 for testing. Defaults to 100.</p>
 </dd>
 </dl>
@@ -860,7 +876,7 @@ Creates final table with name pattern: {table_prefix}initial</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If design_file_path is specified but file doesn’t exist.</p>
+<dd class="field-odd"><p><strong>FileNotFoundError</strong> – If design_file_path is specified but file doesn’t exist.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -947,7 +963,7 @@ self.reverse_complement is True.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="trebl_tools.map_refiner.MapRefiner">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">trebl_tools.map_refiner.</span></span><span class="sig-name descname"><span class="pre">MapRefiner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bc_objects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_pairs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reads_threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_figures_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_fraction_major_target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manual_ec_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">umi_object</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trebl_tools/map_refiner.html#MapRefiner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.map_refiner.MapRefiner" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Refine and filter sequencing maps generated by InitialMapper.</p>
 <p>This class provides a flexible pipeline for processing barcode mapping tables
 through multiple sequential filtering steps including quality control, error
@@ -955,23 +971,23 @@ correction, read count thresholding, and target uniqueness filtering.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>db_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the DuckDB database containing mapping tables.</p></li>
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of barcode objects with extraction parameters.</p></li>
-<li><p><strong>column_pairs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>]</em>) – List of (key_columns, target_columns) tuples
+<li><p><strong>db_path</strong> (<em>str</em>) – Path to the DuckDB database containing mapping tables.</p></li>
+<li><p><strong>bc_objects</strong> (<em>list</em><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of barcode objects with extraction parameters.</p></li>
+<li><p><strong>column_pairs</strong> (<em>list</em><em>[</em><em>tuple</em><em>]</em>) – List of (key_columns, target_columns) tuples
 for unique target filtering. Each element can be a string or list of strings.</p></li>
-<li><p><strong>reads_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Minimum read count threshold for filtering.</p></li>
-<li><p><strong>map_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – Custom order of processing steps. If None,
+<li><p><strong>reads_threshold</strong> (<em>int</em>) – Minimum read count threshold for filtering.</p></li>
+<li><p><strong>map_order</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Custom order of processing steps. If None,
 prompts user to select from default steps. Defaults to None.</p></li>
-<li><p><strong>step_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Identifier for this processing step. Defaults to “”.</p></li>
-<li><p><strong>descriptor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Additional descriptor for table naming. Defaults to “”.</p></li>
-<li><p><strong>design_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Path to design file for validation. Defaults to None.</p></li>
-<li><p><strong>output_figures_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Directory for saving plots and outputs.
+<li><p><strong>step_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Identifier for this processing step. Defaults to “”.</p></li>
+<li><p><strong>descriptor</strong> (<em>str</em><em>, </em><em>optional</em>) – Additional descriptor for table naming. Defaults to “”.</p></li>
+<li><p><strong>design_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to design file for validation. Defaults to None.</p></li>
+<li><p><strong>output_figures_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory for saving plots and outputs.
 Defaults to None.</p></li>
-<li><p><strong>min_fraction_major_target</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Minimum fraction of reads that
+<li><p><strong>min_fraction_major_target</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimum fraction of reads that
 must come from the most abundant target. Defaults to 0.9.</p></li>
-<li><p><strong>manual_ec_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to manually set error correction
+<li><p><strong>manual_ec_threshold</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to manually set error correction
 threshold instead of automatic detection. Defaults to True.</p></li>
-<li><p><strong>umi_object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><em>object</em></a><em>, </em><em>optional</em>) – UMI extraction object. Defaults to None.</p></li>
+<li><p><strong>umi_object</strong> (<em>object</em><em>, </em><em>optional</em>) – UMI extraction object. Defaults to None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1020,18 +1036,18 @@ for processing step order if not provided.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>db_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to DuckDB database.</p></li>
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects for processing.</p></li>
-<li><p><strong>column_pairs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Key-target column pairs for filtering.</p></li>
-<li><p><strong>reads_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Minimum read count threshold.</p></li>
-<li><p><strong>map_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>, </em><em>optional</em>) – Custom processing step order.</p></li>
-<li><p><strong>step_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Processing step identifier.</p></li>
-<li><p><strong>descriptor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Additional table name descriptor.</p></li>
-<li><p><strong>design_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Path to validation design file.</p></li>
-<li><p><strong>output_figures_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Output directory for plots.</p></li>
-<li><p><strong>min_fraction_major_target</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Fraction threshold for target filtering.</p></li>
-<li><p><strong>manual_ec_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Use manual error correction threshold.</p></li>
-<li><p><strong>umi_object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><em>object</em></a><em>, </em><em>optional</em>) – UMI extraction object.</p></li>
+<li><p><strong>db_path</strong> (<em>str</em>) – Path to DuckDB database.</p></li>
+<li><p><strong>bc_objects</strong> (<em>list</em>) – Barcode objects for processing.</p></li>
+<li><p><strong>column_pairs</strong> (<em>list</em>) – Key-target column pairs for filtering.</p></li>
+<li><p><strong>reads_threshold</strong> (<em>int</em>) – Minimum read count threshold.</p></li>
+<li><p><strong>map_order</strong> (<em>list</em><em>, </em><em>optional</em>) – Custom processing step order.</p></li>
+<li><p><strong>step_name</strong> (<em>str</em>) – Processing step identifier.</p></li>
+<li><p><strong>descriptor</strong> (<em>str</em>) – Additional table name descriptor.</p></li>
+<li><p><strong>design_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to validation design file.</p></li>
+<li><p><strong>output_figures_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Output directory for plots.</p></li>
+<li><p><strong>min_fraction_major_target</strong> (<em>float</em>) – Fraction threshold for target filtering.</p></li>
+<li><p><strong>manual_ec_threshold</strong> (<em>bool</em>) – Use manual error correction threshold.</p></li>
+<li><p><strong>umi_object</strong> (<em>object</em><em>, </em><em>optional</em>) – UMI extraction object.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1047,8 +1063,8 @@ Recalculates quality flags and design validation after correction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Directory for temporary files and whitelist outputs.</p></li>
-<li><p><strong>prev_table</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the previous table to correct.</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory for temporary files and whitelist outputs.</p></li>
+<li><p><strong>prev_table</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the previous table to correct.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1077,7 +1093,7 @@ forms. Removes temporary FASTQ file after processing.</p>
 contains only whitespace, ensuring all required barcodes are present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>previous_table</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the previous table to filter.
+<dd class="field-odd"><p><strong>previous_table</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the previous table to filter.
 Defaults to “initial”.</p>
 </dd>
 </dl>
@@ -1095,13 +1111,13 @@ Defaults to “initial”.</p>
 <dd><p>Check if a table exists and determine if processing should be skipped.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>check_table_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Full table name to check for existence.</p>
+<dd class="field-odd"><p><strong>check_table_name</strong> (<em>str</em>) – Full table name to check for existence.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if table exists and processing should be skipped, False otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1131,7 +1147,7 @@ further operations on a closed connection.</p>
 the barcode combination matches the designed library.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>previous_table</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the previous table to filter.
+<dd class="field-odd"><p><strong>previous_table</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the previous table to filter.
 Defaults to “quality”.</p>
 </dd>
 </dl>
@@ -1153,7 +1169,7 @@ barcode sequences, applies UMI-tools whitelist algorithm, and updates
 the database with canonical (error-corrected) barcode sequences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>previous_table</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the previous table to correct.
+<dd class="field-odd"><p><strong>previous_table</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the previous table to correct.
 Defaults to “quality”.</p>
 </dd>
 </dl>
@@ -1182,7 +1198,7 @@ with the number of occurrences for each combination. Optionally generates
 a read count distribution histogram.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>previous_table</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the previous table to group.
+<dd class="field-odd"><p><strong>previous_table</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the previous table to group.
 Defaults to “quality_designed”.</p>
 </dd>
 </dl>
@@ -1207,7 +1223,7 @@ Generates histogram plot if output_figures_path is specified.</p>
 This serves as the starting point for all subsequent processing steps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parquet_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the Parquet file containing initial mapping data.</p>
+<dd class="field-odd"><p><strong>parquet_path</strong> (<em>str</em>) – Path to the Parquet file containing initial mapping data.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1230,7 +1246,7 @@ This serves as the starting point for all subsequent processing steps.</p>
 if present) are TRUE, indicating successful extraction with expected lengths.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>previous_table</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the previous table to filter.
+<dd class="field-odd"><p><strong>previous_table</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the previous table to filter.
 Defaults to “initial”.</p>
 </dd>
 </dl>
@@ -1256,7 +1272,7 @@ Prompts user for threshold if not already set. Optionally generates a
 histogram showing the threshold cutoff.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>previous_table</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the previous table to threshold.</p>
+<dd class="field-odd"><p><strong>previous_table</strong> (<em>str</em>) – Name of the previous table to threshold.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1282,13 +1298,13 @@ most abundant target accounts for at least min_fraction_major_target
 of reads. This ensures that each key maps predominantly to a single target.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>previous_table</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the previous table to filter.</p>
+<dd class="field-odd"><p><strong>previous_table</strong> (<em>str</em>) – Name of the previous table to filter.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Name of the created filtered table.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1319,11 +1335,11 @@ all quality checks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Directory to save FASTQ.
+<li><p><strong>output_dir</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Directory to save FASTQ.
 Defaults to current directory.</p></li>
-<li><p><strong>suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix for FASTQ filename.
+<li><p><strong>suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix for FASTQ filename.
 Defaults to “_barcodes_extracted.fastq”.</p></li>
-<li><p><strong>prev_table</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the previous table to use.
+<li><p><strong>prev_table</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the previous table to use.
 Defaults to “quality”.</p></li>
 </ul>
 </dd>
@@ -1331,7 +1347,7 @@ Defaults to “quality”.</p></li>
 <dd class="field-even"><p>Path to the generated FASTQ file.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1357,8 +1373,8 @@ non-prefixed table names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>map_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Base name of the table to retrieve.</p></li>
-<li><p><strong>insert_prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to try prefixed name first.
+<li><p><strong>map_name</strong> (<em>str</em>) – Base name of the table to retrieve.</p></li>
+<li><p><strong>insert_prefix</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to try prefixed name first.
 Defaults to True.</p></li>
 </ul>
 </dd>
@@ -1385,7 +1401,7 @@ against a design file. Sets Designed=1 for sequences that match the
 design library, Designed=0 otherwise.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>prev_table</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the table to update.
+<dd class="field-odd"><p><strong>prev_table</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the table to update.
 Defaults to “seq”.</p>
 </dd>
 </dl>
@@ -1413,8 +1429,8 @@ correction performance metrics using pre-computed summary data.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>summary_df</strong> (<em>pd.DataFrame</em>) – DataFrame with error correction summary data.
 Must contain columns: [‘canonical’, ‘num_merged’, ‘largest_count’, ‘rest_count’].</p></li>
-<li><p><strong>n_cols</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of panels per row. Defaults to 4.</p></li>
-<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Figure resolution in dots per inch. Defaults to 300.</p></li>
+<li><p><strong>n_cols</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of panels per row. Defaults to 4.</p></li>
+<li><p><strong>dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – Figure resolution in dots per inch. Defaults to 300.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1446,9 +1462,9 @@ by reading whitelist files and generating summary statistics and plots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>save_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Directory to save plot outputs.
+<li><p><strong>save_dir</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Directory to save plot outputs.
 If None, uses output_figures_path. Defaults to None.</p></li>
-<li><p><strong>plot</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to generate and save plots.
+<li><p><strong>plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to generate and save plots.
 Defaults to True.</p></li>
 </ul>
 </dd>
@@ -1486,10 +1502,10 @@ at each processing step, with options for background bars and count labels.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em><em>, </em><em>optional</em>) – Existing axis to plot on.
 If None, creates new figure. Defaults to None.</p></li>
-<li><p><strong>palette</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Seaborn color palette name. Defaults to “rocket_r”.</p></li>
-<li><p><strong>text_offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Vertical offset for count labels.
+<li><p><strong>palette</strong> (<em>str</em><em>, </em><em>optional</em>) – Seaborn color palette name. Defaults to “rocket_r”.</p></li>
+<li><p><strong>text_offset</strong> (<em>float</em><em>, </em><em>optional</em>) – Vertical offset for count labels.
 Defaults to 0.</p></li>
-<li><p><strong>show_background</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to show background bars for
+<li><p><strong>show_background</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to show background bars for
 total reads with reduced opacity. Defaults to True.</p></li>
 </ul>
 </dd>
@@ -1497,7 +1513,7 @@ total reads with reduced opacity. Defaults to True.</p></li>
 <dd class="field-even"><p>(fig, ax) matplotlib Figure and Axes objects.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1522,8 +1538,8 @@ for barcode combinations in the specified table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>previous_table</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the table to plot.</p></li>
-<li><p><strong>save_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Path to save the plot. Defaults to None.</p></li>
+<li><p><strong>previous_table</strong> (<em>str</em>) – Name of the table to plot.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save the plot. Defaults to None.</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em><em>, </em><em>optional</em>) – Existing axis to plot on.
 Defaults to None.</p></li>
 <li><p><strong>**kwargs</strong> – Additional arguments passed to the plotting function.</p></li>
@@ -1553,9 +1569,9 @@ Each step creates a new table based on the previous step’s output.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>save_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Name for final output table. If provided,
+<li><p><strong>save_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name for final output table. If provided,
 creates a copy of the final result with this name. Defaults to None.</p></li>
-<li><p><strong>should_check_exists</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to skip processing if
+<li><p><strong>should_check_exists</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to skip processing if
 tables already exist. Defaults to False.</p></li>
 </ul>
 </dd>
@@ -1628,8 +1644,8 @@ Step descriptions are defined in the internal map_info_dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>map_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the table to save.</p></li>
-<li><p><strong>map_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path where CSV file should be saved.</p></li>
+<li><p><strong>map_name</strong> (<em>str</em>) – Name of the table to save.</p></li>
+<li><p><strong>map_path</strong> (<em>str</em>) – Path where CSV file should be saved.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1648,7 +1664,7 @@ Step descriptions are defined in the internal map_info_dict.</p>
 <dd class="field-odd"><p>List of tuples containing table names in the database.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+<dd class="field-even"><p>list</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1666,7 +1682,7 @@ Step descriptions are defined in the internal map_info_dict.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="trebl_tools.pipelines.TreblPipeline">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">trebl_tools.pipelines.</span></span><span class="sig-name descname"><span class="pre">TreblPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_correction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_n_reads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trebl_tools/pipelines.html#TreblPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.pipelines.TreblPipeline" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>End-to-end TREBL analysis pipeline orchestrator.</p>
 <p>This class coordinates the complete TREBL workflow including initial barcode
 mapping, quality filtering, error correction, UMI deduplication, and activity
@@ -1675,16 +1691,16 @@ experimental analyses with multiple samples and replicates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>db_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the DuckDB database file. Will be created if
+<li><p><strong>db_path</strong> (<em>str</em>) – Path to the DuckDB database file. Will be created if
 it doesn’t exist.</p></li>
-<li><p><strong>design_file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>None</em>) – Path to the design validation file.
+<li><p><strong>design_file_path</strong> (<em>str</em><em> or </em><em>None</em>) – Path to the design validation file.
 If None, design-based filtering is skipped throughout the pipeline.</p></li>
-<li><p><strong>error_correction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to enable UMI-tools based
+<li><p><strong>error_correction</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to enable UMI-tools based
 error correction during refinement steps. Defaults to False.</p></li>
-<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Output directory for results,
+<li><p><strong>output_path</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Output directory for results,
 figures, and intermediate files. If None, results are not saved
 to disk. Defaults to None.</p></li>
-<li><p><strong>test_n_reads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If set to an integer, limits
+<li><p><strong>test_n_reads</strong> (<em>int</em><em> or </em><em>bool</em><em>, </em><em>optional</em>) – If set to an integer, limits
 initial mapping to the first N reads for rapid testing/debugging.
 If False, processes all reads. Defaults to False.</p></li>
 </ul>
@@ -1744,16 +1760,16 @@ is provided.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>db_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the DuckDB database file. Will be created if
+<li><p><strong>db_path</strong> (<em>str</em>) – Path to the DuckDB database file. Will be created if
 it doesn’t exist.</p></li>
-<li><p><strong>design_file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>None</em>) – Path to the design validation file.
+<li><p><strong>design_file_path</strong> (<em>str</em><em> or </em><em>None</em>) – Path to the design validation file.
 If None, design-based filtering is skipped throughout the pipeline.</p></li>
-<li><p><strong>error_correction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to enable UMI-tools based
+<li><p><strong>error_correction</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to enable UMI-tools based
 error correction during refinement steps. Defaults to False.</p></li>
-<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Output directory for results,
+<li><p><strong>output_path</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Output directory for results,
 figures, and intermediate files. If None, results are not saved
 to disk. Defaults to None.</p></li>
-<li><p><strong>test_n_reads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If set to an integer, limits
+<li><p><strong>test_n_reads</strong> (<em>int</em><em> or </em><em>bool</em><em>, </em><em>optional</em>) – If set to an integer, limits
 initial mapping to the first N reads for rapid testing/debugging.
 If False, processes all reads. Defaults to False.</p></li>
 </ul>
@@ -1778,16 +1794,16 @@ averaged activity and summed activity calculations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>step1_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the Step 1 mapping CSV file containing the
+<li><p><strong>step1_path</strong> (<em>str</em>) – Path to the Step 1 mapping CSV file containing the
 canonical barcode-to-gene relationships.</p></li>
-<li><p><strong>AD_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of AD barcode objects with <cite>.name</cite>
+<li><p><strong>AD_bc_objects</strong> (<em>list</em><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of AD barcode objects with <cite>.name</cite>
 attributes corresponding to columns in the Step 1 mapping.</p></li>
-<li><p><strong>RT_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of RT barcode objects with <cite>.name</cite>
+<li><p><strong>RT_bc_objects</strong> (<em>list</em><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of RT barcode objects with <cite>.name</cite>
 attributes for reporter identification.</p></li>
-<li><p><strong>time_regex</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Regular expression to extract timepoint values from
+<li><p><strong>time_regex</strong> (<em>str</em>) – Regular expression to extract timepoint values from
 sample names. Should contain a capture group for the time value.
 Example: r”(d+)h” for “2h”, r”t(d+)” for “t24”.</p></li>
-<li><p><strong>rep_regex</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Regular expression to extract replicate identifiers
+<li><p><strong>rep_regex</strong> (<em>str</em>) – Regular expression to extract replicate identifiers
 from sample names. Should contain a capture group for replicate number.
 Example: r”rep(d+)” for “rep1”, r”r(d+)” for “r2”.</p></li>
 </ul>
@@ -1879,9 +1895,9 @@ GENE1  1      0.45  0.12  0.52    1.23  0.34  1.15    2.10  0.67  1.98</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If regex patterns fail to match sample names</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If required input CSV files are not found</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.14)"><strong>KeyError</strong></a> – If expected columns are missing from input files</p></li>
+<li><p><strong>ValueError</strong> – If regex patterns fail to match sample names</p></li>
+<li><p><strong>FileNotFoundError</strong> – If required input CSV files are not found</p></li>
+<li><p><strong>KeyError</strong> – If expected columns are missing from input files</p></li>
 </ul>
 </dd>
 </dl>
@@ -1904,11 +1920,11 @@ returned as Matplotlib figure and axes objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – List of barcode objects to evaluate.</p></li>
-<li><p><strong>step1_map_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the Step 1 DuckDB table used to
+<li><p><strong>bc_objects</strong> (<em>list</em>) – List of barcode objects to evaluate.</p></li>
+<li><p><strong>step1_map_name</strong> (<em>str</em>) – Name of the Step 1 DuckDB table used to
 calculate overlap with mapped barcodes.</p></li>
-<li><p><strong>step_name_prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Prefix used to identify TREBL
-experiment tables in DuckDB. Defaults to “<a href="#id3"><span class="problematic" id="id4">trebl_experiment_</span></a>”.</p></li>
+<li><p><strong>step_name_prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – Prefix used to identify TREBL
+experiment tables in DuckDB. Defaults to “<a href="#id4"><span class="problematic" id="id5">trebl_experiment_</span></a>”.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1923,7 +1939,7 @@ Returns None, None if no matching tables are found.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1938,12 +1954,12 @@ This analysis helps determine appropriate read count thresholds for filtering.</
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to FASTQ file containing sequences for analysis.</p></li>
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – Barcode objects defining extraction patterns
+<li><p><strong>seq_file</strong> (<em>str</em>) – Path to FASTQ file containing sequences for analysis.</p></li>
+<li><p><strong>bc_objects</strong> (<em>list</em><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – Barcode objects defining extraction patterns
 and expected lengths for the library.</p></li>
-<li><p><strong>step_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Step identifier used for DuckDB table naming and
+<li><p><strong>step_name</strong> (<em>str</em>) – Step identifier used for DuckDB table naming and
 plot titles.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether sequences should be reverse
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether sequences should be reverse
 complemented prior to barcode extraction.</p></li>
 </ul>
 </dd>
@@ -1975,9 +1991,9 @@ and outputs the final designed map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file containing Step 1 reads.</p></li>
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects defining extraction rules.</p></li>
-<li><p><strong>column_pairs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>]</em>) – <p>Column-pair checks used
+<li><p><strong>seq_file</strong> (<em>str</em>) – FASTQ file containing Step 1 reads.</p></li>
+<li><p><strong>bc_objects</strong> (<em>list</em>) – Barcode objects defining extraction rules.</p></li>
+<li><p><strong>column_pairs</strong> (<em>list</em><em>[</em><em>tuple</em><em>]</em>) – <p>Column-pair checks used
 to remove barcode collisions.</p>
 <p>Each tuple has the form:</p>
 <blockquote>
@@ -2019,12 +2035,12 @@ with ≥90% of reads. Ambiguous key combinations are removed.</p>
 <p>]</p>
 </div></blockquote>
 </p></li>
-<li><p><strong>reads_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Minimum number of reads required for a
+<li><p><strong>reads_threshold</strong> (<em>int</em>) – Minimum number of reads required for a
 barcode or barcode pair to be kept.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether reads should be
+<li><p><strong>reverse_complement</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether reads should be
 reverse complemented prior to barcode extraction.
 Defaults to False.</p></li>
-<li><p><strong>step_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – <p>Suffix appended to the step name
+<li><p><strong>step_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Suffix appended to the step name
 for DuckDB table naming. This is useful when you want
 to distinguish multiple runs or subsets of the same step.</p>
 <p class="rubric">Example</p>
@@ -2053,15 +2069,15 @@ overlap with the Step 1 map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>AD_seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file containing AD reads.</p></li>
-<li><p><strong>AD_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects for ADs.</p></li>
-<li><p><strong>RT_seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file containing RT reads.</p></li>
-<li><p><strong>RT_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects for reporters.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to reverse complement reads.</p></li>
-<li><p><strong>reads_threshold_AD</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Minimum reads per AD barcode.</p></li>
-<li><p><strong>reads_threshold_RT</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Minimum reads per RT barcode.</p></li>
-<li><p><strong>step1_map_csv_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the Step 1 map CSV file.</p></li>
-<li><p><strong>step_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
+<li><p><strong>AD_seq_file</strong> (<em>str</em>) – FASTQ file containing AD reads.</p></li>
+<li><p><strong>AD_bc_objects</strong> (<em>list</em>) – Barcode objects for ADs.</p></li>
+<li><p><strong>RT_seq_file</strong> (<em>str</em>) – FASTQ file containing RT reads.</p></li>
+<li><p><strong>RT_bc_objects</strong> (<em>list</em>) – Barcode objects for reporters.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether to reverse complement reads.</p></li>
+<li><p><strong>reads_threshold_AD</strong> (<em>int</em>) – Minimum reads per AD barcode.</p></li>
+<li><p><strong>reads_threshold_RT</strong> (<em>int</em>) – Minimum reads per RT barcode.</p></li>
+<li><p><strong>step1_map_csv_path</strong> (<em>str</em>) – Path to the Step 1 map CSV file.</p></li>
+<li><p><strong>step_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -2076,7 +2092,7 @@ overlap with the Step 1 map.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2088,10 +2104,10 @@ overlap with the Step 1 map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file path.</p></li>
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to reverse complement reads.</p></li>
-<li><p><strong>step_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
+<li><p><strong>seq_file</strong> (<em>str</em>) – FASTQ file path.</p></li>
+<li><p><strong>bc_objects</strong> (<em>list</em>) – Barcode objects.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether to reverse complement reads.</p></li>
+<li><p><strong>step_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2104,12 +2120,12 @@ overlap with the Step 1 map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>AD_seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file for AD reads.</p></li>
-<li><p><strong>AD_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – AD barcode objects.</p></li>
-<li><p><strong>RT_seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file for RT reads.</p></li>
-<li><p><strong>RT_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – RT barcode objects.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to reverse complement reads.</p></li>
-<li><p><strong>step_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
+<li><p><strong>AD_seq_file</strong> (<em>str</em>) – FASTQ file for AD reads.</p></li>
+<li><p><strong>AD_bc_objects</strong> (<em>list</em>) – AD barcode objects.</p></li>
+<li><p><strong>RT_seq_file</strong> (<em>str</em>) – FASTQ file for RT reads.</p></li>
+<li><p><strong>RT_bc_objects</strong> (<em>list</em>) – RT barcode objects.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether to reverse complement reads.</p></li>
+<li><p><strong>step_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2125,18 +2141,18 @@ is enabled, results from simple and/or directional/complex deduplication are mer
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>AD_seq_files</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – Paths to FASTQ files for AD library reads.</p></li>
-<li><p><strong>AD_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects for AD library extraction.</p></li>
-<li><p><strong>RT_seq_files</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – Paths to FASTQ files for reporter (RT) reads.</p></li>
-<li><p><strong>RT_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects for reporter library extraction.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether reads should be reverse complemented prior to barcode extraction.</p></li>
-<li><p><strong>step1_map_csv_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Path to Step 1 map CSV for computing overlap plots.</p></li>
+<li><p><strong>AD_seq_files</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Paths to FASTQ files for AD library reads.</p></li>
+<li><p><strong>AD_bc_objects</strong> (<em>list</em>) – Barcode objects for AD library extraction.</p></li>
+<li><p><strong>RT_seq_files</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Paths to FASTQ files for reporter (RT) reads.</p></li>
+<li><p><strong>RT_bc_objects</strong> (<em>list</em>) – Barcode objects for reporter library extraction.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether reads should be reverse complemented prior to barcode extraction.</p></li>
+<li><p><strong>step1_map_csv_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to Step 1 map CSV for computing overlap plots.</p></li>
 <li><p><strong>AD_umi_object</strong> (<em>optional</em>) – UMI object for AD library. If provided, triggers UMI deduplication.</p></li>
 <li><p><strong>RT_umi_object</strong> (<em>optional</em>) – UMI object for RT library. If provided, triggers UMI deduplication.</p></li>
-<li><p><strong>reads_threshold_AD</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum reads per AD barcode to retain. Defaults to 1.</p></li>
-<li><p><strong>reads_threshold_RT</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum reads per RT barcode to retain. Defaults to 1.</p></li>
-<li><p><strong>step_name_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix for DuckDB table and output names.</p></li>
-<li><p><strong>umi_deduplication</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – <p>Deduplication mode for both AD and RT libraries.
+<li><p><strong>reads_threshold_AD</strong> (<em>int</em><em>, </em><em>optional</em>) – Minimum reads per AD barcode to retain. Defaults to 1.</p></li>
+<li><p><strong>reads_threshold_RT</strong> (<em>int</em><em>, </em><em>optional</em>) – Minimum reads per RT barcode to retain. Defaults to 1.</p></li>
+<li><p><strong>step_name_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix for DuckDB table and output names.</p></li>
+<li><p><strong>umi_deduplication</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Deduplication mode for both AD and RT libraries.
 Options:</p>
 <blockquote>
 <div><ul>
@@ -2158,7 +2174,7 @@ Options:</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -2184,12 +2200,12 @@ Options:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>AD_seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file for AD reads.</p></li>
-<li><p><strong>AD_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – AD barcode objects.</p></li>
-<li><p><strong>RT_seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file for RT reads.</p></li>
-<li><p><strong>RT_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – RT barcode objects.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to reverse complement reads.</p></li>
-<li><p><strong>step_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
+<li><p><strong>AD_seq_file</strong> (<em>str</em>) – FASTQ file for AD reads.</p></li>
+<li><p><strong>AD_bc_objects</strong> (<em>list</em>) – AD barcode objects.</p></li>
+<li><p><strong>RT_seq_file</strong> (<em>str</em>) – FASTQ file for RT reads.</p></li>
+<li><p><strong>RT_bc_objects</strong> (<em>list</em>) – RT barcode objects.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether to reverse complement reads.</p></li>
+<li><p><strong>step_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2212,9 +2228,9 @@ and read count relationships between canonical and collapsed sequences.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>summary_df</strong> (<em>pd.DataFrame</em>) – DataFrame with error correction summary data.
 Must contain columns: [‘canonical’, ‘num_merged’, ‘largest_count’, ‘rest_count’].</p></li>
-<li><p><strong>n_cols</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of panels per row. Currently fixed at 4
+<li><p><strong>n_cols</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of panels per row. Currently fixed at 4
 for the standard panel layout. Defaults to 4.</p></li>
-<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Figure resolution in dots per inch. Defaults to 300.</p></li>
+<li><p><strong>dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – Figure resolution in dots per inch. Defaults to 300.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -2262,10 +2278,10 @@ plots showing before/after sequence counts and correction statistics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>output_figures_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – Directory containing whitelist files
+<li><p><strong>output_figures_path</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory containing whitelist files
 and where output plots will be saved.</p></li>
-<li><p><strong>table_prefix_with_descriptor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Prefix for output filenames.</p></li>
-<li><p><strong>plot</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to generate and save plots.
+<li><p><strong>table_prefix_with_descriptor</strong> (<em>str</em>) – Prefix for output filenames.</p></li>
+<li><p><strong>plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to generate and save plots.
 Defaults to True.</p></li>
 </ul>
 </dd>
@@ -2288,7 +2304,7 @@ Defaults to True.</p></li>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If no whitelist files (<a href="#id1"><span class="problematic" id="id2">*</span></a>_whitelist.txt) are found
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – If no whitelist files (<a href="#id2"><span class="problematic" id="id3">*</span></a>_whitelist.txt) are found
     in the specified directory.</p>
 </dd>
 </dl>
@@ -2322,14 +2338,14 @@ the difference between total and unique counts.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em><em> or </em><em>None</em>) – Existing axis to plot on. If None,
 a new figure is created.</p></li>
-<li><p><strong>palette</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of seaborn color palette to use for bars.</p></li>
-<li><p><strong>text_offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Vertical offset for read count labels to avoid overlap.</p></li>
-<li><p><strong>show_background</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to show background bars for total reads
+<li><p><strong>palette</strong> (<em>str</em>) – Name of seaborn color palette to use for bars.</p></li>
+<li><p><strong>text_offset</strong> (<em>float</em>) – Vertical offset for read count labels to avoid overlap.</p></li>
+<li><p><strong>show_background</strong> (<em>bool</em>) – Whether to show background bars for total reads
 with reduced alpha transparency.</p></li>
-<li><p><strong>default_map_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Ordered list of pipeline step names for
+<li><p><strong>default_map_order</strong> (<em>list</em>) – Ordered list of pipeline step names for
 consistent color mapping across plots.</p></li>
-<li><p><strong>output_figures_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Directory path where plot will be saved.</p></li>
-<li><p><strong>table_prefix_with_descriptor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Prefix for output filename.</p></li>
+<li><p><strong>output_figures_path</strong> (<em>str</em>) – Directory path where plot will be saved.</p></li>
+<li><p><strong>table_prefix_with_descriptor</strong> (<em>str</em>) – Prefix for output filename.</p></li>
 <li><p><strong>df</strong> (<em>pd.DataFrame</em>) – DataFrame with columns:
 - description: Step descriptions for y-axis labels
 - map: Pipeline step names for color mapping
@@ -2341,7 +2357,7 @@ consistent color mapping across plots.</p></li>
 <dd class="field-even"><p>(fig, ax) matplotlib Figure and Axes objects.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -2376,7 +2392,7 @@ dynamic ranges typical in sequencing data.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>map_df</strong> (<em>pd.DataFrame</em>) – DataFrame containing at least a “count” column
 with read count values.</p></li>
-<li><p><strong>save_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Path to save the figure. If None, figure
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save the figure. If None, figure
 is not saved. Defaults to None.</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em><em>, </em><em>optional</em>) – Existing axis to plot on. If None,
 a new figure is created. Defaults to None.</p></li>
@@ -2409,7 +2425,7 @@ a new figure is created. Defaults to None.</p></li>
 passed and filtered for each sample.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Directory containing the logs subdirectory with .out files.</p>
+<dd class="field-odd"><p><strong>output_dir</strong> (<em>str</em>) – Directory containing the logs subdirectory with .out files.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
@@ -2450,8 +2466,8 @@ Log files should be in output_dir/logs/ and end with .out extension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>seq_files</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – List of file paths or single file path.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to apply reverse complement to sequences.</p></li>
+<li><p><strong>seq_files</strong> (<em>list</em><em> of </em><em>str</em><em> or </em><em>str</em>) – List of file paths or single file path.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether to apply reverse complement to sequences.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -2474,13 +2490,13 @@ Other extensions are treated as plain text files with one sequence per line.</p>
 <dd><p>Return the reverse complement of a DNA sequence.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>seq</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – DNA sequence string.</p>
+<dd class="field-odd"><p><strong>seq</strong> (<em>str</em>) – DNA sequence string.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Reverse complement of the input sequence.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -2492,7 +2508,7 @@ Other extensions are treated as plain text files with one sequence per line.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="trebl_tools.preprocess.reverse_complement_series">
-<span class="sig-prename descclassname"><span class="pre">trebl_tools.preprocess.</span></span><span class="sig-name descname"><span class="pre">reverse_complement_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v3.0.0)"><span class="pre">pandas.Series</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v3.0.0)"><span class="pre">pandas.Series</span></a></span></span><a class="reference internal" href="_modules/trebl_tools/preprocess.html#reverse_complement_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.preprocess.reverse_complement_series" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">trebl_tools.preprocess.</span></span><span class="sig-name descname"><span class="pre">reverse_complement_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.Series</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.Series</span></span></span><a class="reference internal" href="_modules/trebl_tools/preprocess.html#reverse_complement_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.preprocess.reverse_complement_series" title="Link to this definition"></a></dt>
 <dd><p>Return the reverse complement of a pandas Series of DNA sequences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2530,16 +2546,16 @@ as .fastq files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to folder containing .fastq.gz files.</p></li>
-<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to folder where output should be written.</p></li>
-<li><p><strong>script_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Path to the existing fastp.sh script.
+<li><p><strong>input_dir</strong> (<em>str</em>) – Path to folder containing .fastq.gz files.</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em>) – Path to folder where output should be written.</p></li>
+<li><p><strong>script_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the existing fastp.sh script.
 Defaults to “savio_jobs/fastp.sh”.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If the script_path does not exist.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If no .fastq.gz files are found in input_dir.</p></li>
+<li><p><strong>FileNotFoundError</strong> – If the script_path does not exist.</p></li>
+<li><p><strong>ValueError</strong> – If no .fastq.gz files are found in input_dir.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2562,7 +2578,7 @@ Defaults to “savio_jobs/fastp.sh”.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> (<em>dask.DataFrame</em>) – DataFrame to save.</p></li>
-<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path where the Parquet file will be saved.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path where the Parquet file will be saved.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -2590,9 +2606,9 @@ gzipped FASTQ files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>infile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Input FASTQ or FASTQ.GZ file path.</p></li>
-<li><p><strong>outfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Output text file path (1 sequence per line).</p></li>
-<li><p><strong>chunk_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of lines to read at once.
+<li><p><strong>infile</strong> (<em>str</em>) – Input FASTQ or FASTQ.GZ file path.</p></li>
+<li><p><strong>outfile</strong> (<em>str</em>) – Output text file path (1 sequence per line).</p></li>
+<li><p><strong>chunk_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of lines to read at once.
 Must be multiple of 4. Defaults to 400000.</p></li>
 </ul>
 </dd>
@@ -2635,7 +2651,7 @@ Must be multiple of 4. Defaults to 400000.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="trebl_tools.umi_deduplicate.UMIDeduplicator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">trebl_tools.umi_deduplicate.</span></span><span class="sig-name descname"><span class="pre">UMIDeduplicator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bc_objects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step1_map_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fastq_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refined_map_suffix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trebl_tools/umi_deduplicate.html#UMIDeduplicator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.umi_deduplicate.UMIDeduplicator" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Unified UMI Deduplication class combining simple counts and full UMI-tools pipeline.</p>
 <p>This class provides comprehensive UMI (Unique Molecular Identifier) deduplication
 functionality, supporting both simple counting methods and advanced UMI-tools
@@ -2643,14 +2659,14 @@ directional deduplication workflows.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>db_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the DuckDB database file.</p></li>
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – List of barcode objects with name and length attributes.</p></li>
-<li><p><strong>step_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name identifier for this processing step.</p></li>
-<li><p><strong>descriptor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Additional descriptor for table naming.</p></li>
-<li><p><strong>step1_map_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the step1 mapping table in the database.</p></li>
-<li><p><strong>fastq_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the input FASTQ file.</p></li>
-<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Directory path for output files.</p></li>
-<li><p><strong>refined_map_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Suffix for the final refined mapping table (last step from map refiner).</p></li>
+<li><p><strong>db_path</strong> (<em>str</em>) – Path to the DuckDB database file.</p></li>
+<li><p><strong>bc_objects</strong> (<em>list</em>) – List of barcode objects with name and length attributes.</p></li>
+<li><p><strong>step_name</strong> (<em>str</em>) – Name identifier for this processing step.</p></li>
+<li><p><strong>descriptor</strong> (<em>str</em>) – Additional descriptor for table naming.</p></li>
+<li><p><strong>step1_map_name</strong> (<em>str</em>) – Name of the step1 mapping table in the database.</p></li>
+<li><p><strong>fastq_path</strong> (<em>str</em>) – Path to the input FASTQ file.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – Directory path for output files.</p></li>
+<li><p><strong>refined_map_suffix</strong> (<em>str</em>) – Suffix for the final refined mapping table (last step from map refiner).</p></li>
 </ul>
 </dd>
 </dl>
@@ -2660,7 +2676,7 @@ directional deduplication workflows.</p>
 <dd><p>Path to DuckDB database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2682,7 +2698,7 @@ directional deduplication workflows.</p>
 <dd><p>Barcode objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2693,7 +2709,7 @@ directional deduplication workflows.</p>
 <dd><p>List of barcode column names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2704,7 +2720,7 @@ directional deduplication workflows.</p>
 <dd><p>Processing step identifier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2715,7 +2731,7 @@ directional deduplication workflows.</p>
 <dd><p>Generated prefix for database tables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2726,7 +2742,7 @@ directional deduplication workflows.</p>
 <dd><p>Base filename derived from FASTQ path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2766,7 +2782,7 @@ All intermediate files are automatically cleaned up.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/subprocess.html#subprocess.CalledProcessError" title="(in Python v3.14)"><strong>subprocess.CalledProcessError</strong></a> – If any step in the pipeline fails.</p>
+<dd class="field-odd"><p><strong>subprocess.CalledProcessError</strong> – If any step in the pipeline fails.</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -2820,7 +2836,7 @@ and builds a bowtie2 index for alignment. The FASTA file is removed after
 indexing to save space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix for FASTA filename. Defaults to “_barcodes”.</p>
+<dd class="field-odd"><p><strong>suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix for FASTA filename. Defaults to “_barcodes”.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -2850,7 +2866,7 @@ Used for UMI-tools directional deduplication workflow.</p>
 - Quality scores are placeholder ‘I’ characters</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix for output FASTQ filename.
+<dd class="field-odd"><p><strong>suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix for output FASTQ filename.
 Defaults to “_umi_extracted.fastq”.</p>
 </dd>
 </dl>
@@ -2876,7 +2892,7 @@ Defaults to “_umi_extracted.fastq”.</p>
 table on barcode columns. Renames columns to follow naming conventions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to save merged results to CSV.
+<dd class="field-odd"><p><strong>save</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save merged results to CSV.
 Defaults to True.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -2909,7 +2925,7 @@ Defaults to True.</p>
 table on barcode columns. Filters out quality and designed columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to save results to CSV file.
+<dd class="field-odd"><p><strong>save</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to save results to CSV file.
 Defaults to True.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -3092,7 +3108,7 @@ sets the alias_name attribute to ‘count’ for the count column.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="trebl_tools.TreblPipeline">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">trebl_tools.</span></span><span class="sig-name descname"><span class="pre">TreblPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_correction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_n_reads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trebl_tools/pipelines.html#TreblPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trebl_tools.TreblPipeline" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>End-to-end TREBL analysis pipeline orchestrator.</p>
 <p>This class coordinates the complete TREBL workflow including initial barcode
 mapping, quality filtering, error correction, UMI deduplication, and activity
@@ -3101,16 +3117,16 @@ experimental analyses with multiple samples and replicates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>db_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the DuckDB database file. Will be created if
+<li><p><strong>db_path</strong> (<em>str</em>) – Path to the DuckDB database file. Will be created if
 it doesn’t exist.</p></li>
-<li><p><strong>design_file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>None</em>) – Path to the design validation file.
+<li><p><strong>design_file_path</strong> (<em>str</em><em> or </em><em>None</em>) – Path to the design validation file.
 If None, design-based filtering is skipped throughout the pipeline.</p></li>
-<li><p><strong>error_correction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to enable UMI-tools based
+<li><p><strong>error_correction</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to enable UMI-tools based
 error correction during refinement steps. Defaults to False.</p></li>
-<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Output directory for results,
+<li><p><strong>output_path</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Output directory for results,
 figures, and intermediate files. If None, results are not saved
 to disk. Defaults to None.</p></li>
-<li><p><strong>test_n_reads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If set to an integer, limits
+<li><p><strong>test_n_reads</strong> (<em>int</em><em> or </em><em>bool</em><em>, </em><em>optional</em>) – If set to an integer, limits
 initial mapping to the first N reads for rapid testing/debugging.
 If False, processes all reads. Defaults to False.</p></li>
 </ul>
@@ -3170,16 +3186,16 @@ is provided.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>db_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the DuckDB database file. Will be created if
+<li><p><strong>db_path</strong> (<em>str</em>) – Path to the DuckDB database file. Will be created if
 it doesn’t exist.</p></li>
-<li><p><strong>design_file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>None</em>) – Path to the design validation file.
+<li><p><strong>design_file_path</strong> (<em>str</em><em> or </em><em>None</em>) – Path to the design validation file.
 If None, design-based filtering is skipped throughout the pipeline.</p></li>
-<li><p><strong>error_correction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to enable UMI-tools based
+<li><p><strong>error_correction</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to enable UMI-tools based
 error correction during refinement steps. Defaults to False.</p></li>
-<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Output directory for results,
+<li><p><strong>output_path</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Output directory for results,
 figures, and intermediate files. If None, results are not saved
 to disk. Defaults to None.</p></li>
-<li><p><strong>test_n_reads</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If set to an integer, limits
+<li><p><strong>test_n_reads</strong> (<em>int</em><em> or </em><em>bool</em><em>, </em><em>optional</em>) – If set to an integer, limits
 initial mapping to the first N reads for rapid testing/debugging.
 If False, processes all reads. Defaults to False.</p></li>
 </ul>
@@ -3204,16 +3220,16 @@ averaged activity and summed activity calculations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>step1_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the Step 1 mapping CSV file containing the
+<li><p><strong>step1_path</strong> (<em>str</em>) – Path to the Step 1 mapping CSV file containing the
 canonical barcode-to-gene relationships.</p></li>
-<li><p><strong>AD_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of AD barcode objects with <cite>.name</cite>
+<li><p><strong>AD_bc_objects</strong> (<em>list</em><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of AD barcode objects with <cite>.name</cite>
 attributes corresponding to columns in the Step 1 mapping.</p></li>
-<li><p><strong>RT_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of RT barcode objects with <cite>.name</cite>
+<li><p><strong>RT_bc_objects</strong> (<em>list</em><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – List of RT barcode objects with <cite>.name</cite>
 attributes for reporter identification.</p></li>
-<li><p><strong>time_regex</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Regular expression to extract timepoint values from
+<li><p><strong>time_regex</strong> (<em>str</em>) – Regular expression to extract timepoint values from
 sample names. Should contain a capture group for the time value.
 Example: r”(d+)h” for “2h”, r”t(d+)” for “t24”.</p></li>
-<li><p><strong>rep_regex</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Regular expression to extract replicate identifiers
+<li><p><strong>rep_regex</strong> (<em>str</em>) – Regular expression to extract replicate identifiers
 from sample names. Should contain a capture group for replicate number.
 Example: r”rep(d+)” for “rep1”, r”r(d+)” for “r2”.</p></li>
 </ul>
@@ -3305,9 +3321,9 @@ GENE1  1      0.45  0.12  0.52    1.23  0.34  1.15    2.10  0.67  1.98</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If regex patterns fail to match sample names</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><strong>FileNotFoundError</strong></a> – If required input CSV files are not found</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.14)"><strong>KeyError</strong></a> – If expected columns are missing from input files</p></li>
+<li><p><strong>ValueError</strong> – If regex patterns fail to match sample names</p></li>
+<li><p><strong>FileNotFoundError</strong> – If required input CSV files are not found</p></li>
+<li><p><strong>KeyError</strong> – If expected columns are missing from input files</p></li>
 </ul>
 </dd>
 </dl>
@@ -3330,11 +3346,11 @@ returned as Matplotlib figure and axes objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – List of barcode objects to evaluate.</p></li>
-<li><p><strong>step1_map_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the Step 1 DuckDB table used to
+<li><p><strong>bc_objects</strong> (<em>list</em>) – List of barcode objects to evaluate.</p></li>
+<li><p><strong>step1_map_name</strong> (<em>str</em>) – Name of the Step 1 DuckDB table used to
 calculate overlap with mapped barcodes.</p></li>
-<li><p><strong>step_name_prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Prefix used to identify TREBL
-experiment tables in DuckDB. Defaults to “<a href="#id5"><span class="problematic" id="id6">trebl_experiment_</span></a>”.</p></li>
+<li><p><strong>step_name_prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – Prefix used to identify TREBL
+experiment tables in DuckDB. Defaults to “<a href="#id6"><span class="problematic" id="id7">trebl_experiment_</span></a>”.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -3349,7 +3365,7 @@ Returns None, None if no matching tables are found.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3364,12 +3380,12 @@ This analysis helps determine appropriate read count thresholds for filtering.</
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to FASTQ file containing sequences for analysis.</p></li>
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – Barcode objects defining extraction patterns
+<li><p><strong>seq_file</strong> (<em>str</em>) – Path to FASTQ file containing sequences for analysis.</p></li>
+<li><p><strong>bc_objects</strong> (<em>list</em><em>[</em><a class="reference internal" href="#trebl_tools.finder.Barcode" title="trebl_tools.finder.Barcode"><em>Barcode</em></a><em>]</em>) – Barcode objects defining extraction patterns
 and expected lengths for the library.</p></li>
-<li><p><strong>step_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Step identifier used for DuckDB table naming and
+<li><p><strong>step_name</strong> (<em>str</em>) – Step identifier used for DuckDB table naming and
 plot titles.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether sequences should be reverse
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether sequences should be reverse
 complemented prior to barcode extraction.</p></li>
 </ul>
 </dd>
@@ -3401,9 +3417,9 @@ and outputs the final designed map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file containing Step 1 reads.</p></li>
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects defining extraction rules.</p></li>
-<li><p><strong>column_pairs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>]</em>) – <p>Column-pair checks used
+<li><p><strong>seq_file</strong> (<em>str</em>) – FASTQ file containing Step 1 reads.</p></li>
+<li><p><strong>bc_objects</strong> (<em>list</em>) – Barcode objects defining extraction rules.</p></li>
+<li><p><strong>column_pairs</strong> (<em>list</em><em>[</em><em>tuple</em><em>]</em>) – <p>Column-pair checks used
 to remove barcode collisions.</p>
 <p>Each tuple has the form:</p>
 <blockquote>
@@ -3445,12 +3461,12 @@ with ≥90% of reads. Ambiguous key combinations are removed.</p>
 <p>]</p>
 </div></blockquote>
 </p></li>
-<li><p><strong>reads_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Minimum number of reads required for a
+<li><p><strong>reads_threshold</strong> (<em>int</em>) – Minimum number of reads required for a
 barcode or barcode pair to be kept.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether reads should be
+<li><p><strong>reverse_complement</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether reads should be
 reverse complemented prior to barcode extraction.
 Defaults to False.</p></li>
-<li><p><strong>step_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – <p>Suffix appended to the step name
+<li><p><strong>step_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Suffix appended to the step name
 for DuckDB table naming. This is useful when you want
 to distinguish multiple runs or subsets of the same step.</p>
 <p class="rubric">Example</p>
@@ -3479,15 +3495,15 @@ overlap with the Step 1 map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>AD_seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file containing AD reads.</p></li>
-<li><p><strong>AD_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects for ADs.</p></li>
-<li><p><strong>RT_seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file containing RT reads.</p></li>
-<li><p><strong>RT_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects for reporters.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to reverse complement reads.</p></li>
-<li><p><strong>reads_threshold_AD</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Minimum reads per AD barcode.</p></li>
-<li><p><strong>reads_threshold_RT</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Minimum reads per RT barcode.</p></li>
-<li><p><strong>step1_map_csv_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the Step 1 map CSV file.</p></li>
-<li><p><strong>step_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
+<li><p><strong>AD_seq_file</strong> (<em>str</em>) – FASTQ file containing AD reads.</p></li>
+<li><p><strong>AD_bc_objects</strong> (<em>list</em>) – Barcode objects for ADs.</p></li>
+<li><p><strong>RT_seq_file</strong> (<em>str</em>) – FASTQ file containing RT reads.</p></li>
+<li><p><strong>RT_bc_objects</strong> (<em>list</em>) – Barcode objects for reporters.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether to reverse complement reads.</p></li>
+<li><p><strong>reads_threshold_AD</strong> (<em>int</em>) – Minimum reads per AD barcode.</p></li>
+<li><p><strong>reads_threshold_RT</strong> (<em>int</em>) – Minimum reads per RT barcode.</p></li>
+<li><p><strong>step1_map_csv_path</strong> (<em>str</em>) – Path to the Step 1 map CSV file.</p></li>
+<li><p><strong>step_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -3502,7 +3518,7 @@ overlap with the Step 1 map.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3514,10 +3530,10 @@ overlap with the Step 1 map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file path.</p></li>
-<li><p><strong>bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to reverse complement reads.</p></li>
-<li><p><strong>step_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
+<li><p><strong>seq_file</strong> (<em>str</em>) – FASTQ file path.</p></li>
+<li><p><strong>bc_objects</strong> (<em>list</em>) – Barcode objects.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether to reverse complement reads.</p></li>
+<li><p><strong>step_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
 </ul>
 </dd>
 </dl>
@@ -3530,12 +3546,12 @@ overlap with the Step 1 map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>AD_seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file for AD reads.</p></li>
-<li><p><strong>AD_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – AD barcode objects.</p></li>
-<li><p><strong>RT_seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file for RT reads.</p></li>
-<li><p><strong>RT_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – RT barcode objects.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to reverse complement reads.</p></li>
-<li><p><strong>step_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
+<li><p><strong>AD_seq_file</strong> (<em>str</em>) – FASTQ file for AD reads.</p></li>
+<li><p><strong>AD_bc_objects</strong> (<em>list</em>) – AD barcode objects.</p></li>
+<li><p><strong>RT_seq_file</strong> (<em>str</em>) – FASTQ file for RT reads.</p></li>
+<li><p><strong>RT_bc_objects</strong> (<em>list</em>) – RT barcode objects.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether to reverse complement reads.</p></li>
+<li><p><strong>step_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
 </ul>
 </dd>
 </dl>
@@ -3551,18 +3567,18 @@ is enabled, results from simple and/or directional/complex deduplication are mer
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>AD_seq_files</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – Paths to FASTQ files for AD library reads.</p></li>
-<li><p><strong>AD_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects for AD library extraction.</p></li>
-<li><p><strong>RT_seq_files</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>) – Paths to FASTQ files for reporter (RT) reads.</p></li>
-<li><p><strong>RT_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Barcode objects for reporter library extraction.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether reads should be reverse complemented prior to barcode extraction.</p></li>
-<li><p><strong>step1_map_csv_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Path to Step 1 map CSV for computing overlap plots.</p></li>
+<li><p><strong>AD_seq_files</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Paths to FASTQ files for AD library reads.</p></li>
+<li><p><strong>AD_bc_objects</strong> (<em>list</em>) – Barcode objects for AD library extraction.</p></li>
+<li><p><strong>RT_seq_files</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Paths to FASTQ files for reporter (RT) reads.</p></li>
+<li><p><strong>RT_bc_objects</strong> (<em>list</em>) – Barcode objects for reporter library extraction.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether reads should be reverse complemented prior to barcode extraction.</p></li>
+<li><p><strong>step1_map_csv_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to Step 1 map CSV for computing overlap plots.</p></li>
 <li><p><strong>AD_umi_object</strong> (<em>optional</em>) – UMI object for AD library. If provided, triggers UMI deduplication.</p></li>
 <li><p><strong>RT_umi_object</strong> (<em>optional</em>) – UMI object for RT library. If provided, triggers UMI deduplication.</p></li>
-<li><p><strong>reads_threshold_AD</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum reads per AD barcode to retain. Defaults to 1.</p></li>
-<li><p><strong>reads_threshold_RT</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum reads per RT barcode to retain. Defaults to 1.</p></li>
-<li><p><strong>step_name_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix for DuckDB table and output names.</p></li>
-<li><p><strong>umi_deduplication</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – <p>Deduplication mode for both AD and RT libraries.
+<li><p><strong>reads_threshold_AD</strong> (<em>int</em><em>, </em><em>optional</em>) – Minimum reads per AD barcode to retain. Defaults to 1.</p></li>
+<li><p><strong>reads_threshold_RT</strong> (<em>int</em><em>, </em><em>optional</em>) – Minimum reads per RT barcode to retain. Defaults to 1.</p></li>
+<li><p><strong>step_name_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix for DuckDB table and output names.</p></li>
+<li><p><strong>umi_deduplication</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Deduplication mode for both AD and RT libraries.
 Options:</p>
 <blockquote>
 <div><ul>
@@ -3584,7 +3600,7 @@ Options:</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -3610,12 +3626,12 @@ Options:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>AD_seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file for AD reads.</p></li>
-<li><p><strong>AD_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – AD barcode objects.</p></li>
-<li><p><strong>RT_seq_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – FASTQ file for RT reads.</p></li>
-<li><p><strong>RT_bc_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – RT barcode objects.</p></li>
-<li><p><strong>reverse_complement</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to reverse complement reads.</p></li>
-<li><p><strong>step_suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
+<li><p><strong>AD_seq_file</strong> (<em>str</em>) – FASTQ file for AD reads.</p></li>
+<li><p><strong>AD_bc_objects</strong> (<em>list</em>) – AD barcode objects.</p></li>
+<li><p><strong>RT_seq_file</strong> (<em>str</em>) – FASTQ file for RT reads.</p></li>
+<li><p><strong>RT_bc_objects</strong> (<em>list</em>) – RT barcode objects.</p></li>
+<li><p><strong>reverse_complement</strong> (<em>bool</em>) – Whether to reverse complement reads.</p></li>
+<li><p><strong>step_suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Suffix appended to the step name.</p></li>
 </ul>
 </dd>
 </dl>

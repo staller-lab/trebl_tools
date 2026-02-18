@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>trebl_tools.plotting &mdash; TREBL Tools 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
@@ -39,8 +39,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/advanced_usage.html">Advanced Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">trebl_tools</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -66,16 +80,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for trebl_tools.plotting</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span></span><span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <div class="viewcode-block" id="plot_reads_histogram">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.plotting.plot_reads_histogram">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">plot_reads_histogram</span><span class="p">(</span><span class="n">map_df</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>    
+<span class="k">def</span> <span class="nf">plot_reads_histogram</span><span class="p">(</span><span class="n">map_df</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>    
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot a histogram of read counts on a log-log scale.</span>
 
 <span class="sd">    Creates a histogram visualization of read count distributions using</span>
@@ -122,7 +136,7 @@
     
 <div class="viewcode-block" id="plot_error_correction">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.plotting.plot_error_correction">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">plot_error_correction</span><span class="p">(</span><span class="n">output_figures_path</span><span class="p">,</span> <span class="n">table_prefix_with_descriptor</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">plot_error_correction</span><span class="p">(</span><span class="n">output_figures_path</span><span class="p">,</span> <span class="n">table_prefix_with_descriptor</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Summarize and visualize error correction results from whitelist files.</span>
 <span class="sd">    </span>
 <span class="sd">    Processes whitelist files generated during error correction to create</span>
@@ -165,7 +179,7 @@
 <span class="sd">        canonical, collapsed, largest_count, counts. Uses seaborn &#39;talk&#39; context</span>
 <span class="sd">        for plot styling.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+    <span class="kn">import</span> <span class="nn">glob</span>
     
     <span class="n">whitelist_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_figures_path</span> <span class="ow">or</span> <span class="s2">&quot;./error_corrected&quot;</span><span class="p">)</span>
     <span class="n">whitelist_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">whitelist_dir</span> <span class="o">/</span> <span class="s2">&quot;*_whitelist.txt&quot;</span><span class="p">)))</span>
@@ -183,7 +197,7 @@
     <span class="n">wl_df</span><span class="p">[</span><span class="s2">&quot;num_merged&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wl_df</span><span class="p">[</span><span class="s2">&quot;collapsed_list&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
     
     <span class="c1"># Compute rest counts</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">parse_counts</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">parse_counts</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">])</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;largest_count&quot;</span><span class="p">],</span> <span class="mi">0</span>
         <span class="n">rest</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
@@ -210,7 +224,7 @@
     
 <div class="viewcode-block" id="plot_all_whitelists_from_summary">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.plotting.plot_all_whitelists_from_summary">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">plot_all_whitelists_from_summary</span><span class="p">(</span><span class="n">summary_df</span><span class="p">,</span> <span class="n">n_cols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">plot_all_whitelists_from_summary</span><span class="p">(</span><span class="n">summary_df</span><span class="p">,</span> <span class="n">n_cols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create comprehensive visualization of barcode error correction summary.</span>
 <span class="sd">    </span>
 <span class="sd">    Generates a multi-panel figure showing various aspects of barcode error</span>
@@ -311,7 +325,7 @@
 
 <div class="viewcode-block" id="plot_loss_helper">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.plotting.plot_loss_helper">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">plot_loss_helper</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">palette</span><span class="p">,</span> <span class="n">text_offset</span><span class="p">,</span> <span class="n">show_background</span><span class="p">,</span> <span class="n">default_map_order</span><span class="p">,</span> <span class="n">output_figures_path</span><span class="p">,</span> <span class="n">table_prefix_with_descriptor</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">plot_loss_helper</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">palette</span><span class="p">,</span> <span class="n">text_offset</span><span class="p">,</span> <span class="n">show_background</span><span class="p">,</span> <span class="n">default_map_order</span><span class="p">,</span> <span class="n">output_figures_path</span><span class="p">,</span> <span class="n">table_prefix_with_descriptor</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate horizontal bar plot showing read loss through processing pipeline steps.</span>
 <span class="sd">    </span>
 <span class="sd">    Creates a visualization showing both total reads and unique counts at each</span>

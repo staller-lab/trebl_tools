@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>trebl_tools.preprocess &mdash; TREBL Tools 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
@@ -39,8 +39,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/advanced_usage.html">Advanced Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">trebl_tools</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -66,24 +80,24 @@
            <div itemprop="articleBody">
              
   <h1>Source code for trebl_tools.preprocess</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">dask.dataframe</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dask.diagnostics</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProgressBar</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dask</span><span class="w"> </span><span class="kn">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">compute</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">islice</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">gzip</span>
+<span></span><span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
+<span class="kn">from</span> <span class="nn">dask.diagnostics</span> <span class="kn">import</span> <span class="n">ProgressBar</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">dask</span> <span class="kn">import</span> <span class="n">delayed</span><span class="p">,</span> <span class="n">compute</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">import</span> <span class="nn">gzip</span>
 
 
 <div class="viewcode-block" id="time_it">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.preprocess.time_it">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">time_it</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">time_it</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator to print how long a method takes to run.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -96,7 +110,7 @@
 <span class="sd">        Time is displayed in seconds if less than 60 seconds, otherwise in minutes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
@@ -111,7 +125,7 @@
 
 <div class="viewcode-block" id="load_and_shorten_files">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.preprocess.load_and_shorten_files">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load_and_shorten_files</span><span class="p">(</span><span class="n">seq_files</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">load_and_shorten_files</span><span class="p">(</span><span class="n">seq_files</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load sequence files (FASTQ, gzipped FASTQ, or TXT) as Dask DataFrame.</span>
 <span class="sd">    </span>
 <span class="sd">    For FASTQ files, keeps only every 4th line starting from line 1 (the sequence line).</span>
@@ -163,7 +177,7 @@
 
 <div class="viewcode-block" id="reverse_complement_series">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.preprocess.reverse_complement_series">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement_series</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">reverse_complement_series</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the reverse complement of a pandas Series of DNA sequences.</span>
 
 <span class="sd">    Args:</span>
@@ -183,7 +197,7 @@
 <span class="sd">        If an error occurs during reverse complement conversion, </span>
 <span class="sd">        an empty string is returned for that sequence.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">safe_rc</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">safe_rc</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">())</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -194,7 +208,7 @@
 
 <div class="viewcode-block" id="reverse_complement">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.preprocess.reverse_complement">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">reverse_complement</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the reverse complement of a DNA sequence.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -213,7 +227,7 @@
     
 <div class="viewcode-block" id="shorten_seq_file">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.preprocess.shorten_seq_file">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">shorten_seq_file</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">4</span><span class="o">*</span><span class="mi">100000</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">shorten_seq_file</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">4</span><span class="o">*</span><span class="mi">100000</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract sequences from FASTQ files to a text file (fastest method).</span>
 <span class="sd">    </span>
 <span class="sd">    Extracts the 2nd line of each FASTQ record (sequence line) and writes</span>
@@ -250,7 +264,7 @@
                 
 <div class="viewcode-block" id="save_parquet">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.preprocess.save_parquet">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">save_parquet</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">save_parquet</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save a DataFrame to a Parquet file with progress bar.</span>
 
 <span class="sd">    Args:</span>
@@ -280,7 +294,7 @@
 
 <div class="viewcode-block" id="run_fastp">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.preprocess.run_fastp">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">run_fastp</span><span class="p">(</span><span class="n">input_dir</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">script_path</span><span class="o">=</span><span class="s2">&quot;savio_jobs/fastp.sh&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">run_fastp</span><span class="p">(</span><span class="n">input_dir</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">script_path</span><span class="o">=</span><span class="s2">&quot;savio_jobs/fastp.sh&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run fastp on all .fastq.gz files using SLURM array job.</span>
 <span class="sd">    </span>
 <span class="sd">    Submits a SLURM array job to process all .fastq.gz files in the input</span>
@@ -344,7 +358,7 @@
 
 <div class="viewcode-block" id="fastp_summary_df">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.preprocess.fastp_summary_df">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fastp_summary_df</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">fastp_summary_df</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate summary DataFrame from fastp log files.</span>
 <span class="sd">    </span>
 <span class="sd">    Parses fastp output log files to extract statistics about reads</span>

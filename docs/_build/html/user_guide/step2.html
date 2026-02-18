@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Step 2: TREBL Step 2 Mapping &mdash; TREBL Tools 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="TREBL Experiment with UMIs" href="trebl_experiment.html" />
+    <link rel="prev" title="Step 1: TREBL Mapping" href="step1.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TREBL Tools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Step 2: TREBL Step 2 Mapping</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#copy-paste-ready-block">Copy-Paste Ready Block</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-blocks-explained">Code Blocks Explained</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#define-barcodes-you-will-search-for-in-ad-and-rt-file">1. Define Barcodes You Will Search For in AD and RT File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#split-objects-by-ad-and-rt">2. Split Objects by AD and RT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#specify-sequencing-files">3. Specify Sequencing Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plot-reads-distribution">4. Plot Reads Distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-step-2-mapping">5. Run Step 2 Mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#outputs">6. Outputs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced_usage.html">Advanced Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">trebl_tools</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TREBL Tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Step 2: TREBL Step 2 Mapping</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/step2.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="step-2-trebl-step-2-mapping">
+<h1>Step 2: TREBL Step 2 Mapping<a class="headerlink" href="#step-2-trebl-step-2-mapping" title="Link to this heading"></a></h1>
+<p>The example below is again Marissa’s Step 2 data. In step 2, the barcodes are now separated so are sequenced in different files.</p>
+<p><strong>Note:</strong> Must have first run step 1 successfully.</p>
+<section id="copy-paste-ready-block">
+<h2>Copy-Paste Ready Block<a class="headerlink" href="#copy-paste-ready-block" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 2: TREBL Step 2 Mapping (Full Block)</span>
+
+<span class="c1"># Define barcodes (same as Step 1)</span>
+<span class="n">AD</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;AD&quot;</span><span class="p">,</span> <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;GGCTAGC&quot;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="s2">&quot;TGACTAG&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+<span class="n">AD_BC</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;AD_BC&quot;</span><span class="p">,</span> <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;CGCGCC&quot;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="s2">&quot;GGGCCC&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">RT_BC</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;RT_BC&quot;</span><span class="p">,</span> <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;CTCGAG&quot;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="s2">&quot;GGCCGC&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+<span class="c1"># Separate objects by AD and RT</span>
+<span class="n">AD_bc_objects</span> <span class="o">=</span> <span class="p">[</span><span class="n">AD</span><span class="p">,</span> <span class="n">AD_BC</span><span class="p">]</span>  <span class="c1"># AD and AD barcodes, only use AD BC if human</span>
+<span class="n">RT_bc_objects</span> <span class="o">=</span> <span class="p">[</span><span class="n">RT_BC</span><span class="p">]</span>      <span class="c1"># Reporter barcodes</span>
+
+<span class="c1"># Sequencing files for AD and RT</span>
+<span class="n">step2_AD_seq_file</span> <span class="o">=</span> <span class="s2">&quot;/global/scratch/projects/fc_mvslab/data/sequencing/czb_new_sept2025/MAZ10/ChopTF/results/AD_Assembled/ChopTFstep2_2_AD_concat.fastq&quot;</span>
+<span class="n">step2_RT_seq_file</span> <span class="o">=</span> <span class="s2">&quot;/global/scratch/projects/fc_mvslab/data/sequencing/czb_new_sept2025/MAZ10/ChopTF/results/RPTR_Assembled/ChopTFstep2_2_RPTR_concat.fastq&quot;</span>
+
+<span class="c1"># Plot reads distribution before thresholding</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">step2_reads_distribution</span><span class="p">(</span>
+    <span class="n">AD_seq_file</span><span class="o">=</span><span class="n">step2_AD_seq_file</span><span class="p">,</span>       <span class="c1"># AD sequencing file</span>
+    <span class="n">AD_bc_objects</span><span class="o">=</span><span class="n">AD_bc_objects</span><span class="p">,</span>         <span class="c1"># AD barcodes to search</span>
+    <span class="n">RT_seq_file</span><span class="o">=</span><span class="n">step2_RT_seq_file</span><span class="p">,</span>       <span class="c1"># RT sequencing file</span>
+    <span class="n">RT_bc_objects</span><span class="o">=</span><span class="n">RT_bc_objects</span><span class="p">,</span>         <span class="c1"># RT barcodes to search</span>
+    <span class="n">reverse_complement</span><span class="o">=</span><span class="kc">True</span>              <span class="c1"># Search reverse complement</span>
+<span class="p">)</span>
+<span class="c1"># Produces histograms for AD and RT reads</span>
+<span class="c1"># Helps pick reads_threshold_AD and reads_threshold_RT</span>
+
+<span class="c1"># Run Step 2 mapping</span>
+<span class="n">step2</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run_step_2</span><span class="p">(</span>
+    <span class="n">AD_seq_file</span><span class="o">=</span><span class="n">step2_AD_seq_file</span><span class="p">,</span>       <span class="c1"># AD sequencing file</span>
+    <span class="n">AD_bc_objects</span><span class="o">=</span><span class="n">AD_bc_objects</span><span class="p">,</span>         <span class="c1"># AD barcodes</span>
+    <span class="n">RT_seq_file</span><span class="o">=</span><span class="n">step2_RT_seq_file</span><span class="p">,</span>       <span class="c1"># RT sequencing file</span>
+    <span class="n">RT_bc_objects</span><span class="o">=</span><span class="n">RT_bc_objects</span><span class="p">,</span>         <span class="c1"># RT barcodes</span>
+    <span class="n">reverse_complement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>             <span class="c1"># Search reverse complement</span>
+    <span class="n">reads_threshold_AD</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>               <span class="c1"># Minimum reads for AD</span>
+    <span class="n">reads_threshold_RT</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>               <span class="c1"># Minimum reads for RT</span>
+    <span class="n">step1_map_name</span><span class="o">=</span><span class="s2">&quot;step1_AD_AD_BC_RPTR_BC_designed&quot;</span>  <span class="c1"># Previous step 1 map in DuckDB</span>
+<span class="p">)</span>
+
+<span class="c1"># Extract outputs</span>
+<span class="n">AD_step2</span> <span class="o">=</span> <span class="n">step2</span><span class="p">[</span><span class="s2">&quot;AD_step2&quot;</span><span class="p">]</span>                <span class="c1"># Step 2 AD map</span>
+<span class="n">RT_step2</span> <span class="o">=</span> <span class="n">step2</span><span class="p">[</span><span class="s2">&quot;RT_step2&quot;</span><span class="p">]</span>                <span class="c1"># Step 2 RT map</span>
+<span class="n">step1_step2_overlap</span> <span class="o">=</span> <span class="n">step2</span><span class="p">[</span><span class="s2">&quot;step1_overlap&quot;</span><span class="p">]</span> <span class="c1"># Overlap with Step 1 map</span>
+</pre></div>
+</div>
+</section>
+<section id="code-blocks-explained">
+<h2>Code Blocks Explained<a class="headerlink" href="#code-blocks-explained" title="Link to this heading"></a></h2>
+<section id="define-barcodes-you-will-search-for-in-ad-and-rt-file">
+<h3>1. Define Barcodes You Will Search For in AD and RT File<a class="headerlink" href="#define-barcodes-you-will-search-for-in-ad-and-rt-file" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Same barcodes as step 1 </span>
+<span class="n">AD</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;AD&quot;</span><span class="p">,</span> 
+    <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;GGCTAGC&quot;</span><span class="p">,</span> 
+    <span class="n">post</span><span class="o">=</span><span class="s2">&quot;TGACTAG&quot;</span><span class="p">,</span> 
+    <span class="n">length</span><span class="o">=</span><span class="mi">120</span>
+<span class="p">)</span>
+<span class="n">AD_BC</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;AD_BC&quot;</span><span class="p">,</span> 
+    <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;CGCGCC&quot;</span><span class="p">,</span> 
+    <span class="n">post</span><span class="o">=</span><span class="s2">&quot;GGGCCC&quot;</span><span class="p">,</span> 
+    <span class="n">length</span><span class="o">=</span><span class="mi">11</span>
+<span class="p">)</span>
+<span class="n">RT_BC</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RT_BC&quot;</span><span class="p">,</span> 
+    <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;CTCGAG&quot;</span><span class="p">,</span> 
+    <span class="n">post</span><span class="o">=</span><span class="s2">&quot;GGCCGC&quot;</span><span class="p">,</span> 
+    <span class="n">length</span><span class="o">=</span><span class="mi">14</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Refer to “Define barcodes” section of step 1 page for explanation of how barcode extraction works.</p>
+<p>For human analysis, unlike the yeast example above, you will only have AD BC and RT BC, in your step 2 data. This is because the AD and AD BC will no longer be adjacent.</p>
+<p><strong>Tips:</strong></p>
+<ul class="simple">
+<li><p>Almost always the same as step 1. Should only be different if you need to use shorter/longer flanking sequences.</p></li>
+</ul>
+</section>
+<section id="split-objects-by-ad-and-rt">
+<h3>2. Split Objects by AD and RT<a class="headerlink" href="#split-objects-by-ad-and-rt" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">AD_bc_objects</span> <span class="o">=</span> <span class="p">[</span><span class="n">AD</span><span class="p">,</span> <span class="n">AD_BC</span><span class="p">]</span>
+<span class="n">RT_bc_objects</span> <span class="o">=</span> <span class="p">[</span><span class="n">RT_BC</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>In step 2, AD and RT barcodes are in separate files so must be analyzed separately.</p>
+</section>
+<section id="specify-sequencing-files">
+<h3>3. Specify Sequencing Files<a class="headerlink" href="#specify-sequencing-files" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">step2_AD_seq_file</span> <span class="o">=</span> <span class="s2">&quot;path/to/AD_reads.fastq&quot;</span>
+<span class="n">step2_RT_seq_file</span> <span class="o">=</span> <span class="s2">&quot;path/to/RT_reads.fastq&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Separate files for AD and RT sequencing reads.</p></li>
+<li><p>Can be a single file or list of files; <code class="docutils literal notranslate"><span class="pre">.fastq</span></code> or <code class="docutils literal notranslate"><span class="pre">.fastq.gz</span></code>.</p></li>
+</ul>
+</section>
+<section id="plot-reads-distribution">
+<h3>4. Plot Reads Distribution<a class="headerlink" href="#plot-reads-distribution" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">step2_reads_distribution</span><span class="p">(</span>
+    <span class="n">AD_seq_file</span><span class="o">=</span><span class="n">step2_AD_seq_file</span><span class="p">,</span>
+    <span class="n">AD_bc_objects</span><span class="o">=</span><span class="n">AD_bc_objects</span><span class="p">,</span>
+    <span class="n">RT_seq_file</span><span class="o">=</span><span class="n">step2_RT_seq_file</span><span class="p">,</span>
+    <span class="n">RT_bc_objects</span><span class="o">=</span><span class="n">RT_bc_objects</span><span class="p">,</span>
+    <span class="n">reverse_complement</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Generates AD and RT reads histograms. Will appear inline in jupyter notebook. The figure will be saved to the output folder.</p></li>
+<li><p>Helps pick <code class="docutils literal notranslate"><span class="pre">reads_threshold_AD</span></code> and <code class="docutils literal notranslate"><span class="pre">reads_threshold_RT</span></code> to get high quality data.</p></li>
+<li><p>Visual check for sequencing quality and read coverage.</p></li>
+</ul>
+</section>
+<section id="run-step-2-mapping">
+<h3>5. Run Step 2 Mapping<a class="headerlink" href="#run-step-2-mapping" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">step2</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run_step_2</span><span class="p">(</span>
+    <span class="n">AD_seq_file</span><span class="o">=</span><span class="n">step2_AD_seq_file</span><span class="p">,</span>
+    <span class="n">AD_bc_objects</span><span class="o">=</span><span class="n">AD_bc_objects</span><span class="p">,</span>
+    <span class="n">RT_seq_file</span><span class="o">=</span><span class="n">step2_RT_seq_file</span><span class="p">,</span>
+    <span class="n">RT_bc_objects</span><span class="o">=</span><span class="n">RT_bc_objects</span><span class="p">,</span>
+    <span class="n">reverse_complement</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">reads_threshold_AD</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">reads_threshold_RT</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">step1_map_name</span><span class="o">=</span><span class="s2">&quot;step1_AD_AD_BC_RPTR_BC_designed&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Applies reads thresholds to ensure low-read noise is removed.</p></li>
+<li><p>Checks how Step 2 reads overlap with Step 1 mapping.</p></li>
+</ul>
+</section>
+<section id="outputs">
+<h3>6. Outputs<a class="headerlink" href="#outputs" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">AD_step2</span> <span class="o">=</span> <span class="n">step2</span><span class="p">[</span><span class="s2">&quot;AD_step2&quot;</span><span class="p">]</span>
+<span class="n">RT_step2</span> <span class="o">=</span> <span class="n">step2</span><span class="p">[</span><span class="s2">&quot;RT_step2&quot;</span><span class="p">]</span>
+<span class="n">step1_step2_overlap</span> <span class="o">=</span> <span class="n">step2</span><span class="p">[</span><span class="s2">&quot;step1_overlap&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>AD_step2</strong> → DataFrame of extracted sequences from AD file after Step 2 processing. One row per unique combination with reads count.</p></li>
+<li><p><strong>RT_step2</strong> → DataFrame of RT sequences after Step 2 processing. One row per unique combination with reads count.</p></li>
+<li><p><strong>step1_step2_overlap</strong> → DataFrame showing overlap between Step 1 map and Step 2 reads.</p></li>
+<li><p>CSVs and PNGs are saved automatically.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="step1.html" class="btn btn-neutral float-left" title="Step 1: TREBL Mapping" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="trebl_experiment.html" class="btn btn-neutral float-right" title="TREBL Experiment with UMIs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Staller Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>trebl_tools.initial_map &mdash; TREBL Tools 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
@@ -39,8 +39,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/advanced_usage.html">Advanced Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">trebl_tools</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -66,13 +80,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for trebl_tools.initial_map</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools.preprocess</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span>   
+<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">duckdb</span>
+<span class="kn">from</span> <span class="nn">trebl_tools.preprocess</span> <span class="kn">import</span> <span class="n">time_it</span>   
 
 <div class="viewcode-block" id="InitialMapper">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">InitialMapper</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">InitialMapper</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract and map barcodes from DNA sequences in FASTQ or TXT files.</span>
 
 <span class="sd">    This class reads sequence files, optionally reverse-complements them, </span>
@@ -125,7 +139,7 @@
 
 <div class="viewcode-block" id="InitialMapper.__init__">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                  <span class="n">db_path</span><span class="p">,</span> 
                  <span class="n">seq_file</span><span class="p">,</span> 
                  <span class="n">bc_objects</span><span class="p">,</span> 
@@ -161,7 +175,7 @@
 <div class="viewcode-block" id="InitialMapper.read_fastq">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.read_fastq">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">read_fastq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_fastq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Read sequences from FASTQ/TXT files and create an initial sequence table.</span>
 
 <span class="sd">        Processes input files to extract sequence data. For FASTQ files, extracts</span>
@@ -208,7 +222,7 @@
 <div class="viewcode-block" id="InitialMapper.reverse_complement_fastq">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.reverse_complement_fastq">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement_fastq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">reverse_complement_fastq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace sequence column with reverse complement of DNA sequences.</span>
 <span class="sd">        </span>
 <span class="sd">        Converts all sequences in the &#39;seq&#39; table to their reverse complement</span>
@@ -238,7 +252,7 @@
         <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE seq_rc RENAME TO seq;&quot;</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_sequence_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_obj</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_extract_sequence_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract a barcode or UMI sequence into a new column and compute quality.</span>
 
 <span class="sd">        Internal helper method that extracts sequences based on the provided</span>
@@ -323,7 +337,7 @@
 <div class="viewcode-block" id="InitialMapper.extract_barcodes">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.extract_barcodes">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">extract_barcodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">extract_barcodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract all barcode sequences and compute their quality flags.</span>
 <span class="sd">        </span>
 <span class="sd">        Processes each barcode object in self.bc_objects to extract the</span>
@@ -351,7 +365,7 @@
 <div class="viewcode-block" id="InitialMapper.extract_umi">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.extract_umi">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">extract_umi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">extract_umi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract the UMI sequence and compute its quality flag.</span>
 <span class="sd">        </span>
 <span class="sd">        Processes the UMI object (if provided) to extract UMI sequences</span>
@@ -376,7 +390,7 @@
 <div class="viewcode-block" id="InitialMapper.merge_design">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.merge_design">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">merge_design</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+    <span class="k">def</span> <span class="nf">merge_design</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Merge with design file and create final mapping table.</span>
 <span class="sd">        </span>
 <span class="sd">        Merges extracted barcode data with the design file (if provided) to</span>
@@ -426,7 +440,7 @@
         <span class="p">)</span></div>
 
         
-    <span class="k">def</span><span class="w"> </span><span class="nf">_run_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_run_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the complete mapping pipeline in sequence.</span>
 <span class="sd">        </span>
 <span class="sd">        Internal helper method that runs all pipeline steps in the correct order:</span>
@@ -447,7 +461,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">merge_design</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mapping complete.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_table_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_table_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a table exists in the connected DuckDB database.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
@@ -472,7 +486,7 @@
     
 <div class="viewcode-block" id="InitialMapper.create_map">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.create_map">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the full mapping pipeline on all reads.</span>
 <span class="sd">        </span>
 <span class="sd">        Executes the complete barcode extraction pipeline on all sequences</span>
@@ -507,7 +521,7 @@
     
 <div class="viewcode-block" id="InitialMapper.create_test_map">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.create_test_map">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_test_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_n_reads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_test_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_n_reads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the mapping pipeline on a limited number of reads for testing.</span>
 <span class="sd">        </span>
 <span class="sd">        Executes the barcode extraction pipeline on a subset of sequences</span>
@@ -543,7 +557,7 @@
 
 <div class="viewcode-block" id="InitialMapper.preview_map">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.preview_map">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">preview_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">preview_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Preview the first 5 rows of the created mapping table.</span>
 
 <span class="sd">        Returns a sample of the initial mapping table to verify extraction</span>

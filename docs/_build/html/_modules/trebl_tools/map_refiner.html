@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>trebl_tools.map_refiner &mdash; TREBL Tools 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
@@ -39,8 +39,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/advanced_usage.html">Advanced Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">trebl_tools</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -66,28 +80,28 @@
            <div itemprop="articleBody">
              
   <h1>Source code for trebl_tools.map_refiner</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span></span><span class="kn">import</span> <span class="nn">duckdb</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s2">&quot;talk&quot;</span><span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.cm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">plotting</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools.preprocess</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools.error_correct</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_whitelist_on_concat_domains</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">error_correct</span>
+<span class="kn">from</span> <span class="nn">trebl_tools</span> <span class="kn">import</span> <span class="n">plotting</span>
+<span class="kn">from</span> <span class="nn">trebl_tools.preprocess</span> <span class="kn">import</span> <span class="n">time_it</span>
+<span class="kn">from</span> <span class="nn">trebl_tools.error_correct</span> <span class="kn">import</span> <span class="n">run_whitelist_on_concat_domains</span>
+<span class="kn">from</span> <span class="nn">trebl_tools</span> <span class="kn">import</span> <span class="n">error_correct</span>
 
 <div class="viewcode-block" id="MapRefiner">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">MapRefiner</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">MapRefiner</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Refine and filter sequencing maps generated by InitialMapper.</span>
 <span class="sd">    </span>
 <span class="sd">    This class provides a flexible pipeline for processing barcode mapping tables</span>
@@ -157,7 +171,7 @@
 
 <div class="viewcode-block" id="MapRefiner.__init__">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                  <span class="n">db_path</span><span class="p">,</span> 
                  <span class="n">bc_objects</span><span class="p">,</span> 
                  <span class="n">column_pairs</span><span class="p">,</span> 
@@ -264,7 +278,7 @@
 
 <div class="viewcode-block" id="MapRefiner.show_tables">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.show_tables">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">show_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">show_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display all tables in the connected DuckDB database.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
@@ -280,7 +294,7 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">tables</span><span class="p">)</span></div>
 
     
-    <span class="k">def</span><span class="w"> </span><span class="nf">_prefixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_prefixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate properly prefixed table names based on processing context.</span>
 <span class="sd">        </span>
 <span class="sd">        Creates table names with appropriate prefixes depending on the table type</span>
@@ -331,7 +345,7 @@
 
 <div class="viewcode-block" id="MapRefiner.check_exists">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.check_exists">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">check_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_table_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">check_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_table_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a table exists and determine if processing should be skipped.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
@@ -363,7 +377,7 @@
 <div class="viewcode-block" id="MapRefiner.create_initial">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.create_initial">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_initial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parquet_path</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_initial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parquet_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load initial mapping table from Parquet file into database.</span>
 <span class="sd">        </span>
 <span class="sd">        Creates the initial mapping table by reading from a Parquet file.</span>
@@ -392,7 +406,7 @@
 <div class="viewcode-block" id="MapRefiner.create_quality">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.create_quality">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_quality</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="o">=</span><span class="s2">&quot;initial&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_quality</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="o">=</span><span class="s2">&quot;initial&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter to high-quality reads based on barcode and UMI quality flags.</span>
 <span class="sd">        </span>
 <span class="sd">        Keeps only rows where all barcode quality flags (and UMI quality flag</span>
@@ -436,7 +450,7 @@
 <div class="viewcode-block" id="MapRefiner.create_designed">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.create_designed">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_designed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="o">=</span><span class="s2">&quot;quality&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_designed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="o">=</span><span class="s2">&quot;quality&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter to designed sequences only.</span>
 <span class="sd">        </span>
 <span class="sd">        Keeps only rows where the Designed column equals 1, indicating that</span>
@@ -467,7 +481,7 @@
 <div class="viewcode-block" id="MapRefiner.barcode_exists">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.barcode_exists">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">barcode_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="o">=</span><span class="s2">&quot;initial&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">barcode_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="o">=</span><span class="s2">&quot;initial&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove rows with null or empty barcode sequences.</span>
 <span class="sd">        </span>
 <span class="sd">        Filters out rows where any barcode column (except AD) is NULL or</span>
@@ -508,7 +522,7 @@
 <div class="viewcode-block" id="MapRefiner.create_grouped">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.create_grouped">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_grouped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="o">=</span><span class="s2">&quot;quality_designed&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_grouped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="o">=</span><span class="s2">&quot;quality_designed&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Group identical barcode combinations and count occurrences.</span>
 <span class="sd">        </span>
 <span class="sd">        Aggregates reads by unique barcode combinations, creating a count column</span>
@@ -562,7 +576,7 @@
 <div class="viewcode-block" id="MapRefiner.create_thresholded">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.create_thresholded">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_thresholded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_thresholded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter barcode combinations by minimum read count threshold.</span>
 <span class="sd">        </span>
 <span class="sd">        Removes barcode combinations with read counts below the specified threshold.</span>
@@ -617,7 +631,7 @@
 <div class="viewcode-block" id="MapRefiner.generate_fastq_for_whitelist">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.generate_fastq_for_whitelist">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate_fastq_for_whitelist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_barcodes_extracted.fastq&quot;</span><span class="p">,</span> <span class="n">prev_table</span> <span class="o">=</span> <span class="s2">&quot;quality&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">generate_fastq_for_whitelist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_barcodes_extracted.fastq&quot;</span><span class="p">,</span> <span class="n">prev_table</span> <span class="o">=</span> <span class="s2">&quot;quality&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate synthetic FASTQ file from filtered barcode sequences for error correction.</span>
 <span class="sd">        </span>
 <span class="sd">        Creates a FASTQ file containing concatenated barcode sequences for input</span>
@@ -692,7 +706,7 @@
     
 <div class="viewcode-block" id="MapRefiner.apply_whitelist">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.apply_whitelist">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">apply_whitelist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">prev_table</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">apply_whitelist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">prev_table</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply UMI-tools whitelist error correction to barcode sequences.</span>
 <span class="sd">        </span>
 <span class="sd">        Generates FASTQ from barcode sequences, runs UMI-tools whitelist to identify</span>
@@ -857,7 +871,7 @@
 <div class="viewcode-block" id="MapRefiner.merge_design">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.merge_design">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">merge_design</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prev_table</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">merge_design</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prev_table</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Merge with design file to validate barcode combinations.</span>
 <span class="sd">        </span>
 <span class="sd">        Adds or updates the &#39;Designed&#39; column by comparing barcode sequences</span>
@@ -913,7 +927,7 @@
 <div class="viewcode-block" id="MapRefiner.create_error_corrected">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.create_error_corrected">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_error_corrected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="o">=</span><span class="s2">&quot;quality&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_error_corrected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="o">=</span><span class="s2">&quot;quality&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform error correction using UMI-tools whitelist approach.</span>
 <span class="sd">        </span>
 <span class="sd">        Executes the complete error correction pipeline: generates FASTQ from</span>
@@ -951,7 +965,7 @@
 <div class="viewcode-block" id="MapRefiner.create_unique_target">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.create_unique_target">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_unique_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_unique_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter for unique target relationships using configurable column pairs.</span>
 <span class="sd">        </span>
 <span class="sd">        For each (key_columns, target_columns) pair, keeps only keys where the</span>
@@ -1061,7 +1075,7 @@
 
 <div class="viewcode-block" id="MapRefiner.refine_map_from_db">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.refine_map_from_db">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">refine_map_from_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">should_check_exists</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">refine_map_from_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">should_check_exists</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the complete map refinement pipeline.</span>
 <span class="sd">        </span>
 <span class="sd">        Runs all configured processing steps in sequence according to map_order.</span>
@@ -1113,7 +1127,7 @@
     <span class="c1"># -------------------------------</span>
 <div class="viewcode-block" id="MapRefiner.get_map_df">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.get_map_df">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_map_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_name</span><span class="p">,</span> <span class="n">insert_prefix</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_map_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_name</span><span class="p">,</span> <span class="n">insert_prefix</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve a mapping table as a pandas DataFrame.</span>
 <span class="sd">        </span>
 <span class="sd">        Loads a table from the database, automatically handling prefixed and</span>
@@ -1141,7 +1155,7 @@
 
 <div class="viewcode-block" id="MapRefiner.save_map">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.save_map">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_name</span><span class="p">,</span> <span class="n">map_path</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">save_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_name</span><span class="p">,</span> <span class="n">map_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save a mapping table to CSV file.</span>
 <span class="sd">        </span>
 <span class="sd">        Exports a table from the database to a CSV file with headers.</span>
@@ -1159,7 +1173,7 @@
 <div class="viewcode-block" id="MapRefiner.save_loss_table">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.save_loss_table">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_loss_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">save_loss_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate and save comprehensive processing loss summary.</span>
 <span class="sd">        </span>
 <span class="sd">        Creates a detailed summary table showing read counts, unique sequences,</span>
@@ -1278,7 +1292,7 @@
     <span class="c1"># -------------------------------</span>
 <div class="viewcode-block" id="MapRefiner.plot_loss">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.plot_loss">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">plot_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;rocket_r&quot;</span><span class="p">,</span> <span class="n">text_offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">show_background</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">plot_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;rocket_r&quot;</span><span class="p">,</span> <span class="n">text_offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">show_background</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create visualization of processing losses across refinement steps.</span>
 <span class="sd">        </span>
 <span class="sd">        Generates a horizontal bar plot showing both total reads and unique counts</span>
@@ -1326,7 +1340,7 @@
         
 <div class="viewcode-block" id="MapRefiner.plot_reads_histogram">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.plot_reads_histogram">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">plot_reads_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">plot_reads_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_table</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate histogram of read count distributions for a processing table.</span>
 <span class="sd">        </span>
 <span class="sd">        Creates a log-log scale histogram showing the distribution of read counts</span>
@@ -1353,7 +1367,7 @@
 
 <div class="viewcode-block" id="MapRefiner.close_connection">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.close_connection">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">close_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">close_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Close the DuckDB database connection.</span>
 <span class="sd">        </span>
 <span class="sd">        Properly closes the database connection and sets it to None to prevent</span>
@@ -1370,7 +1384,7 @@
 <div class="viewcode-block" id="MapRefiner.plot_error_correction">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.plot_error_correction">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">plot_error_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">plot_error_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate summary plots and analysis of error correction results.</span>
 <span class="sd">        </span>
 <span class="sd">        Creates comprehensive visualizations of barcode error correction performance</span>
@@ -1403,7 +1417,7 @@
 <div class="viewcode-block" id="MapRefiner.plot_all_whitelists_from_summary">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.map_refiner.MapRefiner.plot_all_whitelists_from_summary">[docs]</a>
     <span class="nd">@time_it</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">plot_all_whitelists_from_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">summary_df</span><span class="p">,</span> <span class="n">n_cols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">plot_all_whitelists_from_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">summary_df</span><span class="p">,</span> <span class="n">n_cols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create multi-panel visualization of error correction summaries.</span>
 <span class="sd">        </span>
 <span class="sd">        Generates a comprehensive figure with multiple panels showing error</span>

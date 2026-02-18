@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>trebl_tools.finder &mdash; TREBL Tools 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
@@ -39,8 +39,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/advanced_usage.html">Advanced Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">trebl_tools</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -66,12 +80,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for trebl_tools.finder</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">dask.dataframe</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span></span><span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <div class="viewcode-block" id="Barcode">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.finder.Barcode">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Barcode</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">Barcode</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a barcode with extraction pattern specifications.</span>
 <span class="sd">    </span>
 <span class="sd">    This class defines the parameters needed to extract a specific barcode</span>
@@ -104,7 +118,7 @@
 
 <div class="viewcode-block" id="Barcode.__init__">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.finder.Barcode.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">preceder</span><span class="p">,</span> <span class="n">post</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">preceder</span><span class="p">,</span> <span class="n">post</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a Barcode object with extraction parameters.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
@@ -122,7 +136,7 @@
         
 <div class="viewcode-block" id="add_barcode">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.finder.add_barcode">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">add_barcode</span><span class="p">(</span><span class="n">seq_df</span><span class="p">,</span> <span class="n">bc_object</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">add_barcode</span><span class="p">(</span><span class="n">seq_df</span><span class="p">,</span> <span class="n">bc_object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract a barcode from sequences using pattern matching.</span>
 
 <span class="sd">    Extracts barcode sequences located between specified preceder and post</span>
@@ -165,7 +179,7 @@
 
 <div class="viewcode-block" id="add_umi">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.finder.add_umi">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">add_umi</span><span class="p">(</span><span class="n">seq_df</span><span class="p">,</span> <span class="n">umi_length</span><span class="o">=</span><span class="mi">12</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">add_umi</span><span class="p">(</span><span class="n">seq_df</span><span class="p">,</span> <span class="n">umi_length</span><span class="o">=</span><span class="mi">12</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract UMI (Unique Molecular Identifier) from the end of sequences.</span>
 
 <span class="sd">    Extracts the last `umi_length` bases from each sequence as the UMI.</span>
@@ -204,7 +218,7 @@
     
 <div class="viewcode-block" id="add_multiple_barcodes">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.finder.add_multiple_barcodes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">add_multiple_barcodes</span><span class="p">(</span><span class="n">bc_objects</span><span class="p">,</span> <span class="n">seq_df</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">add_multiple_barcodes</span><span class="p">(</span><span class="n">bc_objects</span><span class="p">,</span> <span class="n">seq_df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract multiple barcodes from sequences in a single operation.</span>
 
 <span class="sd">    Applies barcode extraction for all specified barcode objects to the</span>

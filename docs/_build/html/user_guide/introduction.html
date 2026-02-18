@@ -3,9 +3,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview: module code &mdash; TREBL Tools 0.1.0 documentation</title>
+  <title>What is TREBL? &mdash; TREBL Tools 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
@@ -17,7 +18,9 @@
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="TREBL Tools Documentation" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,15 +43,15 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/introduction.html">What is TREBL?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/preprocessing.html">Preprocessing Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/analysis_setup.html">Analysis Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/step1.html">Step 1: TREBL Mapping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/advanced_usage.html">Advanced Usage</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="step2.html">Step 2: TREBL Step 2 Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced_usage.html">Advanced Usage</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
@@ -69,8 +72,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Overview: module code</li>
+      <li class="breadcrumb-item active">What is TREBL?</li>
       <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/introduction.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -78,21 +82,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="trebl_tools/complexity.html">trebl_tools.complexity</a></li>
-<li><a href="trebl_tools/error_correct.html">trebl_tools.error_correct</a></li>
-<li><a href="trebl_tools/finder.html">trebl_tools.finder</a></li>
-<li><a href="trebl_tools/initial_map.html">trebl_tools.initial_map</a></li>
-<li><a href="trebl_tools/map_refiner.html">trebl_tools.map_refiner</a></li>
-<li><a href="trebl_tools/pipelines.html">trebl_tools.pipelines</a></li>
-<li><a href="trebl_tools/plotting.html">trebl_tools.plotting</a></li>
-<li><a href="trebl_tools/preprocess.html">trebl_tools.preprocess</a></li>
-<li><a href="trebl_tools/umi_deduplicate.html">trebl_tools.umi_deduplicate</a></li>
-</ul>
+  <section id="what-is-trebl">
+<h1>What is TREBL?<a class="headerlink" href="#what-is-trebl" title="Link to this heading"></a></h1>
+<p>TREBL-seq is a method used to quantify activation domain strength and speed. By sequencing RNA barcodes in reporter transcripts, we can measure the strength of thousands of activation domains across multiple time points.</p>
+<p>This package can be used to analyze the sequencing data from a TREBL-seq experiment and produce activity scores. A detailed breakdown of the analysis workflow is documented below. There are also example scripts in the <a class="reference external" href="https://github.com/staller-lab/trebl_tools">GitHub repository</a>.</p>
+</section>
+
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="TREBL Tools Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

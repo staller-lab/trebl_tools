@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>trebl_tools.pipelines &mdash; TREBL Tools 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
@@ -39,8 +39,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/advanced_usage.html">Advanced Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">trebl_tools</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -66,22 +80,22 @@
            <div itemprop="articleBody">
              
   <h1>Source code for trebl_tools.pipelines</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">initial_map</span><span class="p">,</span> <span class="n">map_refiner</span><span class="p">,</span> <span class="n">complexity</span><span class="p">,</span> <span class="n">finder</span><span class="p">,</span> <span class="n">preprocess</span><span class="p">,</span> <span class="n">error_correct</span><span class="p">,</span> <span class="n">plotting</span><span class="p">,</span> <span class="n">umi_deduplicate</span>
+<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">duckdb</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">trebl_tools</span> <span class="kn">import</span> <span class="n">initial_map</span><span class="p">,</span> <span class="n">map_refiner</span><span class="p">,</span> <span class="n">complexity</span><span class="p">,</span> <span class="n">finder</span><span class="p">,</span> <span class="n">preprocess</span><span class="p">,</span> <span class="n">error_correct</span><span class="p">,</span> <span class="n">plotting</span><span class="p">,</span> <span class="n">umi_deduplicate</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>  
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>  
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 
 <span class="c1"># Defines the sequence of refinement operations for each step.</span>
@@ -100,7 +114,7 @@
 
 <div class="viewcode-block" id="TreblPipeline">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">TreblPipeline</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">TreblPipeline</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    End-to-end TREBL analysis pipeline orchestrator.</span>
 
@@ -168,7 +182,7 @@
 
 <div class="viewcode-block" id="TreblPipeline.__init__">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">db_path</span><span class="p">,</span>
         <span class="n">design_file_path</span><span class="p">,</span>
@@ -218,7 +232,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">output_figures_path</span> <span class="o">=</span> <span class="kc">None</span></div>
 
             
-    <span class="k">def</span><span class="w"> </span><span class="nf">_run_initial_mappers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapper_specs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_run_initial_mappers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapper_specs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute one or more InitialMapper instances with specified configurations.</span>
 
@@ -252,7 +266,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">mapper</span><span class="o">.</span><span class="n">create_map</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_run_refiners</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refiners</span><span class="p">,</span> <span class="n">plot_titles</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_run_refiners</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refiners</span><span class="p">,</span> <span class="n">plot_titles</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute MapRefiner instances and optionally generate loss plots.</span>
 
@@ -286,7 +300,7 @@
 
 <div class="viewcode-block" id="TreblPipeline.reads_distribution">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.reads_distribution">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reads_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_file</span><span class="p">,</span> <span class="n">bc_objects</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">reads_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_file</span><span class="p">,</span> <span class="n">bc_objects</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Visualize read-count distributions for threshold determination.</span>
 
@@ -345,7 +359,7 @@
         
 <div class="viewcode-block" id="TreblPipeline.step1_reads_distribution">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.step1_reads_distribution">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">step1_reads_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_file</span><span class="p">,</span> <span class="n">bc_objects</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">,</span> <span class="n">step_suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">step1_reads_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_file</span><span class="p">,</span> <span class="n">bc_objects</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">,</span> <span class="n">step_suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convenience wrapper for Step 1 read distributions.</span>
 
@@ -361,7 +375,7 @@
 
 <div class="viewcode-block" id="TreblPipeline.step2_reads_distribution">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.step2_reads_distribution">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">step2_reads_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="nf">step2_reads_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                                  <span class="n">AD_seq_file</span><span class="p">,</span>
         <span class="n">AD_bc_objects</span><span class="p">,</span>
         <span class="n">RT_seq_file</span><span class="p">,</span>
@@ -388,7 +402,7 @@
 
 <div class="viewcode-block" id="TreblPipeline.trebl_experiment_reads_distribution">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.trebl_experiment_reads_distribution">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">trebl_experiment_reads_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">AD_seq_files</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">trebl_experiment_reads_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">AD_seq_files</span><span class="p">,</span>
         <span class="n">AD_bc_objects</span><span class="p">,</span>
         <span class="n">RT_seq_files</span><span class="p">,</span>
         <span class="n">RT_bc_objects</span><span class="p">,</span>
@@ -423,7 +437,7 @@
             
 <div class="viewcode-block" id="TreblPipeline.run_step_1">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.run_step_1">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">run_step_1</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">run_step_1</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">seq_file</span><span class="p">,</span>
         <span class="n">bc_objects</span><span class="p">,</span>
@@ -549,7 +563,7 @@
 
 <div class="viewcode-block" id="TreblPipeline.run_step_2">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.run_step_2">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">run_step_2</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">run_step_2</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">AD_seq_file</span><span class="p">,</span>
         <span class="n">AD_bc_objects</span><span class="p">,</span>
@@ -665,7 +679,7 @@
         <span class="p">}</span></div>
 
     
-    <span class="k">def</span><span class="w"> </span><span class="nf">_duckdb_safe_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_duckdb_safe_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert a filename to a DuckDB-safe table name.</span>
 <span class="sd">        </span>
@@ -686,7 +700,7 @@
         <span class="k">return</span> <span class="n">name</span>
     
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_run_trebl_experiment_helper</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_run_trebl_experiment_helper</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">seq_files</span><span class="p">,</span>
         <span class="n">bc_objects</span><span class="p">,</span>
@@ -872,7 +886,7 @@
 
 <div class="viewcode-block" id="TreblPipeline.trebl_experiment_analysis">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.trebl_experiment_analysis">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">trebl_experiment_analysis</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">trebl_experiment_analysis</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">AD_seq_files</span><span class="p">,</span>
         <span class="n">AD_bc_objects</span><span class="p">,</span>
@@ -1000,7 +1014,7 @@
 
 <div class="viewcode-block" id="TreblPipeline.plot_trebl_experiment_loss">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.plot_trebl_experiment_loss">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">plot_trebl_experiment_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bc_objects</span><span class="p">,</span> <span class="n">step1_map_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">step_name_prefix</span><span class="o">=</span><span class="s2">&quot;trebl_experiment_&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">plot_trebl_experiment_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bc_objects</span><span class="p">,</span> <span class="n">step1_map_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">step_name_prefix</span><span class="o">=</span><span class="s2">&quot;trebl_experiment_&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot barcode quality and mapping loss for a TREBL experiment.</span>
 
@@ -1121,7 +1135,7 @@
 
 <div class="viewcode-block" id="TreblPipeline.calculate_activity_scores">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.calculate_activity_scores">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_activity_scores</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">calculate_activity_scores</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">step1_path</span><span class="p">,</span>
         <span class="n">AD_bc_objects</span><span class="p">,</span>
@@ -1212,10 +1226,10 @@
 <span class="sd">            KeyError: If expected columns are missing from input files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+        <span class="kn">import</span> <span class="nn">sys</span>
+        <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">extract_with_regex</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">extract_with_regex</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Extract integer values using regex with validation.&quot;&quot;&quot;</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">extracted</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">group</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
