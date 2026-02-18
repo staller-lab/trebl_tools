@@ -23,7 +23,7 @@
 
 # Load required modules and activate conda environment
 module load python
-source activate trebl_env  # Or: conda activate trebl_env
+source activate trebl_tools_env  # Or: conda activate trebl_tools_env
 
 # Set number of threads for multiprocessing
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK

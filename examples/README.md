@@ -63,7 +63,7 @@ examples/
 2. Navigate to `examples/notebooks/`
 3. Open either `quick_start_example.ipynb` or `full_analysis_example.ipynb`
 4. Update the file paths in the notebook to point to your data
-5. Select the `trebl_env` kernel
+5. Select the `trebl_tools_env` kernel
 6. Run the cells sequentially
 
 **Note:** For large files (>10M reads), plotting steps can be time-consuming. Consider using the Savio job submission method instead.

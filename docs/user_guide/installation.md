@@ -7,18 +7,20 @@ This analysis is designed to run on Savio to handle large data and computations.
 We recommend creating your own conda environment for better package management and easier Jupyter integration:
 
 ```bash
-# 1. Create a new conda environment with Python 3.11
-conda create -n trebl_env python=3.11
-conda activate trebl_env
+# 1. Clone the repository
+git clone https://github.com/staller-lab/trebl_tools.git
+cd trebl_tools
 
-# 2. Install necessary conda packages (bioinformatics tools)
-conda install -c bioconda umi_tools fastp
+# 2. Create conda environment from the provided YAML file
+# This will install all dependencies including Python, pandas, duckdb, umi_tools, etc.
+conda env create -f trebl_tools_env.yaml
+conda activate trebl_tools_env
 
-# 3. Install trebl_tools and its Python dependencies from git (v0.1.0-beta)
-pip install git+https://github.com/staller-lab/trebl_tools.git@v0.1.0-beta
+# 3. Install trebl_tools package
+pip install -e .
 
 # 4. Install Jupyter kernel using your conda environment
-python -m ipykernel install --user --name trebl_env
+python -m ipykernel install --user --name trebl_tools_env
 
 # 5. Verify kernel is installed
 jupyter kernelspec list
@@ -28,7 +30,7 @@ jupyter kernelspec list
 
 1. Start a jupyter server session on Savio OOD
 
-2. Open a notebook and select "trebl_env" as the kernel
+2. Open a notebook and select "trebl_tools_env" as the kernel
 
 3. The trebl_tools package will be available to import directly:
 

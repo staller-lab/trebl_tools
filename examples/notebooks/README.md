@@ -54,15 +54,15 @@ A comprehensive workflow for publication-quality analysis.
 1. **Environment Setup:**
    - Ensure you have installed `trebl_tools` and dependencies
    - See main repository README for installation instructions
-   - Activate your conda environment: `conda activate trebl_env`
+   - Activate your conda environment: `conda activate trebl_tools_env`
 
 2. **Jupyter Setup on Savio:**
    - Start a Jupyter session via Savio Open OnDemand (OOD)
    - Install the kernel if not already done:
      ```bash
-     python -m ipykernel install --user --name trebl_env
+     python -m ipykernel install --user --name trebl_tools_env
      ```
-   - Select the `trebl_env` kernel when opening a notebook
+   - Select the `trebl_tools_env` kernel when opening a notebook
 
 ### Running a Notebook
 
@@ -158,12 +158,12 @@ These directories will contain:
 
 ### Kernel Not Found
 - Make sure you've installed the IPython kernel for your conda environment
-- Run: `python -m ipykernel install --user --name trebl_env`
+- Run: `python -m ipykernel install --user --name trebl_tools_env`
 - Refresh your Jupyter session
 
 ### Import Errors
 - Verify trebl_tools is installed: `pip show trebl_tools`
-- Make sure you selected the correct kernel (`trebl_env`)
+- Make sure you selected the correct kernel (`trebl_tools_env`)
 - Check that all dependencies are installed
 
 ### Long Running Cells
