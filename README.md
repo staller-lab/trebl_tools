@@ -15,15 +15,18 @@ We recommend creating your own conda environment for better package management a
 conda create -n trebl_env python=3.11
 conda activate trebl_env
 
-# 2. Clone the repository
+# 2. Install necessary conda packages (bioinformatics tools)
+conda install -c bioconda bowtie2 samtools umi_tools fastp
+
+# 3. Clone the repository
 git clone https://github.com/staller-lab/trebl_tools.git
 cd trebl_tools
 
-# 3. Install trebl_tools and its Python dependencies
+# 4. Install trebl_tools and its Python dependencies from git
 pip install -e .
 
-# 4. Install Jupyter kernel using your conda environment
+# 5. Install Jupyter kernel using your conda environment
 python -m ipykernel install --user --name trebl_env
 
-# 5. Verify it's installed
+# 6. Verify kernel is installed
 jupyter kernelspec list
