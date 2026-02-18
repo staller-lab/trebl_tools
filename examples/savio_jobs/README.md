@@ -1,6 +1,11 @@
 # Savio Job Scripts
 
-This directory contains SLURM batch scripts for running TREBL analysis on the Savio cluster.
+This directory contains SLURM batch scripts for running complete TREBL analysis workflows on the Savio cluster.
+
+Each script covers all three analysis steps:
+1. **Step 1**: Initial TREBL mapping to establish barcode relationships
+2. **Step 2**: Process separated AD and RT libraries
+3. **TREBL Experiment**: Full experiment analysis with UMI deduplication
 
 ## Available Scripts
 
@@ -73,6 +78,8 @@ Runs a comprehensive TREBL analysis with maximum accuracy.
    # ==========================================
    DESIGN_FILE = "/path/to/your/design_file.txt"
    STEP1_SEQ_FILE = "/path/to/your/step1_sequencing_file.fastq"
+   STEP2_AD_SEQ_FILE = "/path/to/your/step2_AD_file.fastq"
+   STEP2_RT_SEQ_FILE = "/path/to/your/step2_RT_file.fastq"
    AD_SEQ_FILES_PATTERN = "/path/to/AD_assembled/*"
    RT_SEQ_FILES_PATTERN = "/path/to/RT_assembled/*"
    OUTPUT_DIR = "output/quick_start"
@@ -160,10 +167,13 @@ Both scripts follow this workflow:
 3. **Run Step 1:**
    - Plot reads distribution
    - Run mapping
-4. **Run TREBL experiment:**
+4. **Run Step 2:**
+   - Plot Step 2 reads distribution
+   - Run Step 2 mapping
+5. **Run TREBL experiment:**
    - Plot TREBL experiment reads distribution
    - Run analysis with UMI deduplication
-5. **Output summary statistics**
+6. **Output summary statistics**
 
 ### Key Differences Between Scripts
 

@@ -1,6 +1,11 @@
 # TREBL Tools Examples
 
-This directory contains example notebooks and Savio job scripts for running TREBL analysis workflows. Two complete workflows are provided to accommodate different analysis needs.
+This directory contains example notebooks and Savio job scripts for running complete TREBL analysis workflows. Two comprehensive workflows are provided to accommodate different analysis needs.
+
+Each workflow includes all three analysis steps:
+- **Step 1**: Initial TREBL mapping to establish barcode relationships
+- **Step 2**: Process separated AD and RT libraries  
+- **TREBL Experiment**: Full experiment analysis with UMI deduplication
 
 ## Directory Structure
 
@@ -128,6 +133,12 @@ Both workflows generate:
 - `step1_*.csv` - Mapping of barcodes from Step 1
 - `step1_*_loss_table.png` - Visualization of filtering steps
 - `step1_reads_distribution.png` - Histogram of reads per barcode
+
+### Step 2 Outputs
+- `step2_AD.csv` - AD library mapping from Step 2
+- `step2_RT.csv` - RT library mapping from Step 2
+- `step2_*_loss_table.png` - Visualization of Step 2 filtering
+- `step2_reads_distribution_*.png` - Histograms for AD and RT files
 
 ### TREBL Experiment Outputs
 - `AD_trebl_experiment_results.csv` - AD library results with UMI counts

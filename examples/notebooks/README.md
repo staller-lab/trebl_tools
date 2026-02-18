@@ -1,6 +1,11 @@
 # Example Notebooks
 
-This directory contains Jupyter notebooks demonstrating TREBL analysis workflows.
+This directory contains Jupyter notebooks demonstrating complete TREBL analysis workflows.
+
+Each notebook covers all three analysis steps:
+1. **Step 1**: Initial TREBL mapping to establish barcode relationships
+2. **Step 2**: Process separated AD and RT libraries
+3. **TREBL Experiment**: Full experiment analysis with UMI deduplication
 
 ## Available Notebooks
 
@@ -76,6 +81,7 @@ A comprehensive workflow for publication-quality analysis.
 
 If your sequencing files are large (>10 million reads), the plotting steps can take significant time:
 - `step1_reads_distribution()` - Can take 10-30 minutes
+- `step2_reads_distribution()` - Can take 10-30 minutes  
 - `trebl_experiment_reads_distribution()` - Can take 30-60 minutes for multiple files
 
 **Recommendation:** For very large datasets, consider using the Savio job scripts in `../savio_jobs/` instead, which are optimized for cluster execution.
@@ -96,7 +102,8 @@ Both notebooks follow the same overall structure:
 2. Initialize pipeline
 3. Define barcodes
 4. Run Step 1 mapping
-5. Run TREBL experiment analysis
+5. Run Step 2 mapping
+6. Run TREBL experiment analysis
 
 **The key differences are:**
 
@@ -115,9 +122,9 @@ By default, outputs are saved to:
 - **Full Analysis:** `output/full_analysis/`
 
 These directories will contain:
-- CSV files with mapping and count results
+- CSV files with Step 1, Step 2, and TREBL experiment results
 - PNG files with visualizations
-- Loss table summaries
+- Loss table summaries for each step
 
 ### Customization Tips
 
