@@ -16,7 +16,7 @@ RPTR_BC = finder.Barcode(name="RPTR_BC", preceder="CTCGAG", post="GGCCGC", lengt
 
 # Separate objects by AD and RT
 AD_bc_objects = [AD, AD_BC]  # AD and AD barcodes, only use AD BC if human
-RT_bc_objects = [RT_BC]      # Reporter barcodes
+RT_bc_objects = [RPTR_BC]    # Reporter barcodes
 
 # Separate AD and RT objects to search for
 AD_UMI = finder.Barcode(name="UMI", preceder="TGATTT", post="", length=12)
