@@ -1,40 +1,29 @@
 # TREBL Tools
 
-Tools for TREBL (Transcriptional REporter Barcode Library) analysis and barcode processing.
+Tools for TREBL analysis and barcode processing.
 
 **For Staller Lab members on Savio.**
 
 ## Installation
 
+### Recommended: Create Your Own Conda Environment
+
+We recommend creating your own conda environment for better package management and easier Jupyter integration:
+
 ```bash
-# Clone the repository
+# 1. Create a new conda environment with Python 3.11
+conda create -n trebl_env python=3.11
+conda activate trebl_env
+
+# 2. Clone the repository
 git clone https://github.com/staller-lab/trebl_tools.git
 cd trebl_tools
 
-# Install the package
-pip install --user -e .
-```
+# 3. Install trebl_tools and its Python dependencies
+pip install -e .
 
-## Quick Test
+# 4. Install Jupyter kernel using your conda environment
+python -m ipykernel install --user --name trebl_env
 
-```bash
-python -c "import trebl_tools; print(trebl_tools.__version__)"
-```
-
-## Basic Usage
-
-```python
-# TBD
-```
-
-## Documentation
-
-Full documentation: [Read the Docs](https://trebl-tools.readthedocs.io) *(coming soon)*
-
-## Support
-
-Questions? Contact Sanjana Kotha (sanjana.kotha@berkeley.edu) or ask in the lab Slack.
-
-## License
-
-[Add your license here]
+# 5. Verify it's installed
+jupyter kernelspec list

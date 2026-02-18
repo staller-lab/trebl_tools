@@ -9,8 +9,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import seaborn as sns
 from Bio.Seq import Seq
-
-conda_env='/global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/conda/umi_tools/'
+import shutil
 
 def rc_and_swap(preceder: str, post: str, length: int) -> (str, str):
     """Generate reverse complement patterns for barcode extraction.
@@ -139,9 +138,13 @@ def run_whitelist_on_concat_domains(fastq_path, output_dir, set_cell_number=None
     whitelist_path = output_dir / f"{prefix}_whitelist.txt"
     plot_prefix = output_dir / f"{prefix}_plots"
 
+    umi_tools_exe = shutil.which("umi_tools")
+    if umi_tools_exe is None:
+        raise RuntimeError("umi_tools not found on PATH. Activate the appropriate conda environment.")
+
     cmd = [
-        "conda", "run", "-p", conda_env,
-        "umi_tools", "whitelist",
+        umi_tools_exe,
+        "whitelist",
         "--knee-method=density",
         "--stdin", str(fastq_path),
         "--bc-pattern", "(?P<umi_1>.{1})(?P<cell_1>.*)",

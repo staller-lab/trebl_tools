@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=32
 #SBATCH --time=6:00:00
 
-source activate /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/conda/umi_tools
+#source activate /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/conda/umi_tools
 
 INPUT_DIR=$1 # First input: input dir
 OUTPUT_DIR=$2 # Second output: output dir
