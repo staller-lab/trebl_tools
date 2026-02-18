@@ -56,7 +56,7 @@ Runs a comprehensive TREBL analysis with maximum accuracy.
 
 2. **Ensure conda environment is set up:**
    ```bash
-   conda activate trebl_env
+   conda activate trebl_tools_env
    # Verify installation
    pip show trebl_tools
    ```
@@ -240,7 +240,7 @@ If your environment has a different name:
 
 ```bash
 # Change this line in the script
-source activate trebl_env
+source activate trebl_tools_env
 # to
 source activate YOUR_ENV_NAME
 ```
@@ -292,7 +292,7 @@ cat logs/full_analysis_*.err
 
 **Check:**
 - Conda environment activated correctly
-- trebl_tools installed: `conda activate trebl_env && pip show trebl_tools`
+- trebl_tools installed: `conda activate trebl_tools_env && pip show trebl_tools`
 - All dependencies installed
 
 ### Wrong Results Directory
