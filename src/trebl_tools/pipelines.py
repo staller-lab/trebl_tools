@@ -21,6 +21,7 @@ import json
 import subprocess
 from pathlib import Path
 
+from IPython.display import display
 
 # Defines the sequence of refinement operations for each step.
 # Indexed by step name and whether error correction is enabled.
@@ -211,9 +212,9 @@ class TreblPipeline:
             refiner.refine_map_from_db()
     
             if self.output_figures_path and plot_titles:
-                refiner.plot_loss(text_offset = -0.2)
+                fig, ax = refiner.plot_loss(text_offset = -0.2)
                 if plot_title:
-                    plt.title(plot_title)
+                    ax.set_title(plot_title)
     
         return refiners
 
@@ -318,6 +319,7 @@ class TreblPipeline:
         step_suffix=""):
         """
         Convenience wrapper for TREBL Experiment AD and RT libraries.
+        Useful if using reads rather than UMI counts for thresholding.
 
         Args:
             AD_seq_file (str): FASTQ file for AD reads.
@@ -699,6 +701,9 @@ class TreblPipeline:
             )
             refiner.refine_map_from_db()
             refiner.plot_loss()
+            plt.title(f"{name_only} TREBL Experiment")
+            plt.show()
+            
             if self.error_correction:
                 refiner.plot_error_correction()
     
@@ -1143,13 +1148,14 @@ class TreblPipeline:
         ad_column_names = [bc.name for bc in AD_bc_objects]
         rt_column_names = [bc.name for bc in RT_bc_objects]
 
-        ad_bc_results = pd.read_csv(ad_results_path, index_col=0)
+        ad_bc_results = pd.read_csv(ad_results_path)
         ad_bc_results["time"] = extract_with_regex(
             ad_bc_results["name"], time_regex, column_name="time"
         )
         ad_bc_results["rep"] = extract_with_regex(
             ad_bc_results["name"], rep_regex, column_name="rep"
         )
+
         ad_bc_results = ad_bc_results[
             ad_column_names + ["time", "rep", "AD_umi_count_simple"]
         ].reset_index(drop=True)
@@ -1167,7 +1173,8 @@ class TreblPipeline:
 
         # Load Step 1 mapping
         step1_map = pd.read_csv(step1_path)
-        step1_map = step1_map[ad_column_names + rt_column_names + ["AD"]]
+        step1_map = step1_map[list(set(ad_column_names + rt_column_names + ["AD"]))]
+        
 
         step1_map_with_ad = pd.merge(step1_map, ad_bc_results)
         step1_map_with_rt = pd.merge(step1_map, rt_bc_results)
