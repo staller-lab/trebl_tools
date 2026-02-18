@@ -190,7 +190,7 @@ The function returns a multi-indexed DataFrame with:
 **Metrics calculated per timepoint**:
 - `bc_activity_avg`: Mean per-barcode activity (RT_UMI / AD_UMI)
 - `bc_activity_std`: Standard deviation of per-barcode activity
-- `pooled_activity`: Gene-level activity (sum of RT_UMI / sum of AD_UMI)
+- `pooled_activity`: AD-level activity (sum of RT_UMI / sum of AD_UMI)
 
 **Files saved** (if `output_path` configured):
 - `bc_activities.csv`: Raw per-barcode activity scores
