@@ -135,6 +135,15 @@ trebl_results = pipeline.trebl_experiment_analysis(
 
 ## Final Steps
 
-[To-do] Get final activities
+### Calculating Activity Scores
 
-Finally, you can delete the duck db file.
+After completing the TREBL experiment analysis, you can calculate final activity scores from the output data. This step will be documented in a future update.
+
+### Cleanup
+
+Once you have finished your analysis and saved all results, you can delete the DuckDB database file to free up disk space:
+
+```python
+import os
+os.remove("test.db")  # Replace with your db_path
+```
