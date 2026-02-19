@@ -11,19 +11,16 @@ Tools for TREBL analysis and barcode processing.
 We recommend creating your own conda environment for better package management and easier Jupyter integration:
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/staller-lab/trebl_tools.git
+# clone the latest release 
+git clone --branch v0.1.0 --depth 1 https://github.com/staller-lab/trebl_tools.git
 cd trebl_tools
 
-# 2. Create conda environment from the provided YAML file
+# create and activate conda env from the repo YAML
 conda env create -f trebl_tools_env.yaml
-conda activate trebl_tools_env
+conda activate trebl_tools_env  
 
-# 3. Install trebl_tools package
-pip install -e .
+# install the package (regular / non-editable)
+pip install .
 
-# 4. Install Jupyter kernel using your conda environment
-python -m ipykernel install --user --name trebl_tools_env
-
-# 5. Verify kernel is installed
-jupyter kernelspec list
+# install Jupyter kernel for this env
+python -m ipykernel install --user --name trebl_tools_env --display-name "trebl_tools (v0.1.0)"
