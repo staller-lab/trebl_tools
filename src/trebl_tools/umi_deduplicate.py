@@ -458,43 +458,7 @@ class UMIDeduplicator:
 
     @preprocess.time_it
     def align_sort_and_deduplicate_umis(self):
-        """Execute the complete UMI-tools alignment and deduplication pipeline.
-
-        Runs the full UMI-tools workflow:
-        1. Aligns FASTQ to barcode reference using bowtie2
-        2. Converts SAM to BAM format
-        3. Sorts and indexes BAM file
-        4. Deduplicates UMIs using UMI-tools directional method
-        5. Generates final count table
-        6. Cleans up intermediate files
-
-        Note:
-            Requires conda environment with umi_tools. Module loads
-            bowtie2, and samtools. Uses 32 threads for alignment and sorting.
-            All intermediate files are automatically cleaned up.
-
-        Raises:
-            subprocess.CalledProcessError: If any step in the pipeline fails.
-
-        Example:
-            >>> dedup.align_sort_and_deduplicate_umis()
-            Aligning .FASTQ to reference .FA ...
-            Converting SAM -> BAM ...
-            Sorting BAM ...
-            Indexing BAM ...
-            Deduplicating UMIs ...
-            Saving final counts...
-            Cleaning up intermediate files...
-            UMI workflow complete!
-            Done in 5.23 minutes.
-        """
-        # --- Check required executables ---
-        for exe in ["bowtie2", "samtools", "umi_tools"]:
-            if shutil.which(exe) is None:
-                raise RuntimeError(
-                    f"'{exe}' not found on PATH. Make sure your environment contains this tool."
-                )
-
+        """Execute the complete UMI-tools alignment and deduplication pipeline."""
         # --- Setup output directory ---
         output_dir = self.output_path or os.getcwd()
         os.makedirs(output_dir, exist_ok=True)
@@ -512,11 +476,13 @@ class UMIDeduplicator:
             output_dir, f"{self.base}_directional_umi_counts.tsv"
         )
 
-        bc_len = sum([bc.length for bc in self.bc_objects])
+        bc_len = sum(bc.length for bc in self.bc_objects)
+        L = min(32, bc_len)
 
         # --- Load modules for Bowtie2 and Samtools ---
         module_cmd = (
-            "module load bio/bowtie2/2.5.1-gcc-11.4.0 bio/samtools/1.17-gcc-11.4.0 && "
+            "module load bio/bowtie2/2.5.1-gcc-11.4.0 "
+            "bio/samtools/1.17-gcc-11.4.0 && "
         )
 
         # --- Bowtie2 alignment ---
@@ -524,24 +490,66 @@ class UMIDeduplicator:
         subprocess.run(
             module_cmd + f"bowtie2 -p 32 -x {self.bowtie2_index_prefix} "
             f"-U {self.umi_fastq} -S {sam_file} --norc --end-to-end "
-            f"--very-sensitive -N 0 -L {bc_len} -k 1 --score-min L,0,0",
+            f"--very-sensitive -N 0 -L {L} -k 1 --score-min L,0,0",
             shell=True,
             check=True,
             executable="/bin/bash",
         )
 
-        # --- Convert SAM -> BAM, Sort, Index ---
-        # Prepend the module load for each command that needs samtools
-        for cmd, desc in [
-            (f"samtools view -b {sam_file} -o {bam_file}", "Converting SAM -> BAM"),
-            (f"samtools sort -@ 32 -o {sorted_bam} {bam_file}", "Sorting BAM"),
-            (f"samtools index {sorted_bam}", "Indexing BAM"),
-            (f"samtools index {dedup_bam}", "Indexing dedup BAM"),
-        ]:
-            print(f"{desc} ...")
-            subprocess.run(
-                module_cmd + cmd, shell=True, check=True, executable="/bin/bash"
-            )
+        # --- Convert SAM -> BAM ---
+        print("Converting SAM -> BAM ...")
+        subprocess.run(
+            module_cmd + f"samtools view -b {sam_file} -o {bam_file}",
+            shell=True,
+            check=True,
+            executable="/bin/bash",
+        )
+
+        # --- Sort BAM ---
+        print("Sorting BAM ...")
+        subprocess.run(
+            module_cmd + f"samtools sort -@ 32 -o {sorted_bam} {bam_file}",
+            shell=True,
+            check=True,
+            executable="/bin/bash",
+        )
+
+        # --- Index sorted BAM ---
+        print("Indexing BAM ...")
+        subprocess.run(
+            module_cmd + f"samtools index {sorted_bam}",
+            shell=True,
+            check=True,
+            executable="/bin/bash",
+        )
+
+        # --- Deduplicate UMIs ---
+        print("Deduplicating UMIs ...")
+        subprocess.run(
+            [
+                "umi_tools",
+                "dedup",
+                "-I",
+                sorted_bam,
+                "-S",
+                dedup_bam,
+                "--method=directional",
+                "--per-contig",
+                "--per-gene",
+                # add this if needed:
+                # "--umi-tag=RX",
+            ],
+            check=True,
+        )
+
+        # --- Index deduplicated BAM (NOW it exists) ---
+        print("Indexing dedup BAM ...")
+        subprocess.run(
+            module_cmd + f"samtools index {dedup_bam}",
+            shell=True,
+            check=True,
+            executable="/bin/bash",
+        )
 
         # --- Count UMIs per barcode ---
         print("Saving final counts ...")
@@ -558,9 +566,6 @@ class UMIDeduplicator:
             check=True,
         )
 
-        # --- Cleanup temporary files ---
-        print("Cleaning up intermediate files ...")
-        # tmp_dir and its contents will be deleted automatically via atexit
         print("UMI workflow complete!")
 
     def run_umi_tools_deduplication(self):

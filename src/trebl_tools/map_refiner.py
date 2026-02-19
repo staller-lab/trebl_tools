@@ -1267,7 +1267,6 @@ class MapRefiner:
         """
         return plotting.plot_error_correction(self.output_figures_path,
                                               self.table_prefix_with_descriptor,
-                                              save_dir,
                                               plot)
 
     @time_it
