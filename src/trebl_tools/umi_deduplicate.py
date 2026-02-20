@@ -3,7 +3,6 @@ import sys
 sys.path = [
     p for p in sys.path if "/.local/lib" not in p
 ]  # Use conda env installation of duckdb
-print(sys.path)
 
 import duckdb  # For connecting to your DuckDB database
 import pandas as pd  # For DataFrame manipulation
@@ -201,7 +200,7 @@ class UMIDeduplicator:
 
         query = f"""
             SELECT b.*, a."{self.alias_name}"
-            FROM "{self.new_table_name}" AS a
+            FROM "{self.table_prefix}{self.refined_map_suffix}_umis_collapsed" AS a
             INNER JOIN "{self.step1_map_name}" AS b
             ON {join_condition}
         """
@@ -254,7 +253,7 @@ class UMIDeduplicator:
         """
 
         query = f"""
-            SELECT * FROM "{self.new_table_name}"
+            SELECT * FROM "{self.table_prefix}{self.refined_map_suffix}_umis_collapsed"
         """
         merged_df = self.con.execute(query).fetchdf()
 
