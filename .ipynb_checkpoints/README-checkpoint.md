@@ -12,7 +12,7 @@ We recommend creating your own conda environment for better package management a
 
 ```bash
 # clone the latest release 
-git clone --branch v0.1.1 --depth 1 https://github.com/staller-lab/trebl_tools.git
+git clone --branch v0.1.3 --depth 1 https://github.com/staller-lab/trebl_tools.git
 cd trebl_tools
 
 # create and activate conda env from the repo YAML
