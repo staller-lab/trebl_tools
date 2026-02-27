@@ -975,27 +975,22 @@ class TreblPipeline:
 
         if step1_map_csv_path:
             # Load Step 1 map CSV into DuckDB as a temporary table
-            step1_map_name = "step1_map_temp"
-            self.con.execute(f"DROP TABLE IF EXISTS {step1_map_name}")
-            self.con.execute(
-                f"""
-                CREATE TABLE {step1_map_name} AS
-                SELECT * FROM read_csv_auto('{step1_map_csv_path}')
-            """
-            )
-
+            
             # Plot loss for AD and RT
             self.plot_trebl_experiment_loss(
-                AD_bc_objects, step1_map_name, step_name_prefix=step_name_prefix
+                AD_bc_objects, step1_map_csv_path, step_name_prefix=step_name_prefix
             )
             self.plot_trebl_experiment_loss(
-                RT_bc_objects, step1_map_name, step_name_prefix=step_name_prefix
+                RT_bc_objects, step1_map_csv_path, step_name_prefix=step_name_prefix
             )
 
         return results
 
     def plot_trebl_experiment_loss(
-        self, bc_objects, step1_map_name=None, step_name_prefix="trebl_experiment_"
+        self,
+        bc_objects,
+        step1_map_csv_path=None,
+        step_name_prefix="trebl_experiment_",
     ):
         """
         Plot barcode quality and mapping loss for a TREBL experiment.
@@ -1010,8 +1005,8 @@ class TreblPipeline:
 
         Args:
             bc_objects (list): List of barcode objects to evaluate.
-            step1_map_name (str): Name of the Step 1 DuckDB table used to
-                calculate overlap with mapped barcodes.
+            step1_map_csv_path (str, optional): Path to Step 1 map CSV for 
+                computing overlap plots.
             step_name_prefix (str, optional): Prefix used to identify TREBL
                 experiment tables in DuckDB. Defaults to "trebl_experiment_".
 
@@ -1025,6 +1020,17 @@ class TreblPipeline:
 
         # Connect to DuckDB
         con = duckdb.connect(self.db_path)
+
+        step1_map_name = None
+        if step1_map_csv_path is not None:
+            step1_map_name = "step1_map_temp"
+            con.execute(f"DROP TABLE IF EXISTS {step1_map_name}")
+            con.execute(
+                f"""
+                CREATE TEMP TABLE {step1_map_name} AS
+                SELECT * FROM read_csv_auto('{step1_map_csv_path}')
+                """
+            )
 
         # Get all tables matching step_name_prefix and bc_object names
         tables = con.execute("SHOW TABLES").fetchall()
@@ -1116,10 +1122,15 @@ class TreblPipeline:
                     container, fmt="%d", label_type="edge", fontsize="small", padding=2
                 )
 
+            import textwrap
+            
             title_regex = f"{step_name_prefix}(.*)_{bc_names_str}_initial"
             match = re.search(title_regex, file_name)
             group_name = match.group(1) if match else file_name
-            ax.set_title(str(group_name), fontsize="medium", y=1.1)
+            
+            wrapped_title = "\n".join(textwrap.wrap(group_name, width=20))
+            
+            ax.set_title(wrapped_title, fontsize="medium", y=1.01)
             ax.set_xlabel("")
             ax.set_ylabel("")
 
@@ -1131,7 +1142,7 @@ class TreblPipeline:
         sns.despine()
         plt.tight_layout(pad=1)
 
-        fig.suptitle("Trebl Experiment Loss")
+        fig.suptitle("Trebl Experiment Loss", y = 1.02)
 
         save_path = os.path.join(
             self.output_figures_path,
