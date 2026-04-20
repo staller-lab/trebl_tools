@@ -16,26 +16,28 @@ Choose Your Analysis Path
 -------------------------
 
 Use the flowchart below to pick the right workflow before you start.
+**All UMI workflows always use** ``umi_deduplication="both"`` — the only choice is whether to enable error correction.
 
 .. code-block:: text
 
    Do you have UMIs in your experiment?
    │
-   ├── Yes ──► Is speed more important than maximum accuracy?
+   ├── Yes ──► Do you want error correction?
+   │           (salvages more reads but adds processing time)
    │           │
-   │           ├── Yes ──► Quick Start  (~2–4 hours, good for exploration/testing)
+   │           ├── No  ──► Quick Start  (~2–4 hours, good for exploration/testing)
    │           │           • error_correction = False
-   │           │           • umi_deduplication = "simple"
+   │           │           • umi_deduplication = "both"  ← always use this
    │           │           Example: examples/notebooks/quick_start_example.ipynb
    │           │
-   │           └── No  ──► Full Analysis  (~6–12 hours, publication-quality)
+   │           └── Yes ──► Full Analysis  (~6–12 hours, publication-quality)
    │                       • error_correction = True
-   │                       • umi_deduplication = "both"  (simple + directional)
+   │                       • umi_deduplication = "both"  ← always use this
    │                       Example: examples/notebooks/full_analysis_example.ipynb
    │
    └── No  ──► No-UMI Path  (see Advanced Usage)
                • AD_umi_object = None,  RT_umi_object = None
-               • Set AD_reads_threshold / RT_reads_threshold manually
+               • Set reads_threshold_AD / reads_threshold_RT manually
 
 .. list-table:: At a glance: workflow comparison
    :header-rows: 1
@@ -50,7 +52,7 @@ Use the flowchart below to pick the right workflow before you start.
      - ``True``
      - ``False``
    * - ``umi_deduplication``
-     - ``"simple"``
+     - ``"both"``
      - ``"both"``
      - *(omit UMI objects)*
    * - Typical runtime

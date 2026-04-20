@@ -7,7 +7,9 @@ matching example notebook on GitHub:
 [`quick_start_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/quick_start_example.ipynb) |
 [`full_analysis_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/full_analysis_example.ipynb)
 
-### Quick Start (faster, good for exploration)
+**Both presets always use `umi_deduplication="both"`** (simple + directional deduplication). The only thing you choose is whether to enable error correction.
+
+### Quick Start (no error correction, faster)
 
 Use when you want rapid turnaround, are testing a new dataset, or when data quality is high.
 
@@ -21,13 +23,13 @@ pipeline = pipelines.TreblPipeline(
 # Optional: test_n_reads=100000 to test with a subset first
 ```
 
-Later, when calling `trebl_experiment_analysis`, use:
+Later, when calling `trebl_experiment_analysis`, always use:
 
 ```python
-umi_deduplication="simple"           # Count unique UMIs only
+umi_deduplication="both"             # Simple + directional (complex) deduplication
 ```
 
-### Full Analysis (slower, publication-quality)
+### Full Analysis (with error correction, publication-quality)
 
 Use when preparing final results or when data quality is variable.
 
@@ -41,7 +43,7 @@ pipeline = pipelines.TreblPipeline(
 # Optional: test_n_reads=100000 to test with a subset first
 ```
 
-Later, when calling `trebl_experiment_analysis`, use:
+Later, when calling `trebl_experiment_analysis`, always use:
 
 ```python
 umi_deduplication="both"             # Simple + directional (complex) deduplication

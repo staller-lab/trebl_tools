@@ -4,25 +4,18 @@ This step processes a full TREBL-seq experiment, mapping AD and RT barcodes acro
 
 **Note:** Must have successfully run step 1 before.
 
-## Choosing Your UMI Deduplication Mode
+Always use `umi_deduplication="both"` — this runs both simple and directional (UMI-tools) deduplication and gives you both sets of counts. The only choice is whether to enable **error correction** when you initialise the pipeline (see [Analysis Setup](analysis_setup.md)).
 
-Pass `umi_deduplication` to `trebl_experiment_analysis` to control deduplication:
-
-| Value | What it does | When to use |
-|-------|-------------|-------------|
-| `"simple"` | Count unique UMIs per barcode | Quick Start — faster, less disk usage |
-| `"both"` | Run simple **and** directional (UMI-tools) deduplication | Full Analysis — publication-quality results |
-
-> **Tip:** See the [Analysis Setup](analysis_setup.md) page for Quick Start vs Full Analysis presets, or jump straight to the example notebooks:
-> [`quick_start_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/quick_start_example.ipynb) |
-> [`full_analysis_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/full_analysis_example.ipynb)
+> **Tip:** Jump straight to the example notebooks:
+> [`quick_start_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/quick_start_example.ipynb) (no error correction) |
+> [`full_analysis_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/full_analysis_example.ipynb) (with error correction)
 
 ## Copy-Paste Ready Block
 
-### Quick Start (simple deduplication)
-
 ```python
-# TREBL Experiment: Quick Start — simple UMI deduplication only
+# TREBL Experiment: Reads Distribution and Analysis
+# Works for both Quick Start (error_correction=False) and
+# Full Analysis (error_correction=True) — set that flag in TreblPipeline()
 
 # Define barcodes (same as previous steps)
 AD = finder.Barcode(name="AD", preceder="GGCTAGC", post="TGACTAG", length=120)
@@ -38,6 +31,7 @@ RT_UMI = finder.Barcode(name="UMI", preceder="TGTCAC", post="", length=12)
 trebl_AD_seq_files = glob.glob("/path/to/AD_Assembled/*")
 trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")
 
+# Check reads distributions to pick threshold values
 pipeline.trebl_experiment_reads_distribution(
     AD_seq_files=trebl_AD_seq_files,
     AD_bc_objects=AD_bc_objects,
@@ -46,6 +40,7 @@ pipeline.trebl_experiment_reads_distribution(
     reverse_complement=True
 )
 
+# Run full TREBL experiment — always use umi_deduplication="both"
 pipeline.trebl_experiment_analysis(
     AD_seq_files=trebl_AD_seq_files,
     AD_bc_objects=AD_bc_objects,
@@ -55,27 +50,7 @@ pipeline.trebl_experiment_analysis(
     step1_map_csv_path="output/step1.csv",   # Path to Step 1 CSV
     AD_umi_object=AD_UMI,
     RT_umi_object=RT_UMI,
-    umi_deduplication="simple",              # Quick Start: simple only
-)
-```
-
-### Full Analysis (both simple and directional deduplication)
-
-```python
-# TREBL Experiment: Full Analysis — simple + directional UMI deduplication
-
-# (Same barcode and file definitions as Quick Start above)
-
-pipeline.trebl_experiment_analysis(
-    AD_seq_files=trebl_AD_seq_files,
-    AD_bc_objects=AD_bc_objects,
-    RT_seq_files=trebl_RT_seq_files,
-    RT_bc_objects=RT_bc_objects,
-    reverse_complement=True,
-    step1_map_csv_path="output/step1.csv",   # Path to Step 1 CSV
-    AD_umi_object=AD_UMI,
-    RT_umi_object=RT_UMI,
-    umi_deduplication="both",               # Full Analysis: simple + directional
+    umi_deduplication="both",               # Always use both
 )
 ```
 
@@ -140,14 +115,15 @@ pipeline.trebl_experiment_analysis(
     step1_map_csv_path="output/step1.csv",      # Path to Step 1 CSV file
     AD_umi_object=AD_UMI,                       # AD UMI deduplication
     RT_umi_object=RT_UMI,                       # RT UMI deduplication
-    umi_deduplication="both",                   # "simple" or "both"
+    umi_deduplication="both",                   # Always use "both"
 )
 ```
 
-**`umi_deduplication` options:**
-- `"simple"`: Count unique UMIs per barcode. Faster; used in the Quick Start notebook.
-- `"both"`: Run simple deduplication **and** UMI-tools directional deduplication. Provides both
-  counts for comparison; used in the Full Analysis notebook.
+**`umi_deduplication="both"`** runs two deduplication passes and saves both sets of counts:
+- **Simple:** Count unique UMIs per barcode (fast baseline)
+- **Directional:** UMI-tools directional deduplication (more accurate, corrects for PCR amplification bias)
+
+Always use `"both"` — it takes a little longer but gives you the full picture.
 
 **Other outputs:**
 - Refines mappings for AD and RT reads, filters low-read counts and keeps barcodes with correct lengths.
