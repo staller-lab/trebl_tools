@@ -165,34 +165,44 @@ class InitialMapper:
         con.execute("DROP TABLE seq;")
         con.execute("ALTER TABLE seq_rc RENAME TO seq;")
 
-    def _extract_sequence_object(self, seq_obj):
-        """Extract a barcode or UMI sequence into a new column and compute quality.
-
+    def _extract_sequence_object(self, seq_obj, umi = False):
+        """
+        Extract a barcode or UMI sequence into a new column and compute quality.
+        
         Internal helper method that extracts sequences based on the provided
-        sequence object's pattern specifications. Handles four extraction modes:
-        1. Both preceder and post: Extract sequence between patterns
-        2. Only preceder: Extract N bases after preceder pattern
-        3. Only post: Extract N bases before post pattern  
-        4. Neither: Extract last N bases from sequence
-
+        sequence object's pattern specifications. Handles five extraction modes:
+        
+        1. Both preceder and post:
+           Extract sequence between the two patterns using non-greedy regex.
+        
+        2. Only preceder (barcode mode):
+           Extract N bases immediately after the preceder.
+        
+        3. Only post (barcode mode):
+           Extract N bases immediately before the post pattern.
+        
+        4. UMI with no flanking sequence:
+           Extract the last N bases of the read.
+        
+        5. UMI with flanking sequence:
+           Locate the preceder near the end of the read and extract the N bases
+           immediately following it. This ensures the UMI is taken from the end
+           of the read rather than earlier internal matches.
+        
         Args:
             seq_obj (object): Barcode or UMI object with attributes:
                 - name (str): Column name for extracted sequence
                 - preceder (str or None): Pattern before target sequence
                 - post (str or None): Pattern after target sequence
                 - length (int): Expected length of target sequence
-
+        
         Note:
-            Creates two columns: {name} for the extracted sequence and
-            {name}_qual as a boolean flag indicating if extraction succeeded
-            (length matches expected). Uses non-greedy regex matching when
-            both preceder and post patterns are specified.
-
-        Example:
-            >>> # Extract 20bp barcode between "ATCG" and "GCTA"
-            >>> bc_obj = BarcodeObject(name="BC1", preceder="ATCG", post="GCTA", length=20)
-            >>> mapper._extract_sequence_object(bc_obj)
-            BC1: extracting between 'ATCG' and 'GCTA'
+            Creates two columns:
+                {name}      → extracted sequence
+                {name}_qual → boolean flag indicating extraction success
+                              (True if extracted length == expected length)
+        
+            Regex extraction returns an empty string if no match is found.
         """
         con = self.con
 
@@ -200,7 +210,12 @@ class InitialMapper:
         length = seq_obj.length
         con.execute(f"ALTER TABLE seq ADD COLUMN {col} VARCHAR;")
 
+        print (umi)
+        print(seq_obj.preceder)
+        print(seq_obj.post)
+
         if seq_obj.preceder and seq_obj.post:
+            # For either barcode or umi
             # Both exist → regex between preceder and post
             regex = f"{seq_obj.preceder}(.*?){seq_obj.post}"  # non-greedy
             print(f"{col}: extracting between '{seq_obj.preceder}' and '{seq_obj.post}'")
@@ -209,7 +224,8 @@ class InitialMapper:
                 SET {col} = coalesce(regexp_extract(sequence::VARCHAR, '{regex}', 1), '')
             """)
     
-        elif not seq_obj.preceder and not seq_obj.post:
+        elif not seq_obj.preceder and not seq_obj.post and umi:
+            # for umi, only length based
             # Neither exists → take last N bases
             print(f"{col}: extracting last {length} bases")
             con.execute(f"""
@@ -220,9 +236,28 @@ class InitialMapper:
                     ELSE ''
                 END
             """)
-    
+
+        elif seq_obj.preceder and umi:
+            # For a umi
+            # Preceder provided
+            flank = seq_obj.preceder
+            flank_len = len(flank)
+            total_len = flank_len + length
+        
+            print(f"{col}: extracting {length}bp UMI after flank '{flank}' near end of read")
+        
+            con.execute(f"""
+                UPDATE seq
+                SET {col} = CASE
+                    WHEN right(sequence, {total_len}) LIKE '{flank}%'
+                    THEN right(sequence, {length})
+                    ELSE ''
+                END
+            """)
+
         elif seq_obj.preceder:
-            # Only preceder → take N bases after preceder
+            # Not a umi
+            # Only preceder → take N bases after first preceder
             regex = f"{seq_obj.preceder}(.{{{length}}})"
             print(f"{col}: extracting {length} bases after preceder '{seq_obj.preceder}'")
             con.execute(f"""
@@ -231,7 +266,8 @@ class InitialMapper:
             """)
     
         elif seq_obj.post:
-            # Only post → take N bases before post
+            # Not a umi
+            # Only post → take N bases before first post
             regex = f"(.{{{length}}}){seq_obj.post}"
             print(f"{col}: extracting {length} bases before post '{seq_obj.post}'")
             con.execute(f"""
@@ -292,7 +328,7 @@ class InitialMapper:
         """
         if self.umi_object:
             print("Extracting UMI...")
-            self._extract_sequence_object(self.umi_object)
+            self._extract_sequence_object(self.umi_object, umi = True)
                 
     @time_it
     def merge_design(self):        

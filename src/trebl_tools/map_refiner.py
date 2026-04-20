@@ -1145,7 +1145,7 @@ class MapRefiner:
         map1_count = df.loc[df['map'] == 'initial', 'unique_count'].values[0] if not df.empty else None
         percent_prev, percent_map1 = [], []
     
-        for count in df['unique_count']:
+        for count in df['total_reads']:
             # % vs previous step
             percent_prev.append(round(100 * count / prev_count, 2) if count is not None and prev_count is not None else None)
             # % vs initial
@@ -1313,4 +1313,5 @@ class MapRefiner:
             Done in 12.34 seconds.
         """
         return plotting.plot_all_whitelists_from_summary(summary_df, n_cols, dpi)
+   
 

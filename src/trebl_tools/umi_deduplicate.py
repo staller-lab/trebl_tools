@@ -317,282 +317,46 @@ class UMIDeduplicator:
         return self.con.execute("SHOW TABLES").fetchdf()
 
     # --------- Methods from UMIToolsDeduplicator ---------
-    @preprocess.time_it
-    def generate_fastq(self, suffix="_umi_extracted.fastq"):
-        """Generate FASTQ file with UMIs in headers and concatenated barcodes as sequences.
-        Used for UMI-tools directional deduplication workflow.
-
-        Creates a FASTQ file where:
-        - Read ID contains the UMI sequence
-        - Read sequence is concatenated barcode columns
-        - Quality scores are placeholder 'I' characters
-
-        Args:
-            suffix (str, optional): Suffix for output FASTQ filename.
-                Defaults to "_umi_extracted.fastq".
-
-        Note:
-            Only includes reads with valid UMI and barcode sequences.
-
-        Example:
-            >>> dedup.generate_fastq("_custom_suffix.fastq")
-            Generating FASTQ with UMIs in header and barcodes as sequence...
-            Writing FASTQ to results/sample_custom_suffix.fastq (1000 reads)...
-            FASTQ complete: results/sample_custom_suffix.fastq
-            Done in 1.23 seconds.
+    def run_umi_tools_deduplication(self):
         """
-        print("Generating FASTQ with UMIs in header and barcodes as sequence...")
-
-        # Concatenate barcode columns
-        if len(self.cols) == 1:
-            concat_expr = self.cols[0]
-        else:
-            concat_expr = " || ".join(self.cols)  # no separator
-
-        query = f"""
-            SELECT UMI, {concat_expr} AS barcode_seq
-            FROM {self.table_prefix}{self.refined_map_suffix}
+        Run umi_tools count_tab on preprocessed DuckDB table instead of FASTQ/BAM.
+        Exports TSV and produces count_tab output in the same location as previous outputs.
         """
-        result = self.con.execute(query).fetchall()
-        n_rows = len(result)
-
-        # display(result)
-
-        # Prepare output path
-        if self.output_path:
-            output_file = os.path.join(self.output_path, f"{self.base}{suffix}")
-            os.makedirs(self.output_path, exist_ok=True)
-        else:
-            output_file = f"{self.base}{suffix}"
-
-        print(f"Writing FASTQ to {output_file} ({n_rows} reads)...")
-
-        with open(output_file, "w") as f:
-            for umi, seq in tqdm(result, total=n_rows, desc="Writing FASTQ"):
-                # Only keep rows with both a barcode and umi
-                if (
-                    umi is not None
-                    and seq is not None
-                    and len(seq) > 1
-                    and len(umi) > 1
-                ):
-                    header = f"@{umi}"
-                    plus = "+"
-                    qual = "I" * len(seq)
-                    f.write(f"{header}\n{seq}\n{plus}\n{qual}\n")
-
-        self.umi_fastq = output_file
-        print(f"FASTQ complete: {self.umi_fastq}")
-
-    @preprocess.time_it
-    def generate_barcode_fasta_and_index(self, suffix="_barcodes"):
-        """Generate FASTA reference of unique barcodes and create bowtie2 index.
-        Used for UMI-tools directional deduplication workflow to align reads to barcode sequences.
-
-        Creates a FASTA file containing all unique concatenated barcode sequences
-        and builds a bowtie2 index for alignment. The FASTA file is removed after
-        indexing to save space.
-
-        Args:
-            suffix (str, optional): Suffix for FASTA filename. Defaults to "_barcodes".
-
-        Note:
-            Loads bowtie module from Savio.
-            Uses 32 threads for index building (BOWTIE2_INDEX_BUILDER_THREADS).
-
-        Example:
-            >>> dedup.generate_barcode_fasta_and_index("_ref")
-            Saving unique barcode(s) as reference file...
-            Creating table of unique concatenated barcodes: trebl_experiment_ADBC2_unique_barcodes
-            Writing FASTA to results/sample_ref.fa...
-            Indexing FASTA with bowtie2-build, prefix: results/sample_ref_index
-            Done in 5.67 seconds.
-        """
-        print("Saving unique barcode(s) as reference file...")
-
-        if len(self.cols) == 1:
-            concat_expr = self.cols[0]
-        else:
-            concat_expr = " || ".join(self.cols)  # no separator
-
-        new_table_name = f"{self.table_prefix}unique_barcodes"
-
-        query = f"""
-            CREATE OR REPLACE TABLE {new_table_name} AS
-            SELECT DISTINCT {concat_expr} AS barcode
-            FROM {self.table_prefix}{self.refined_map_suffix}
-        """
-
-        print(f"Creating table of unique concatenated barcodes: {new_table_name}")
-        self.con.execute(query)
-
-        if self.output_path:
-            # Ensure output_path ends with a slash safely
-            output_file = os.path.join(self.output_path, f"{self.base}{suffix}.fa")
-
-        else:
-            output_file = os.path.join(f"{self.base}{suffix}.fa")
-
-        print(f"Writing FASTA to {output_file}...")
-
-        # Fetch all barcodes from DuckDB
-        result = self.con.execute(f"SELECT barcode FROM {new_table_name}").fetchall()
-        with open(output_file, "w") as f:
-            for i, (barcode,) in enumerate(result, start=1):
-                # Use the barcode itself as the header
-                f.write(f">{barcode}\n{barcode}\n")
-
-        # Index the fasta file too
-        bowtie2_index_prefix = output_file.replace(".fa", "_index")
-        self.bowtie2_index_prefix = bowtie2_index_prefix
-
-        print(f"Indexing FASTA with bowtie2-build, prefix: {bowtie2_index_prefix}")
-
-        # Module system fallback
+        import subprocess
+    
+        # Ensure output directory exists
+        os.makedirs(self.output_path, exist_ok=True)
+    
+        # Step 1: Export TSV
+        tsv_path = os.path.join(self.output_path, f"{self.base}_umi_count_input.tsv")
+        concat_cols = " || ".join(self.cols)
+        self.con.execute(f"""
+            COPY (
+                SELECT '_' || UMI AS umi_col,
+                       {concat_cols} AS gene
+                FROM {self.table_prefix}{self.refined_map_suffix}
+                ORDER BY {concat_cols}  
+            ) TO '{tsv_path}'
+            WITH (FORMAT 'csv', DELIMITER E'\t', HEADER FALSE)
+        """)
+        print(f"Exported TSV for count_tab to {tsv_path}")
+    
+        # Step 2: Run umi_tools count_tab
+        output_path = os.path.join(self.output_path, f"{self.base}_directional_umi_counts.tsv")
         cmd = [
-            "bash",
-            "-c",
-            f"module load bio/bowtie2/2.5.1-gcc-11.4.0 && "
-            f"export BOWTIE2_INDEX_BUILDER_THREADS=32 && "
-            f"bowtie2-build {output_file} {bowtie2_index_prefix}",
+            "umi_tools",
+            "count_tab",
+            "--stdin", tsv_path,
+            "--stdout", output_path
         ]
         subprocess.run(cmd, check=True)
+        self.count_tab_output = output_path
+        print(f"Count_tab output saved to {output_path}")
 
-        # Optionally remove the FASTA after indexing
-        os.remove(output_file)
-
-    @preprocess.time_it
-    def align_sort_and_deduplicate_umis(self):
-        """Execute the complete UMI-tools alignment and deduplication pipeline."""
-        # --- Setup output directory ---
-        output_dir = self.output_path or os.getcwd()
-        os.makedirs(output_dir, exist_ok=True)
-
-        # --- Create temporary working directory ---
-        tmp_dir = tempfile.mkdtemp(prefix="trebl_pipeline_")
-        atexit.register(lambda: shutil.rmtree(tmp_dir, ignore_errors=True))
-
-        # --- Paths for intermediate and final files ---
-        sam_file = os.path.join(tmp_dir, f"{self.base}_umi_extracted.sam")
-        bam_file = os.path.join(tmp_dir, f"{self.base}_umi_extracted.bam")
-        sorted_bam = os.path.join(tmp_dir, f"{self.base}_umi_extracted.sorted.bam")
-        dedup_bam = os.path.join(output_dir, f"{self.base}_umi_deduplicated.bam")
-        counts_per_bc = os.path.join(
-            output_dir, f"{self.base}_directional_umi_counts.tsv"
-        )
-
-        bc_len = sum(bc.length for bc in self.bc_objects)
-        L = min(32, bc_len)
-
-        # --- Load modules for Bowtie2 and Samtools ---
-        module_cmd = (
-            "module load bio/bowtie2/2.5.1-gcc-11.4.0 "
-            "bio/samtools/1.17-gcc-11.4.0 && "
-        )
-
-        # --- Bowtie2 alignment ---
-        print("Aligning .FASTQ to reference .FA ...")
-        subprocess.run(
-            module_cmd + f"bowtie2 -p 32 -x {self.bowtie2_index_prefix} "
-            f"-U {self.umi_fastq} -S {sam_file} --norc --end-to-end "
-            f"--very-sensitive -N 0 -L {L} -k 1 --score-min L,0,0",
-            shell=True,
-            check=True,
-            executable="/bin/bash",
-        )
-
-        # --- Convert SAM -> BAM ---
-        print("Converting SAM -> BAM ...")
-        subprocess.run(
-            module_cmd + f"samtools view -b {sam_file} -o {bam_file}",
-            shell=True,
-            check=True,
-            executable="/bin/bash",
-        )
-
-        # --- Sort BAM ---
-        print("Sorting BAM ...")
-        subprocess.run(
-            module_cmd + f"samtools sort -@ 32 -o {sorted_bam} {bam_file}",
-            shell=True,
-            check=True,
-            executable="/bin/bash",
-        )
-
-        # --- Index sorted BAM ---
-        print("Indexing BAM ...")
-        subprocess.run(
-            module_cmd + f"samtools index {sorted_bam}",
-            shell=True,
-            check=True,
-            executable="/bin/bash",
-        )
-
-        # --- Deduplicate UMIs ---
-        print("Deduplicating UMIs ...")
-        subprocess.run(
-            [
-                "umi_tools",
-                "dedup",
-                "-I",
-                sorted_bam,
-                "-S",
-                dedup_bam,
-                "--method=directional",
-                "--per-contig",
-                "--per-gene",
-                # add this if needed:
-                # "--umi-tag=RX",
-            ],
-            check=True,
-        )
-
-        # --- Index deduplicated BAM (NOW it exists) ---
-        print("Indexing dedup BAM ...")
-        subprocess.run(
-            module_cmd + f"samtools index {dedup_bam}",
-            shell=True,
-            check=True,
-            executable="/bin/bash",
-        )
-
-        # --- Count UMIs per barcode ---
-        print("Saving final counts ...")
-        subprocess.run(
-            [
-                "umi_tools",
-                "count",
-                "-I",
-                dedup_bam,
-                "-S",
-                counts_per_bc,
-                "--per-contig",
-            ],
-            check=True,
-        )
-
-        print("UMI workflow complete!")
-
-    def run_umi_tools_deduplication(self):
-        """Execute the complete UMI-tools deduplication workflow.
-
-        Runs the full UMI-tools pipeline by calling:
-        1. generate_fastq() - Create FASTQ with UMIs in headers
-        2. generate_barcode_fasta_and_index() - Create reference and index
-        3. align_sort_and_deduplicate_umis() - Complete alignment and deduplication
-
-        Note:
-            This is the comprehensive, slower method that uses UMI-tools
-            directional deduplication algorithm. Results in more accurate
-            deduplication compared to simple counting methods.
-
-        Example:
-            >>> dedup.run_umi_tools_deduplication()
-            # Executes complete pipeline automatically
-        """
-        self.generate_fastq()
-        self.generate_barcode_fasta_and_index()
-        self.align_sort_and_deduplicate_umis()
+        # Step 3: Delete intermediate TSV
+        if os.path.exists(tsv_path):
+            os.remove(tsv_path)
+            print(f"Deleted intermediate file {tsv_path}")
 
     def merge_complex_with_step1_map(self, save=True):
         """Merge UMI-tools directional deduplication results with step1 mapping table.

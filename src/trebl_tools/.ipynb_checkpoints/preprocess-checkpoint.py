@@ -12,6 +12,7 @@ import time
 from functools import wraps
 import gzip
 from pathlib import Path
+import re
 
 def time_it(func):
     """Decorator to print how long a method takes to run.
@@ -220,7 +221,9 @@ def run_fastp(input_dir, output_dir, script_path="savio_jobs/fastp.sh"):
     # Resolve absolute paths
     input_dir = os.path.abspath(input_dir)
     output_dir = os.path.abspath(output_dir)
-    script_path = os.path.abspath(script_path)
+    script_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), script_path)
+    )
     
     # Check that script exists
     if not os.path.isfile(script_path):
@@ -252,88 +255,59 @@ def run_fastp(input_dir, output_dir, script_path="savio_jobs/fastp.sh"):
     subprocess.run(submit_cmd)
     print(f"Submitted SLURM array job for {len(files)} files using {script_path}.")
 
-
-def fastp_summary_df(output_dir):
-    """Generate summary DataFrame from fastp log files.
-    
-    Parses fastp output log files to extract statistics about reads
-    passed and filtered for each sample.
-    
-    Args:
-        output_dir (str): Directory containing the logs subdirectory with .out files.
-        
-    Returns:
-        pd.DataFrame: DataFrame with columns:
-            - sample: Sample name
-            - reads_passed: Number of reads that passed filtering
-            - reads_filtered: Number of reads that were filtered out
-            - total_reads: Total number of reads processed
-            - filtered_percent: Percentage of reads filtered
-            
-    Note:
-        The DataFrame is sorted by total_reads in descending order.
-        Log files should be in output_dir/logs/ and end with .out extension.
-        
-    Example:
-        >>> df = fastp_summary_df("/path/to/fastp/output")
-        >>> print(df.head())
-           sample  reads_passed  reads_filtered  total_reads  filtered_percent
-        0  sample1       950000           50000      1000000              5.0
-    """
+def write_fastp_summary(output_dir, filename="fastp_summary.csv"):
+    """Parse fastp logs and write summary table to logs directory."""
 
     log_dir = os.path.join(output_dir, "logs")
-    # List all .out files
+    os.makedirs(log_dir, exist_ok=True)
+
     log_files = [
         f for f in os.listdir(log_dir)
-        if f.endswith(".out") and not f.lower().startswith("fastp")
+        if f.endswith(".out") and not f.lower().startswith("fastp_")
     ]
-    
-    # Prepare lists
+
     samples = []
     reads_passed = []
     reads_filtered = []
-    
+
     for f in tqdm(log_files):
         path = os.path.join(log_dir, f)
+
         with open(path) as fh:
             text = fh.read()
-        
-        # Sample name (strip _fastp_report.out)
-        sample = f.replace("_fastp_report.out","")
-        
-        # Extract reads passed filter
+
+        sample = f.replace("_fastp_report.out", "").replace(".out","")
+
         match_passed = re.search(r"reads passed filter:\s+([\d,]+)", text)
         match_failed_low = re.search(r"reads failed due to low quality:\s+([\d,]+)", text)
         match_failed_N = re.search(r"reads failed due to too many N:\s+([\d,]+)", text)
         match_failed_short = re.search(r"reads failed due to too short:\s+([\d,]+)", text)
-        
-        if match_passed:
-            passed = int(match_passed.group(1).replace(",",""))
-        else:
-            passed = 0
-        # Total filtered = sum of all failures
+
+        passed = int(match_passed.group(1).replace(",", "")) if match_passed else 0
+
         failed = 0
         for m in [match_failed_low, match_failed_N, match_failed_short]:
             if m:
-                failed += int(m.group(1).replace(",",""))
-        
+                failed += int(m.group(1).replace(",", ""))
+
         samples.append(sample)
         reads_passed.append(passed)
         reads_filtered.append(failed)
-    
-    # Build dataframe
+
     df = pd.DataFrame({
         "sample": samples,
         "reads_passed": reads_passed,
         "reads_filtered": reads_filtered
     })
-    
-    # Sort by total reads if you want
+
     df["total_reads"] = df["reads_passed"] + df["reads_filtered"]
-    df = df.sort_values("total_reads", ascending=False)
-    df["filtered_percent"] = df["reads_filtered"] / (df["reads_passed"] + df["reads_filtered"]) * 100
-    df = df.reset_index(drop = True)
-    return df
+    df["filtered_percent"] = df["reads_filtered"] / df["total_reads"] * 100
+    df = df.sort_values("total_reads", ascending=False).reset_index(drop=True)
+
+    output_path = os.path.join(log_dir, filename)
+    df.to_csv(output_path, index=False)
+
+    print(f"fastp summary written to: {output_path}")
 
 def split_fastq(
     input_fastq: str,
