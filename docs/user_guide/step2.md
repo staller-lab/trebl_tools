@@ -1,8 +1,14 @@
 # Step 2: TREBL Step 2 Mapping
 
-The example below is again Marissa's Step 2 data. In step 2, the barcodes are now separated so are sequenced in different files.
+In Step 2, the barcodes are separated and sequenced in different files.
 
-**Note:** Must have first run step 1 successfully.
+**Note:** Must have first run Step 1 successfully.
+
+> **Example notebooks:**
+> [`quick_start_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/quick_start_example.ipynb) |
+> [`full_analysis_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/full_analysis_example.ipynb)
+
+**Note:** For large files (>10M reads), the reads distribution plot can be computationally intensive. Consider submitting as a Savio job rather than running interactively.
 
 ## Copy-Paste Ready Block
 
@@ -15,14 +21,15 @@ AD_BC = finder.Barcode(name="AD_BC", preceder="CGCGCC", post="GGGCCC", length=11
 RT_BC = finder.Barcode(name="RT_BC", preceder="CTCGAG", post="GGCCGC", length=14)
 
 # Separate objects by AD and RT
-AD_bc_objects = [AD, AD_BC]  # AD and AD barcodes, only use AD BC if human
-RT_bc_objects = [RT_BC]      # Reporter barcodes
+AD_bc_objects = [AD, AD_BC]  # AD and AD barcode
+RT_bc_objects = [RT_BC]      # Reporter barcode
 
 # Sequencing files for AD and RT
-step2_AD_seq_file = "/global/scratch/projects/fc_mvslab/data/sequencing/czb_new_sept2025/MAZ10/ChopTF/results/AD_Assembled/ChopTFstep2_2_AD_concat.fastq"
-step2_RT_seq_file = "/global/scratch/projects/fc_mvslab/data/sequencing/czb_new_sept2025/MAZ10/ChopTF/results/RPTR_Assembled/ChopTFstep2_2_RPTR_concat.fastq"
+step2_AD_seq_file = "/path/to/AD_reads.fastq"   # ← update with your path
+step2_RT_seq_file = "/path/to/RT_reads.fastq"   # ← update with your path
 
 # Plot reads distribution before thresholding
+# NOTE: For large files (>10M reads), consider submitting as a Savio job
 pipeline.step2_reads_distribution(
     AD_seq_file=step2_AD_seq_file,       # AD sequencing file
     AD_bc_objects=AD_bc_objects,         # AD barcodes to search
@@ -40,15 +47,15 @@ step2 = pipeline.run_step_2(
     RT_seq_file=step2_RT_seq_file,       # RT sequencing file
     RT_bc_objects=RT_bc_objects,         # RT barcodes
     reverse_complement=True,             # Search reverse complement
-    reads_threshold_AD=10,               # Minimum reads for AD
-    reads_threshold_RT=10,               # Minimum reads for RT
-    step1_map_name="step1_AD_AD_BC_RPTR_BC_designed"  # Previous step 1 map in DuckDB
+    reads_threshold_AD=1,                # Minimum reads for AD; adjust based on your distribution
+    reads_threshold_RT=1,                # Minimum reads for RT; adjust based on your distribution
+    step1_map_csv_path="output/step1.csv"  # ← path to the Step 1 CSV saved in Step 1
 )
 
 # Extract outputs
-AD_step2 = step2["AD_step2"]                # Step 2 AD map
-RT_step2 = step2["RT_step2"]                # Step 2 RT map
-step1_step2_overlap = step2["step1_overlap"] # Overlap with Step 1 map
+AD_step2 = step2["AD_step2"]         # Step 2 AD map
+RT_step2 = step2["RT_step2"]         # Step 2 RT map
+step1_overlap = step2["step1_overlap"]  # Overlap with Step 1 map
 ```
 
 ## Code Blocks Explained
@@ -96,8 +103,8 @@ In step 2, AD and RT barcodes are in separate files so must be analyzed separate
 ### 3. Specify Sequencing Files
 
 ```python
-step2_AD_seq_file = "path/to/AD_reads.fastq"
-step2_RT_seq_file = "path/to/RT_reads.fastq"
+step2_AD_seq_file = "/path/to/AD_reads.fastq"   # ← update with your path
+step2_RT_seq_file = "/path/to/RT_reads.fastq"   # ← update with your path
 ```
 
 - Separate files for AD and RT sequencing reads.
@@ -128,9 +135,9 @@ step2 = pipeline.run_step_2(
     RT_seq_file=step2_RT_seq_file,
     RT_bc_objects=RT_bc_objects,
     reverse_complement=True,
-    reads_threshold_AD=10,
-    reads_threshold_RT=10,
-    step1_map_name="step1_AD_AD_BC_RPTR_BC_designed"
+    reads_threshold_AD=1,                # Adjust based on your reads distribution
+    reads_threshold_RT=1,                # Adjust based on your reads distribution
+    step1_map_csv_path="output/step1.csv"  # ← path to the Step 1 CSV saved in Step 1
 )
 ```
 
@@ -142,10 +149,10 @@ step2 = pipeline.run_step_2(
 ```python
 AD_step2 = step2["AD_step2"]
 RT_step2 = step2["RT_step2"]
-step1_step2_overlap = step2["step1_overlap"]
+step1_overlap = step2["step1_overlap"]
 ```
 
 - **AD_step2** → DataFrame of extracted sequences from AD file after Step 2 processing. One row per unique combination with reads count.
 - **RT_step2** → DataFrame of RT sequences after Step 2 processing. One row per unique combination with reads count.
-- **step1_step2_overlap** → DataFrame showing overlap between Step 1 map and Step 2 reads.
+- **step1_overlap** → DataFrame showing overlap between Step 1 map and Step 2 reads.
 - CSVs and PNGs are saved automatically.
