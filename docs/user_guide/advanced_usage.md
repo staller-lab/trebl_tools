@@ -34,8 +34,8 @@ RPTR_BC = finder.Barcode(name="RPTR_BC", preceder="CTCGAG", post="GGCCGC", lengt
 AD_bc_objects = [AD, AD_BC]
 RT_bc_objects = [RPTR_BC]
 
-trebl_AD_seq_files = glob.glob("/path/to/AD_Assembled/*")
-trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")
+trebl_AD_seq_files = glob.glob("/path/to/AD_Assembled/*")   # ← update with your path
+trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")  # ← update with your path
 
 # (Optional) Check reads distributions to pick threshold values
 pipeline.trebl_experiment_reads_distribution(

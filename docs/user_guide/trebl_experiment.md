@@ -28,8 +28,8 @@ RT_bc_objects = [RPTR_BC]
 AD_UMI = finder.Barcode(name="UMI", preceder="TGATTT", post="", length=12)
 RT_UMI = finder.Barcode(name="UMI", preceder="TGTCAC", post="", length=12)
 
-trebl_AD_seq_files = glob.glob("/path/to/AD_Assembled/*")
-trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")
+trebl_AD_seq_files = glob.glob("/path/to/AD_Assembled/*")   # ← update with your path
+trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")  # ← update with your path
 
 # Check reads distributions to pick threshold values
 pipeline.trebl_experiment_reads_distribution(
@@ -81,8 +81,8 @@ RT_UMI = finder.Barcode(name="UMI", preceder="TGTCAC", post="", length=12)
 ### 2. Sequencing Files
 
 ```python
-trebl_AD_seq_files = glob.glob("/path/to/AD_Assembled/*")
-trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")
+trebl_AD_seq_files = glob.glob("/path/to/AD_Assembled/*")   # ← update with your path
+trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")  # ← update with your path
 ```
 
 - Here we use `glob` to generate a list of fastq or fastq.gz files from a folder.
