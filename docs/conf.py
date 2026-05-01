@@ -21,7 +21,7 @@ extensions = [
 ]
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.ipynb_checkpoints/**', '**/.ipynb_checkpoints/**']
 
 # -- Options for HTML output -------------------------------------------------
 html_theme = 'furo'
