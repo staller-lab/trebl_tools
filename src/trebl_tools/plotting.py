@@ -77,7 +77,7 @@ def plot_error_correction(output_figures_path, table_prefix_with_descriptor, plo
             - rest_count: Sum of counts from non-canonical sequences
 
     Raises:
-        FileNotFoundError: If no whitelist files (*_whitelist.txt) are found
+        FileNotFoundError: If no whitelist files (``*_whitelist.txt``) are found
             in the specified directory.
 
     Example:

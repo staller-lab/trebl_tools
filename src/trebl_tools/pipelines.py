@@ -426,7 +426,7 @@ class TreblPipeline:
                 value maps to multiple targets without one reaching the 90%
                 threshold, the key is considered ambiguous and discarded.
 
-                **Single-column example**:
+                **Single-column example**::
 
                     column_pairs = [("RPTR_BC", "AD")]
 
@@ -435,7 +435,7 @@ class TreblPipeline:
                 reads mapping to multiple ADs without one exceeding 90%,
                 that reporter barcode is removed.
 
-                **Multi-column example**:
+                **Multi-column example**::
 
                     column_pairs = [
                         (("RPTR_BC"), ("Hawk_BC", "AD_BC"))
@@ -445,7 +445,7 @@ class TreblPipeline:
                 maps to a single Hawkins AD barcode and AD barcode combination
                 with ≥90% of reads. Ambiguous key combinations are removed.
 
-                Multiple constraints may be applied sequentially:
+                Multiple constraints may be applied sequentially::
 
                     column_pairs = [
                         ("AD_BC", "AD"),
@@ -922,7 +922,7 @@ class TreblPipeline:
             step1_map_csv_path (str, optional): Path to Step 1 map CSV for 
                 computing overlap plots.
             step_name_prefix (str, optional): Prefix used to identify TREBL
-                experiment tables in DuckDB. Defaults to "trebl_experiment_".
+                experiment tables in DuckDB. Defaults to ``"trebl_experiment_"``.
 
         Returns:
             tuple: (fig, axes)
@@ -1101,12 +1101,13 @@ class TreblPipeline:
                     - Level 0: timepoint values (e.g., 0, 2, 24)
                     - Level 1: metric types ('mean_activity', 'std_activity', 'summed_activity')
 
-                Example structure:
+                Example structure::
+
                                         0                    2                    24
                             mean  std  sum      mean  std  sum      mean  std  sum
-                AD    rep
-                GENE1  1      0.45  0.12  0.52    1.23  0.34  1.15    2.10  0.67  1.98
-                    2      0.48  0.15  0.55    1.18  0.29  1.12    2.05  0.71  1.95
+                    AD    rep
+                    GENE1  1      0.45  0.12  0.52    1.23  0.34  1.15    2.10  0.67  1.98
+                        2      0.48  0.15  0.55    1.18  0.29  1.12    2.05  0.71  1.95
 
         Note:
             **Activity Score Calculations:**
