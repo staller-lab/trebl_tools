@@ -4,54 +4,54 @@ This step processes a full TREBL-seq experiment, mapping AD and RT barcodes acro
 
 **Note:** Must have successfully run step 1 before.
 
+Always use `umi_deduplication="both"` — this runs both simple and directional (UMI-tools) deduplication and gives you both sets of counts. The only choice is whether to enable **error correction** when you initialise the pipeline (see [Analysis Setup](analysis_setup.md)).
+
+> **Tip:** Jump straight to the example notebooks:
+> [`quick_start_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/quick_start_example.ipynb) (no error correction) |
+> [`full_analysis_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/full_analysis_example.ipynb) (with error correction)
+
 ## Copy-Paste Ready Block
 
 ```python
 # TREBL Experiment: Reads Distribution and Analysis
+# Works for both Quick Start (error_correction=False) and
+# Full Analysis (error_correction=True) — set that flag in TreblPipeline()
 
 # Define barcodes (same as previous steps)
 AD = finder.Barcode(name="AD", preceder="GGCTAGC", post="TGACTAG", length=120)
 AD_BC = finder.Barcode(name="AD_BC", preceder="CGCGCC", post="GGGCCC", length=11)
 RPTR_BC = finder.Barcode(name="RPTR_BC", preceder="CTCGAG", post="GGCCGC", length=14)
 
-# Separate objects by AD and RT
-AD_bc_objects = [AD, AD_BC]  # AD and AD barcodes, only use AD BC if human
-RT_bc_objects = [RPTR_BC]    # Reporter barcodes
+AD_bc_objects = [AD, AD_BC]
+RT_bc_objects = [RPTR_BC]
 
-# Separate AD and RT objects to search for
 AD_UMI = finder.Barcode(name="UMI", preceder="TGATTT", post="", length=12)
 RT_UMI = finder.Barcode(name="UMI", preceder="TGTCAC", post="", length=12)
 
-# Use glob to collect all .fastq files for AD and RT
-trebl_AD_seq_files = glob.glob("/global/scratch/projects/fc_mvslab/data/sequencing/2025-10-02_ChopTF_TREBL_spike/results/AD_Assembled/*")
-trebl_RT_seq_files = glob.glob("/global/scratch/projects/fc_mvslab/data/sequencing/2025-10-02_ChopTF_TREBL_spike/results/RPTR_Assembled/*")
+trebl_AD_seq_files = glob.glob("/path/to/AD_Assembled/*")   # ← update with your path
+trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")  # ← update with your path
 
-# Run TREBL experiment reads distribution
+# Check reads distributions to pick threshold values
 pipeline.trebl_experiment_reads_distribution(
-    AD_seq_files=trebl_AD_seq_files,       # List of AD sequencing files
-    AD_bc_objects=[AD, AD_BC],             # AD barcodes
-    RT_seq_files=trebl_RT_seq_files,       # List of RT sequencing files
-    RT_bc_objects=[RPTR_BC],               # RT barcodes
-    reverse_complement=True                 # Reverse complement reads before searching
+    AD_seq_files=trebl_AD_seq_files,
+    AD_bc_objects=AD_bc_objects,
+    RT_seq_files=trebl_RT_seq_files,
+    RT_bc_objects=RT_bc_objects,
+    reverse_complement=True
 )
-# Generates histograms for all AD and RT files
-# Helps visualize distribution across the full experiment
 
-# Run full TREBL experiment analysis
-trebl_results = pipeline.trebl_experiment_analysis(
-    AD_seq_files=trebl_AD_seq_files,       # AD sequencing files
-    AD_bc_objects=[AD, AD_BC],             # AD barcodes
-    RT_seq_files=trebl_RT_seq_files,       # RT sequencing files
-    RT_bc_objects=[RPTR_BC],               # RT barcodes
-    reverse_complement=True,               # Reverse complement reads
-    step1_map_name="step1_AD_AD_BC_RPTR_BC_designed", # Step 1 mapping to link reads
-    AD_umi_object=AD_UMI,                  # Optional: AD UMI deduplication
-    RT_umi_object=RT_UMI,                  # Optional: RT UMI deduplication
-    step_name_prefix="trebl_experiment_"   # Prefix for output files
+# Run full TREBL experiment — always use umi_deduplication="both"
+pipeline.trebl_experiment_analysis(
+    AD_seq_files=trebl_AD_seq_files,
+    AD_bc_objects=AD_bc_objects,
+    RT_seq_files=trebl_RT_seq_files,
+    RT_bc_objects=RT_bc_objects,
+    reverse_complement=True,
+    step1_map_csv_path="output/step1.csv",   # Path to Step 1 CSV
+    AD_umi_object=AD_UMI,
+    RT_umi_object=RT_UMI,
+    umi_deduplication="both",               # Always use both
 )
-# Produces final TREBL experiment output:
-# - CSVs of AD and RT counts
-# - Visualizations of distributions and mappings
 ```
 
 ## Code Blocks Explained
@@ -68,7 +68,7 @@ RPTR_BC = finder.Barcode(name="RPTR_BC", preceder="CTCGAG", post="GGCCGC", lengt
 AD_bc_objects = [AD, AD_BC]  # AD barcodes
 RT_bc_objects = [RPTR_BC]    # Reporter barcodes
 
-# New: Define UMIs for deduplication
+# Define UMIs for deduplication
 AD_UMI = finder.Barcode(name="UMI", preceder="TGATTT", post="", length=12)
 RT_UMI = finder.Barcode(name="UMI", preceder="TGTCAC", post="", length=12)
 ```
@@ -81,8 +81,8 @@ RT_UMI = finder.Barcode(name="UMI", preceder="TGTCAC", post="", length=12)
 ### 2. Sequencing Files
 
 ```python
-trebl_AD_seq_files = glob.glob("/path/to/AD_Assembled/*")
-trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")
+trebl_AD_seq_files = glob.glob("/path/to/AD_Assembled/*")   # ← update with your path
+trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")  # ← update with your path
 ```
 
 - Here we use `glob` to generate a list of fastq or fastq.gz files from a folder.
@@ -106,30 +106,33 @@ pipeline.trebl_experiment_reads_distribution(
 ### 4. TREBL Experiment Analysis
 
 ```python
-trebl_results = pipeline.trebl_experiment_analysis(
+pipeline.trebl_experiment_analysis(
     AD_seq_files=trebl_AD_seq_files,            # AD sequencing files
     AD_bc_objects=AD_bc_objects,                # AD barcodes
     RT_seq_files=trebl_RT_seq_files,            # RT sequencing files
     RT_bc_objects=RT_bc_objects,                # RT barcodes
     reverse_complement=True,                    # Reverse complement?
-    step1_map_name="step1_AD_AD_BC_RPTR_BC_designed",  # Step 1 mapping
+    step1_map_csv_path="output/step1.csv",      # Path to Step 1 CSV file
     AD_umi_object=AD_UMI,                       # AD UMI deduplication
     RT_umi_object=RT_UMI,                       # RT UMI deduplication
-    step_name_prefix="trebl_experiment_"        # Prefix for output files
+    umi_deduplication="both",                   # Always use "both"
 )
 ```
 
-- Performs both simple and complex UMI deduplication.
-  - **Simple:** Count unique UMIs
-  - **Complex:** Use umi tools directional deduplication
+**`umi_deduplication="both"`** runs two deduplication passes and saves both sets of counts:
+- **Simple:** Count unique UMIs per barcode (fast baseline)
+- **Directional:** UMI-tools directional deduplication (more accurate, corrects for PCR amplification bias)
+
+Always use `"both"` — it takes a little longer but gives you the full picture.
+
+**Other outputs:**
 - Refines mappings for AD and RT reads, filters low-read counts and keeps barcodes with correct lengths.
 - Automatically saves CSVs and figures in `output_path`.
 - Saves loss summary figure in output of total reads, reads after barcode quality check, and reads after comparing to step 1.
-- Saves trebl_results DataFrame with aggregated counts to output path
 
 ### 5. Tips
 
-- Keep `step1_map_name` correct → ensures TREBL experiment maps correctly to Step 1.
+- Keep `step1_map_csv_path` pointing to the correct Step 1 CSV → ensures TREBL experiment maps correctly to Step 1.
 - Figures help verify mappings, read distributions, and detect barcode collisions.
 - Large experiments may take 30+ minutes, consider submitting as a Savio job.
 

@@ -1,5 +1,56 @@
 # Analysis Setup
 
+## Recommended Presets
+
+Choose one of the two presets below based on your goal. You can follow along with the
+matching example notebook on GitHub:
+[`quick_start_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/quick_start_example.ipynb) |
+[`full_analysis_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/full_analysis_example.ipynb)
+
+**Both presets always use `umi_deduplication="both"`** (simple + directional deduplication). The only thing you choose is whether to enable error correction.
+
+### Quick Start (no error correction, faster)
+
+Use when you want rapid turnaround, are testing a new dataset, or when data quality is high.
+
+```python
+pipeline = pipelines.TreblPipeline(
+    db_path="quick_start.db",
+    design_file_path="design_file.txt",
+    error_correction=False,          # Skip error correction — faster
+    output_path="output/quick_start"
+)
+# Optional: test_n_reads=100000 to test with a subset first
+```
+
+Later, when calling `trebl_experiment_analysis`, always use:
+
+```python
+umi_deduplication="both"             # Simple + directional (complex) deduplication
+```
+
+### Full Analysis (with error correction, publication-quality)
+
+Use when preparing final results or when data quality is variable.
+
+```python
+pipeline = pipelines.TreblPipeline(
+    db_path="full_analysis.db",
+    design_file_path="design_file.txt",
+    error_correction=True,           # Enable UMI-tools error correction
+    output_path="output/full_analysis"
+)
+# Optional: test_n_reads=100000 to test with a subset first
+```
+
+Later, when calling `trebl_experiment_analysis`, always use:
+
+```python
+umi_deduplication="both"             # Simple + directional (complex) deduplication
+```
+
+**Important:** These variables remain fixed for downstream analysis. If you change any of these parameters, delete the DuckDB file and rerun the pipeline.
+
 ## Initialize the Pipeline
 
 ```python
@@ -15,8 +66,6 @@ pipeline = pipelines.TreblPipeline(
 )
 # Optional: test_n_reads = N, to try N reads first
 ```
-
-**Important:** These variables remain fixed for downstream analysis. If you change any of these parameters, delete the DuckDB file and rerun the pipeline.
 
 ## Parameters
 
