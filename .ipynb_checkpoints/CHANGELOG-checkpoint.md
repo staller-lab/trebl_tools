@@ -4,9 +4,12 @@ All notable changes to this project will be documented here.
 ## [Unreleased]
 - Coming up: Example savio scripts.
 
+## [v0.1.5] - 2026-05-02
+- Updated read the docs with flow charts.
+
 ## [v0.1.4] - 2026-02-27
 - Fixed step 1 map issue with barcode collision check.
-- Changed trebl experiment plotting pipeline function to use step 1 csv instead of map name.
+- Changed trebl experimenst plotting pipeline function to use step 1 csv instead of map name.
 
 ## [v0.1.1-3] - 2026-02-20
 - Tested example notebooks.
