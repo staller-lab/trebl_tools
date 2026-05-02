@@ -1,0 +1,832 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
+
+    <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
+        <title>trebl_tools.initial_map - TREBL Tools 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">TREBL Tools 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <span class="sidebar-brand-text">TREBL Tools 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/introduction.html">What is TREBL?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/preprocessing.html">Preprocessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/analysis_setup.html">Analysis Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step1.html">Step 1: TREBL Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/advanced_usage.html">Advanced Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../modules.html">trebl_tools</a><input aria-label="Toggle navigation of trebl_tools" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../trebl_tools.html">trebl_tools package</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for trebl_tools.initial_map</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="k">if</span> <span class="s2">&quot;/.local/lib&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">p</span>
+<span class="p">]</span>  <span class="c1"># Use conda env installation of duckdb</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">duckdb</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trebl_tools.preprocess</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span>   
+
+<div class="viewcode-block" id="InitialMapper">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InitialMapper</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract and map barcodes from DNA sequences in FASTQ or TXT files.</span>
+
+<span class="sd">    This class reads sequence files, optionally reverse-complements them, </span>
+<span class="sd">    extracts barcodes and UMIs based on specified patterns, and merges with </span>
+<span class="sd">    a design file to produce an initial mapping table stored in DuckDB.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        db_path (str): Path to DuckDB database file where tables will be created.</span>
+<span class="sd">        seq_file (str or list[str]): Path(s) to input FASTQ or sequence files.</span>
+<span class="sd">            Supports both single files and lists of multiple files.</span>
+<span class="sd">        bc_objects (list): List of barcode objects, each with attributes:</span>
+<span class="sd">            - name (str): Column name for the barcode</span>
+<span class="sd">            - preceder (str): Sequence pattern before the barcode</span>
+<span class="sd">            - post (str): Sequence pattern after the barcode  </span>
+<span class="sd">            - length (int): Expected barcode length</span>
+<span class="sd">        step_name (str): Identifier used as prefix for database table names.</span>
+<span class="sd">        reverse_complement (bool): Whether to reverse complement sequences before mapping.</span>
+<span class="sd">        design_file_path (str, optional): Path to CSV file containing designed sequences</span>
+<span class="sd">            for validation. Expected to have sequences in first column.</span>
+<span class="sd">        umi_object (object, optional): UMI extraction object with same attributes</span>
+<span class="sd">            as barcode objects. Defaults to None.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; # Define barcode objects</span>
+<span class="sd">        &gt;&gt;&gt; ad_bc = BarcodeObject(name=&quot;AD_BC&quot;, preceder=&quot;ATCG&quot;, post=&quot;GCTA&quot;, length=20)</span>
+<span class="sd">        &gt;&gt;&gt; rep_bc = BarcodeObject(name=&quot;REP_BC&quot;, preceder=&quot;TTAA&quot;, post=&quot;GGCC&quot;, length=15)</span>
+<span class="sd">        &gt;&gt;&gt; </span>
+<span class="sd">        &gt;&gt;&gt; # Create mapper</span>
+<span class="sd">        &gt;&gt;&gt; mapper = InitialMapper(</span>
+<span class="sd">        ...     db_path=&quot;experiment.duckdb&quot;,</span>
+<span class="sd">        ...     seq_file=[&quot;sample1.fastq.gz&quot;, &quot;sample2.fastq.gz&quot;],</span>
+<span class="sd">        ...     bc_objects=[ad_bc, rep_bc],</span>
+<span class="sd">        ...     step_name=&quot;step1&quot;,</span>
+<span class="sd">        ...     reverse_complement=True,</span>
+<span class="sd">        ...     design_file_path=&quot;designed_sequences.csv&quot;</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; </span>
+<span class="sd">        &gt;&gt;&gt; # Run full mapping pipeline</span>
+<span class="sd">        &gt;&gt;&gt; mapper.create_map()</span>
+<span class="sd">        &gt;&gt;&gt; </span>
+<span class="sd">        &gt;&gt;&gt; # Preview results</span>
+<span class="sd">        &gt;&gt;&gt; preview_df = mapper.preview_map()</span>
+<span class="sd">        &gt;&gt;&gt; print(preview_df.head())</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        For FASTQ files, only sequence lines (every 4th line starting from line 2)</span>
+<span class="sd">        are extracted. Quality flags are automatically generated for each extracted</span>
+<span class="sd">        barcode based on expected length matching.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="InitialMapper.__init__">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">db_path</span><span class="p">,</span> 
+                 <span class="n">seq_file</span><span class="p">,</span> 
+                 <span class="n">bc_objects</span><span class="p">,</span> 
+                 <span class="n">step_name</span><span class="p">,</span> 
+                 <span class="n">reverse_complement</span><span class="p">,</span> 
+                 <span class="n">design_file_path</span><span class="p">,</span> 
+                 <span class="n">umi_object</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the InitialMapper object and set up DuckDB connection.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            db_path (str): Path to DuckDB database file.</span>
+<span class="sd">            seq_file (str or list[str]): Input sequence file path(s).</span>
+<span class="sd">            bc_objects (list): List of barcode extraction objects.</span>
+<span class="sd">            step_name (str): Step identifier for table naming.</span>
+<span class="sd">            reverse_complement (bool): Whether to reverse complement sequences.</span>
+<span class="sd">            design_file_path (str): Path to design validation file.</span>
+<span class="sd">            umi_object (object, optional): UMI extraction object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_files</span> <span class="o">=</span> <span class="n">seq_file</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seq_file</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">seq_file</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">design_file_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">design_file_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span> <span class="k">if</span> <span class="n">design_file_path</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bc_objects</span> <span class="o">=</span> <span class="n">bc_objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_complement</span> <span class="o">=</span> <span class="n">reverse_complement</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">umi_object</span> <span class="o">=</span> <span class="n">umi_object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_name</span> <span class="o">=</span> <span class="n">step_name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">bc_object</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">bc_object</span> <span class="ow">in</span> <span class="n">bc_objects</span><span class="p">]</span>
+        <span class="n">cols_str</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">step_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">cols_str</span><span class="si">}</span><span class="s2">_&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_n_reads</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="InitialMapper.read_fastq">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.read_fastq">[docs]</a>
+    <span class="nd">@time_it</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_fastq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read sequences from FASTQ/TXT files and create an initial sequence table.</span>
+
+<span class="sd">        Processes input files to extract sequence data. For FASTQ files, extracts</span>
+<span class="sd">        only the sequence lines (every 4th line starting from line 2). Creates</span>
+<span class="sd">        a &#39;seq&#39; table in the connected DuckDB database with all sequences.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            If `self.test_n_reads` is set, limits the number of reads processed</span>
+<span class="sd">            for testing purposes. </span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; mapper.test_n_reads = 1000  # Optional: limit for testing</span>
+<span class="sd">            &gt;&gt;&gt; mapper.read_fastq()</span>
+<span class="sd">            Reading 2 FASTQ/TXT file(s)...</span>
+<span class="sd">            Done in 15.34 seconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>    
+        <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_files</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">seq_files</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_files</span><span class="p">]</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> FASTQ/TXT file(s)...&quot;</span><span class="p">)</span>
+        <span class="n">seq_queries</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_files</span><span class="p">:</span>
+            <span class="n">f_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
+            <span class="n">seq_queries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                SELECT column0 AS sequence</span>
+<span class="s2">                FROM (</span>
+<span class="s2">                    SELECT *, ROW_NUMBER() OVER () AS rn</span>
+<span class="s2">                    FROM read_csv_auto(&#39;</span><span class="si">{</span><span class="n">f_path</span><span class="si">}</span><span class="s2">&#39;, header=False)</span>
+<span class="s2">                ) t</span>
+<span class="s2">                WHERE rn % 4 = 2</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">combined_query</span> <span class="o">=</span> <span class="s2">&quot; UNION ALL &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seq_queries</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_n_reads</span><span class="p">:</span>
+            <span class="c1"># Limit to test_n_reads</span>
+            <span class="n">combined_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT * FROM (</span><span class="si">{</span><span class="n">combined_query</span><span class="si">}</span><span class="s2">) LIMIT </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">test_n_reads</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CREATE OR REPLACE TABLE seq AS </span><span class="si">{</span><span class="n">combined_query</span><span class="si">}</span><span class="s2">;&quot;</span><span class="p">)</span></div>
+
+
+        
+<div class="viewcode-block" id="InitialMapper.reverse_complement_fastq">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.reverse_complement_fastq">[docs]</a>
+    <span class="nd">@time_it</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement_fastq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace sequence column with reverse complement of DNA sequences.</span>
+<span class="sd">        </span>
+<span class="sd">        Converts all sequences in the &#39;seq&#39; table to their reverse complement</span>
+<span class="sd">        using DuckDB&#39;s built-in string functions. Only processes sequences if</span>
+<span class="sd">        self.reverse_complement is True.</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; mapper.reverse_complement = True</span>
+<span class="sd">            &gt;&gt;&gt; mapper.reverse_complement_fastq()</span>
+<span class="sd">            Reverse complement of sequences...</span>
+<span class="sd">            Done in 8.21 seconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reverse complement of sequences...&quot;</span><span class="p">)</span>
+        <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span>
+    
+        <span class="c1"># Create a new table with only the reverse complemented sequence</span>
+        <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            CREATE TABLE seq_rc AS</span>
+<span class="s2">            SELECT reverse(translate(sequence, &#39;ACGTacgt&#39;, &#39;TGCAtgca&#39;)) AS sequence</span>
+<span class="s2">            FROM seq;</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+    
+        <span class="c1"># Drop the old table and rename</span>
+        <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;DROP TABLE seq;&quot;</span><span class="p">)</span>
+        <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;ALTER TABLE seq_rc RENAME TO seq;&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_sequence_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_obj</span><span class="p">,</span> <span class="n">umi</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract a barcode or UMI sequence into a new column and compute quality.</span>
+<span class="sd">        </span>
+<span class="sd">        Internal helper method that extracts sequences based on the provided</span>
+<span class="sd">        sequence object&#39;s pattern specifications. Handles five extraction modes:</span>
+<span class="sd">        </span>
+<span class="sd">        1. Both preceder and post:</span>
+<span class="sd">           Extract sequence between the two patterns using non-greedy regex.</span>
+<span class="sd">        </span>
+<span class="sd">        2. Only preceder (barcode mode):</span>
+<span class="sd">           Extract N bases immediately after the preceder.</span>
+<span class="sd">        </span>
+<span class="sd">        3. Only post (barcode mode):</span>
+<span class="sd">           Extract N bases immediately before the post pattern.</span>
+<span class="sd">        </span>
+<span class="sd">        4. UMI with no flanking sequence:</span>
+<span class="sd">           Extract the last N bases of the read.</span>
+<span class="sd">        </span>
+<span class="sd">        5. UMI with flanking sequence:</span>
+<span class="sd">           Locate the preceder near the end of the read and extract the N bases</span>
+<span class="sd">           immediately following it. This ensures the UMI is taken from the end</span>
+<span class="sd">           of the read rather than earlier internal matches.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            seq_obj (object): Barcode or UMI object with attributes:</span>
+<span class="sd">                - name (str): Column name for extracted sequence</span>
+<span class="sd">                - preceder (str or None): Pattern before target sequence</span>
+<span class="sd">                - post (str or None): Pattern after target sequence</span>
+<span class="sd">                - length (int): Expected length of target sequence</span>
+<span class="sd">        </span>
+<span class="sd">        Note:</span>
+<span class="sd">            Creates two columns:</span>
+<span class="sd">                {name}      → extracted sequence</span>
+<span class="sd">                {name}_qual → boolean flag indicating extraction success</span>
+<span class="sd">                              (True if extracted length == expected length)</span>
+<span class="sd">        </span>
+<span class="sd">            Regex extraction returns an empty string if no match is found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span>
+
+        <span class="n">col</span> <span class="o">=</span> <span class="n">seq_obj</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">seq_obj</span><span class="o">.</span><span class="n">length</span>
+        <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ALTER TABLE seq ADD COLUMN </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2"> VARCHAR;&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span> <span class="p">(</span><span class="n">umi</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">seq_obj</span><span class="o">.</span><span class="n">preceder</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">seq_obj</span><span class="o">.</span><span class="n">post</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">seq_obj</span><span class="o">.</span><span class="n">preceder</span> <span class="ow">and</span> <span class="n">seq_obj</span><span class="o">.</span><span class="n">post</span><span class="p">:</span>
+            <span class="c1"># For either barcode or umi</span>
+            <span class="c1"># Both exist → regex between preceder and post</span>
+            <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">seq_obj</span><span class="o">.</span><span class="n">preceder</span><span class="si">}</span><span class="s2">(.*?)</span><span class="si">{</span><span class="n">seq_obj</span><span class="o">.</span><span class="n">post</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># non-greedy</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">: extracting between &#39;</span><span class="si">{</span><span class="n">seq_obj</span><span class="o">.</span><span class="n">preceder</span><span class="si">}</span><span class="s2">&#39; and &#39;</span><span class="si">{</span><span class="n">seq_obj</span><span class="o">.</span><span class="n">post</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                UPDATE seq</span>
+<span class="s2">                SET </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2"> = coalesce(regexp_extract(sequence::VARCHAR, &#39;</span><span class="si">{</span><span class="n">regex</span><span class="si">}</span><span class="s2">&#39;, 1), &#39;&#39;)</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+    
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">seq_obj</span><span class="o">.</span><span class="n">preceder</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">seq_obj</span><span class="o">.</span><span class="n">post</span> <span class="ow">and</span> <span class="n">umi</span><span class="p">:</span>
+            <span class="c1"># for umi, only length based</span>
+            <span class="c1"># Neither exists → take last N bases</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">: extracting last </span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2"> bases&quot;</span><span class="p">)</span>
+            <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                UPDATE seq</span>
+<span class="s2">                SET </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2"> = CASE</span>
+<span class="s2">                    WHEN length(sequence) &gt;= </span><span class="si">{</span><span class="n">length</span><span class="si">}</span>
+<span class="s2">                    THEN substr(sequence, length(sequence) - </span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2"> + 1, </span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">                    ELSE &#39;&#39;</span>
+<span class="s2">                END</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">seq_obj</span><span class="o">.</span><span class="n">preceder</span> <span class="ow">and</span> <span class="n">umi</span><span class="p">:</span>
+            <span class="c1"># For a umi</span>
+            <span class="c1"># Preceder provided</span>
+            <span class="n">flank</span> <span class="o">=</span> <span class="n">seq_obj</span><span class="o">.</span><span class="n">preceder</span>
+            <span class="n">flank_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">flank</span><span class="p">)</span>
+            <span class="n">total_len</span> <span class="o">=</span> <span class="n">flank_len</span> <span class="o">+</span> <span class="n">length</span>
+        
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">: extracting </span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2">bp UMI after flank &#39;</span><span class="si">{</span><span class="n">flank</span><span class="si">}</span><span class="s2">&#39; near end of read&quot;</span><span class="p">)</span>
+        
+            <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                UPDATE seq</span>
+<span class="s2">                SET </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2"> = CASE</span>
+<span class="s2">                    WHEN right(sequence, </span><span class="si">{</span><span class="n">total_len</span><span class="si">}</span><span class="s2">) LIKE &#39;</span><span class="si">{</span><span class="n">flank</span><span class="si">}</span><span class="s2">%&#39;</span>
+<span class="s2">                    THEN right(sequence, </span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">                    ELSE &#39;&#39;</span>
+<span class="s2">                END</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">seq_obj</span><span class="o">.</span><span class="n">preceder</span><span class="p">:</span>
+            <span class="c1"># Not a umi</span>
+            <span class="c1"># Only preceder → take N bases after first preceder</span>
+            <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">seq_obj</span><span class="o">.</span><span class="n">preceder</span><span class="si">}</span><span class="s2">(.</span><span class="se">{{</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="se">}}</span><span class="s2">)&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">: extracting </span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2"> bases after preceder &#39;</span><span class="si">{</span><span class="n">seq_obj</span><span class="o">.</span><span class="n">preceder</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                UPDATE seq</span>
+<span class="s2">                SET </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2"> = coalesce(regexp_extract(sequence::VARCHAR, &#39;</span><span class="si">{</span><span class="n">regex</span><span class="si">}</span><span class="s2">&#39;, 1), &#39;&#39;)</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+    
+        <span class="k">elif</span> <span class="n">seq_obj</span><span class="o">.</span><span class="n">post</span><span class="p">:</span>
+            <span class="c1"># Not a umi</span>
+            <span class="c1"># Only post → take N bases before first post</span>
+            <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(.</span><span class="se">{{</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="se">}}</span><span class="s2">)</span><span class="si">{</span><span class="n">seq_obj</span><span class="o">.</span><span class="n">post</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">: extracting </span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2"> bases before post &#39;</span><span class="si">{</span><span class="n">seq_obj</span><span class="o">.</span><span class="n">post</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                UPDATE seq</span>
+<span class="s2">                SET </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2"> = coalesce(regexp_extract(sequence::VARCHAR, &#39;</span><span class="si">{</span><span class="n">regex</span><span class="si">}</span><span class="s2">&#39;, 1), &#39;&#39;)</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+    
+        <span class="c1"># Add quality flag column</span>
+        <span class="n">qual_col</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">_qual&quot;</span>
+        <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ALTER TABLE seq ADD COLUMN </span><span class="si">{</span><span class="n">qual_col</span><span class="si">}</span><span class="s2"> BOOLEAN;&quot;</span><span class="p">)</span>
+        <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            UPDATE seq</span>
+<span class="s2">            SET </span><span class="si">{</span><span class="n">qual_col</span><span class="si">}</span><span class="s2"> = LENGTH(</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2">;</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="InitialMapper.extract_barcodes">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.extract_barcodes">[docs]</a>
+    <span class="nd">@time_it</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_barcodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract all barcode sequences and compute their quality flags.</span>
+<span class="sd">        </span>
+<span class="sd">        Processes each barcode object in self.bc_objects to extract the</span>
+<span class="sd">        corresponding barcode sequences from the &#39;seq&#39; table. Creates</span>
+<span class="sd">        both the barcode columns and their associated quality flag columns.</span>
+<span class="sd">        </span>
+<span class="sd">        Note:</span>
+<span class="sd">            Calls _extract_sequence_object() for each barcode. Quality flags</span>
+<span class="sd">            are boolean columns indicating whether the extracted sequence</span>
+<span class="sd">            matches the expected length. </span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; mapper.extract_barcodes()</span>
+<span class="sd">            Extracting 3 barcodes...</span>
+<span class="sd">            AD_BC: extracting between &#39;ATCG&#39; and &#39;GCTA&#39;</span>
+<span class="sd">            RT_BC: extracting 15 bases after preceder &#39;TTAA&#39;</span>
+<span class="sd">            UMI: extracting last 12 bases</span>
+<span class="sd">            Done in 45.67 seconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bc_objects</span><span class="p">)</span><span class="si">}</span><span class="s2"> barcodes...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bc_objects</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_extract_sequence_object</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InitialMapper.extract_umi">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.extract_umi">[docs]</a>
+    <span class="nd">@time_it</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_umi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract the UMI sequence and compute its quality flag.</span>
+<span class="sd">        </span>
+<span class="sd">        Processes the UMI object (if provided) to extract UMI sequences</span>
+<span class="sd">        from the &#39;seq&#39; table using the same pattern-matching approach</span>
+<span class="sd">        as barcode extraction.</span>
+<span class="sd">        </span>
+<span class="sd">        Note:</span>
+<span class="sd">            Only runs if self.umi_object is not None. Creates both UMI</span>
+<span class="sd">            column and UMI quality flag column. </span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; mapper.extract_umi()</span>
+<span class="sd">            Extracting UMI...</span>
+<span class="sd">            UMI: extracting 12 bases after preceder &#39;AAAA&#39;</span>
+<span class="sd">            Done in 12.34 seconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">umi_object</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting UMI...&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_extract_sequence_object</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">umi_object</span><span class="p">,</span> <span class="n">umi</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span></div>
+
+                
+<div class="viewcode-block" id="InitialMapper.merge_design">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.merge_design">[docs]</a>
+    <span class="nd">@time_it</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">merge_design</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Merge with design file and create final mapping table.</span>
+<span class="sd">        </span>
+<span class="sd">        Merges extracted barcode data with the design file (if provided) to</span>
+<span class="sd">        create a &#39;Designed&#39; column indicating whether sequences match the</span>
+<span class="sd">        designed library. Creates the final initial mapping table and removes</span>
+<span class="sd">        the raw sequence column to save space.</span>
+<span class="sd">        </span>
+<span class="sd">        Note:</span>
+<span class="sd">            If design_file_path is provided and &quot;AD&quot; column exists, performs</span>
+<span class="sd">            LEFT JOIN with design file. Otherwise, sets all sequences as designed (1).</span>
+<span class="sd">            Creates final table with name pattern: {table_prefix}initial</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; mapper.merge_design()</span>
+<span class="sd">            Merging with design file...</span>
+<span class="sd">            Done in 5.43 seconds.</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If design_file_path is specified but file doesn&#39;t exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>  
+        <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">design_file_path</span> <span class="ow">and</span> <span class="s2">&quot;AD&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Merging with design file...&quot;</span><span class="p">)</span>
+            <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                CREATE OR REPLACE TABLE design AS</span>
+<span class="s2">                SELECT CAST(column0 AS VARCHAR) AS AD</span>
+<span class="s2">                FROM read_csv_auto(&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">design_file_path</span><span class="si">}</span><span class="s2">&#39;, header=False)</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+            <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                CREATE OR REPLACE TABLE </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">initial_tmp AS</span>
+<span class="s2">                SELECT s.*, CASE WHEN d.AD IS NOT NULL THEN 1 ELSE 0 END AS Designed</span>
+<span class="s2">                FROM seq s</span>
+<span class="s2">                LEFT JOIN design d USING(AD);</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                CREATE OR REPLACE TABLE </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">initial_tmp AS</span>
+<span class="s2">                SELECT *, 1 AS Designed</span>
+<span class="s2">                FROM seq;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;DROP TABLE IF EXISTS seq;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Drop the sequence column from the new table</span>
+        <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ALTER TABLE </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">initial_tmp DROP COLUMN sequence;&quot;</span><span class="p">)</span>
+        <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;ALTER TABLE </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">initial_tmp RENAME TO </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">initial;&quot;</span>
+        <span class="p">)</span></div>
+
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the complete mapping pipeline in sequence.</span>
+<span class="sd">        </span>
+<span class="sd">        Internal helper method that runs all pipeline steps in the correct order:</span>
+<span class="sd">        1. read_fastq() - Load sequences from files</span>
+<span class="sd">        2. reverse_complement_fastq() - Optionally reverse complement</span>
+<span class="sd">        3. extract_barcodes() - Extract all barcode sequences  </span>
+<span class="sd">        4. extract_umi() - Extract UMI sequences (if specified)</span>
+<span class="sd">        5. merge_design() - Merge with design file and finalize table</span>
+<span class="sd">        </span>
+<span class="sd">        Note:</span>
+<span class="sd">            This method is called by both create_map() and create_test_map().</span>
+<span class="sd">            All individual steps are decorated with @time_it for performance monitoring.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_fastq</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_complement_fastq</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extract_barcodes</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extract_umi</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">merge_design</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mapping complete.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_table_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a table exists in the connected DuckDB database.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            table_name (str): Name of the table to check for existence.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if table exists, False otherwise.</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; exists = mapper._table_exists(&quot;step1_AD_BC_initial&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; print(f&quot;Table exists: {exists}&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            SELECT COUNT(*) &gt; 0</span>
+<span class="sd">            FROM information_schema.tables</span>
+<span class="sd">            WHERE table_name = ?</span>
+<span class="sd">            &quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">table_name</span><span class="p">],</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+    
+<div class="viewcode-block" id="InitialMapper.create_map">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.create_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the full mapping pipeline on all reads.</span>
+<span class="sd">        </span>
+<span class="sd">        Executes the complete barcode extraction pipeline on all sequences</span>
+<span class="sd">        in the input files. Skips processing if the initial mapping table</span>
+<span class="sd">        already exists in the database.</span>
+<span class="sd">        </span>
+<span class="sd">        Note:</span>
+<span class="sd">            Creates table with name pattern: {step_name}_{barcode_cols}_initial</span>
+<span class="sd">            Resets test_n_reads to None to ensure all reads are processed.</span>
+<span class="sd">            All pipeline steps are automatically timed and logged.</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; mapper.create_map()</span>
+<span class="sd">            ✓ Initial map already exists: step1_AD_BC_REP_BC_initial — skipping</span>
+<span class="sd">            </span>
+<span class="sd">            # Or if table doesn&#39;t exist:</span>
+<span class="sd">            Reading 1 FASTQ/TXT file(s)...</span>
+<span class="sd">            Done in 30.45 seconds.</span>
+<span class="sd">            ...</span>
+<span class="sd">            Mapping complete.</span>
+<span class="sd">        &quot;&quot;&quot;</span>   
+        <span class="n">initial_table</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">initial&quot;</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_exists</span><span class="p">(</span><span class="n">initial_table</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Initial map already exists: </span><span class="si">{</span><span class="n">initial_table</span><span class="si">}</span><span class="s2"> — skipping&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_n_reads</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># ensure no test limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_pipeline</span><span class="p">()</span></div>
+
+
+    
+<div class="viewcode-block" id="InitialMapper.create_test_map">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.create_test_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_test_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_n_reads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the mapping pipeline on a limited number of reads for testing.</span>
+<span class="sd">        </span>
+<span class="sd">        Executes the barcode extraction pipeline on a subset of sequences</span>
+<span class="sd">        for rapid testing and validation. Skips if initial mapping table</span>
+<span class="sd">        already exists.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            test_n_reads (int, optional): Maximum number of reads to process</span>
+<span class="sd">                for testing. Defaults to 100.</span>
+<span class="sd">                </span>
+<span class="sd">        Note:</span>
+<span class="sd">            Useful for validating extraction patterns and pipeline functionality</span>
+<span class="sd">            before processing large datasets. Resets test limit after completion.</span>
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; mapper.create_test_map(test_n_reads=500)</span>
+<span class="sd">            Reading 1 FASTQ/TXT file(s)...</span>
+<span class="sd">            Done in 2.15 seconds.</span>
+<span class="sd">            ...</span>
+<span class="sd">            Mapping complete.</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="n">initial_table</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">initial&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_exists</span><span class="p">(</span><span class="n">initial_table</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Initial map already exists: </span><span class="si">{</span><span class="n">initial_table</span><span class="si">}</span><span class="s2"> — skipping test map&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_n_reads</span> <span class="o">=</span> <span class="n">test_n_reads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_pipeline</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_n_reads</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+  
+
+<div class="viewcode-block" id="InitialMapper.preview_map">
+<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.initial_map.InitialMapper.preview_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">preview_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Preview the first 5 rows of the created mapping table.</span>
+
+<span class="sd">        Returns a sample of the initial mapping table to verify extraction</span>
+<span class="sd">        results and inspect data quality before downstream processing.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: DataFrame containing the first 5 rows of the initial</span>
+<span class="sd">                mapping table with all extracted barcodes, UMI (if applicable),</span>
+<span class="sd">                quality flags, and design validation results.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; preview_df = mapper.preview_map()</span>
+<span class="sd">            step1_AD_BC_REP_BC_initial</span>
+<span class="sd">            Total rows: 1500000</span>
+<span class="sd">            &gt;&gt;&gt; print(preview_df)</span>
+<span class="sd">               AD_BC  AD_BC_qual  REP_BC  REP_BC_qual  UMI  UMI_qual  Designed</span>
+<span class="sd">            0  ATCG...    True      TTAA...     True      ...    True         1</span>
+<span class="sd">            1  GCTA...    False     GGCC...     True      ...    True         0</span>
+<span class="sd">            ...</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Also prints the table name and total row count for quick reference.</span>
+<span class="sd">            Requires that create_map() or create_test_map() has been run first.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">initial&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Count total rows</span>
+        <span class="n">total_rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT COUNT(*) FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">initial&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total rows: </span><span class="si">{</span><span class="n">total_rows</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT * FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}</span><span class="s2">initial LIMIT 5;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">df</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, Staller Lab
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>
