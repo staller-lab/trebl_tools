@@ -17,12 +17,22 @@
 #   sbatch full_analysis_job.sh
 #
 # Before running:
-# 1. Update paths in the Python script section below
+# 1. Update paths in the CONFIGURATION section of the Python script below
 # 2. Ensure output and logs directories exist:
 #    mkdir -p output/full_analysis logs
 #
+# To run with the example data in the repo, submit this script from the
+# repo root directory:
+#   sbatch examples/savio_jobs/full_analysis_job.sh
+# (the default paths below point to examples/data/ relative to the repo root)
+#
 # Note: This job requires more time and resources than quick_start_job.sh
 #       due to error correction and complex UMI deduplication.
+
+# Resolve the directory containing this script so data paths work regardless
+# of where sbatch is called from
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export TREBL_DATA_DIR="${SCRIPT_DIR}/../data"
 
 # Load required modules and activate conda environment
 module load python
@@ -63,54 +73,66 @@ from trebl_tools import (
     error_correct,
     plotting,
     umi_deduplicate,
-    pipelines
+    pipelines,
 )
 
 # ==========================================
 # CONFIGURATION - UPDATE THESE PATHS
 # ==========================================
-DESIGN_FILE = "data/design_file.txt"
-STEP1_SEQ_FILE = "data/step1_ChopTFs_sample.fastq"
-STEP2_AD_SEQ_FILE = "data/step2_ChopTFs_AD_sample.fastq"
-STEP2_RT_SEQ_FILE = "data/step2_ChopTFs_RT_sample.fastq"
-AD_SEQ_FILES = ["data/trebl_experiment_ChopTFs_AD_10.fastq", "data/trebl_experiment_ChopTFs_AD_60.fastq"]
-RT_SEQ_FILES = ["data/trebl_experiment_ChopTFs_RT_10.fastq", "data/trebl_experiment_ChopTFs_RT_60.fastq"]
+# DATA_DIR defaults to the example data bundled with the repo.
+# When using your own data, set DATA_DIR to your data folder, e.g.:
+#   DATA_DIR = "/path/to/my/data"
+DATA_DIR = os.environ.get("TREBL_DATA_DIR", "../data")
+
+DESIGN_FILE = f"{DATA_DIR}/design_file.txt"
+STEP1_SEQ_FILE = f"{DATA_DIR}/step1_ChopTFs_sample.fastq"
+STEP2_AD_SEQ_FILE = f"{DATA_DIR}/step2_ChopTFs_AD_sample.fastq"
+STEP2_RT_SEQ_FILE = f"{DATA_DIR}/step2_ChopTFs_RT_sample.fastq"
+AD_SEQ_FILES = [
+    f"{DATA_DIR}/trebl_experiment_ChopTFs_AD_t10_r2.fastq",
+    f"{DATA_DIR}/trebl_experiment_ChopTFs_AD_t60_r2.fastq",
+]
+RT_SEQ_FILES = [
+    f"{DATA_DIR}/trebl_experiment_ChopTFs_RT_t10_r2.fastq",
+    f"{DATA_DIR}/trebl_experiment_ChopTFs_RT_t60_r2.fastq",
+]
 OUTPUT_DIR = "output/full_analysis"
 
 # ==========================================
 # Initialize Pipeline
 # ==========================================
-print("\n[1/6] Initializing pipeline...")
+print("\n[1/7] Initializing pipeline...")
 pipeline = pipelines.TreblPipeline(
     db_path="db/full_analysis.db",
     design_file_path=DESIGN_FILE,
     error_correction=True,  # Full analysis: enable error correction
-    output_path=OUTPUT_DIR
+    output_path=OUTPUT_DIR,
+    # test_n_reads=100000  # Uncomment to test with first 100k reads
 )
 
 # ==========================================
 # Define Barcodes
 # ==========================================
-print("\n[2/6] Defining barcodes...")
+print("\n[2/7] Defining barcodes...")
 AD = finder.Barcode(
     name="AD",
     preceder="GGCTAGC",
     post="TGACTAG",
-    length=120
+    length=120,
 )
 
 AD_BC = finder.Barcode(
     name="AD_BC",
     preceder="CGCGCC",
     post="GGGCCC",
-    length=11
+    length=11,
 )
 
 RT_BC = finder.Barcode(
     name="RT_BC",
     preceder="CTCGAG",
     post="GGCCGC",
-    length=14
+    length=14,
 )
 
 bc_objects = [AD, AD_BC, RT_BC]
@@ -120,14 +142,14 @@ AD_UMI = finder.Barcode(
     name="UMI",
     preceder="TGATTT",
     post="",
-    length=12
+    length=12,
 )
 
 RT_UMI = finder.Barcode(
     name="UMI",
     preceder="TGTCAC",
     post="",
-    length=12
+    length=12,
 )
 
 # Separate barcode objects for AD and RT
@@ -137,14 +159,14 @@ RT_bc_objects = [RT_BC]
 # ==========================================
 # Step 1: TREBL Mapping with Error Correction
 # ==========================================
-print("\n[3/6] Running Step 1 mapping with error correction...")
+print("\n[3/7] Running Step 1 mapping with error correction...")
 
 # Plot reads distribution
 print("  - Plotting reads distribution...")
 pipeline.step1_reads_distribution(
     seq_file=STEP1_SEQ_FILE,
     bc_objects=bc_objects,
-    reverse_complement=True
+    reverse_complement=True,
 )
 
 # Run Step 1 mapping with error correction
@@ -153,15 +175,15 @@ step1_map = pipeline.run_step_1(
     seq_file=STEP1_SEQ_FILE,
     bc_objects=bc_objects,
     column_pairs=[("RT_BC", "AD")],
-    reads_threshold=10,
-    reverse_complement=False
+    reads_threshold=1,  # Adjust based on your reads distribution
+    reverse_complement=False,
 )
 print(f"  - Step 1 complete: {len(step1_map)} entries")
 
 # ==========================================
 # Step 2: TREBL Step 2 Mapping with Error Correction
 # ==========================================
-print("\n[4/6] Running Step 2 mapping with error correction...")
+print("\n[4/7] Running Step 2 mapping with error correction...")
 
 # Plot Step 2 reads distribution
 print("  - Plotting Step 2 reads distribution...")
@@ -170,7 +192,7 @@ pipeline.step2_reads_distribution(
     AD_bc_objects=AD_bc_objects,
     RT_seq_file=STEP2_RT_SEQ_FILE,
     RT_bc_objects=RT_bc_objects,
-    reverse_complement=True
+    reverse_complement=True,
 )
 
 # Run Step 2 mapping with error correction
@@ -181,9 +203,9 @@ step2 = pipeline.run_step_2(
     RT_seq_file=STEP2_RT_SEQ_FILE,
     RT_bc_objects=RT_bc_objects,
     reverse_complement=True,
-    reads_threshold_AD=10,
-    reads_threshold_RT=10,
-    step1_map_csv_path=f"{OUTPUT_DIR}/step1_AD_AD_BC_RT_BC_error_corrected.csv"
+    reads_threshold_AD=1,  # Adjust based on your reads distribution
+    reads_threshold_RT=1,  # Adjust based on your reads distribution
+    step1_map_csv_path=f"{OUTPUT_DIR}/step1.csv",
 )
 
 AD_step2 = step2["AD_step2"]
@@ -196,7 +218,7 @@ print(f"  - RT Step 2: {len(RT_step2)} entries")
 # ==========================================
 # TREBL Experiment Analysis
 # ==========================================
-print("\n[5/6] Running TREBL experiment analysis with both UMI deduplication methods...")
+print("\n[5/7] Running TREBL experiment analysis with both UMI deduplication methods...")
 
 # Use sequencing files defined in configuration
 trebl_AD_seq_files = AD_SEQ_FILES
@@ -215,7 +237,7 @@ pipeline.trebl_experiment_reads_distribution(
     AD_bc_objects=AD_bc_objects,
     RT_seq_files=trebl_RT_seq_files,
     RT_bc_objects=RT_bc_objects,
-    reverse_complement=True
+    reverse_complement=True,
 )
 
 # Run TREBL experiment with both simple and directional/complex UMI deduplication
@@ -227,10 +249,10 @@ trebl_results = pipeline.trebl_experiment_analysis(
     RT_seq_files=trebl_RT_seq_files,
     RT_bc_objects=RT_bc_objects,
     reverse_complement=True,
-    step1_map_csv_path=f"{OUTPUT_DIR}/step1_AD_AD_BC_RT_BC_error_corrected.csv",
+    step1_map_csv_path=f"{OUTPUT_DIR}/step1.csv",
     AD_umi_object=AD_UMI,
     RT_umi_object=RT_UMI,
-    umi_deduplication='both'  # Full analysis: both simple and directional deduplication
+    umi_deduplication="both",  # Full analysis: both simple and directional deduplication
 )
 
 AD_results = trebl_results["AD_results"]
@@ -240,9 +262,22 @@ print(f"  - AD results: {len(AD_results)} entries")
 print(f"  - RT results: {len(RT_results)} entries")
 
 # ==========================================
+# Activity Scores
+# ==========================================
+print("\n[6/7] Calculating activity scores...")
+activity_scores = pipeline.calculate_activity_scores(
+    step1_path=f"{OUTPUT_DIR}/step1.csv",
+    AD_bc_objects=AD_bc_objects,
+    RT_bc_objects=RT_bc_objects,
+    time_regex=r"_t(\d+)",
+    rep_regex=r"_r(\d+)",
+)
+print(f"  - Activity scores calculated for {len(activity_scores)} entries")
+
+# ==========================================
 # Summary Statistics
 # ==========================================
-print("\n[6/6] Generating summary...")
+print("\n[7/7] Generating summary...")
 print("\nAnalysis Summary:")
 print("-" * 50)
 print(f"Error correction: Enabled")
