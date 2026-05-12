@@ -141,9 +141,7 @@ tail -f logs/quick_start_*.err
 Once complete, outputs are in your `OUTPUT_DIR`:
 - `step1.csv` — Step 1 barcode map (needed for Step 2 and TREBL experiment)
 - `step2_AD.csv` / `step2_RT.csv` — Step 2 mappings
-- `AD_activity_scores_per_sample.csv` — per-sample activity scores (`log10(directional/simple)`)
-- `AD_activity_scores_mean_by_time.csv` — mean activity score across replicates per gene/time
-- `AD_activity_scores_summed_by_time.csv` — activity score from replicate-summed counts
+- `AD_activity_scores_per_barcode.csv` — per-barcode activity scores (`log10(directional/simple)`)
 - PNG plots for each step
 
 ---

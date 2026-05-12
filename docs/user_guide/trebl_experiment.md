@@ -144,11 +144,7 @@ After completing TREBL experiment analysis with `umi_deduplication="both"`, calc
 
 ```python
 # Calculate activity scores from AD simple + directional count tables
-(
-    ad_activity_per_sample_df,
-    ad_activity_mean_by_time_df,
-    ad_activity_summed_by_time_df,
-) = pipeline.calculate_activity_scores(
+ad_activity_per_barcode_df = pipeline.calculate_activity_scores(
     step1_path="output/step1.csv",          # Path to Step 1 mapping CSV
     AD_bc_objects=AD_bc_objects,            # AD barcode objects
     RT_bc_objects=RT_bc_objects,            # RT barcode objects
@@ -196,15 +192,11 @@ If your naming convention differs, adjust the regex patterns accordingly. For ex
 
 #### Output
 
-The function returns three DataFrames:
-- **`ad_activity_per_sample_df`**: Per-sample merged AD simple/directional counts with activity scores
-- **`ad_activity_mean_by_time_df`**: Mean activity score across replicates for each gene/time
-- **`ad_activity_summed_by_time_df`**: Activity score computed from counts summed across replicates for each gene/time
+The function returns one DataFrame:
+- **`ad_activity_per_barcode_df`**: Per-barcode, per-sample merged AD simple/directional counts with activity scores
 
 **Files saved** (if `output_path` configured):
-- `AD_activity_scores_per_sample.csv`
-- `AD_activity_scores_mean_by_time.csv`
-- `AD_activity_scores_summed_by_time.csv`
+- `AD_activity_scores_per_barcode.csv`
 
 ### Cleanup
 

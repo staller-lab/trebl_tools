@@ -1077,20 +1077,17 @@ def calculate_activity_scores(
     rep_regex=r"AD_(\d+)_",
 ):
     """
-    Calculate activity scores from TREBL experiment AD simple and directional counts.
+    Calculate per-barcode activity scores from TREBL experiment AD simple and
+    directional counts.
 
     Activity is defined as:
         np.log10(count_directional / count_simple)
 
     Returns
     -------
-    ad_activity_per_sample_df : pd.DataFrame
-        Per-sample merged AD simple/directional counts with activity scores.
-    ad_activity_mean_by_time_df : pd.DataFrame
-        Mean activity score across replicates for each AD and time.
-    ad_activity_summed_by_time_df : pd.DataFrame
-        Activity score computed from counts summed across replicates for each
-        AD and time.
+    ad_activity_per_barcode_df : pd.DataFrame
+        Per-barcode, per-sample merged AD simple/directional counts with
+        activity scores.
     """
     from pathlib import Path
     import glob
@@ -1145,85 +1142,36 @@ def calculate_activity_scores(
     directional_AD_df["rep"] = directional_AD_df["file_base"].str.extract(rep_regex).astype(int)
     directional_AD_df["time"] = directional_AD_df["file_base"].str.extract(time_regex).astype(int)
 
-    ad_activity_per_sample_df = pd.merge(
+    ad_activity_per_barcode_df = pd.merge(
         simple_AD_df,
         directional_AD_df,
         on=["gene", "rep", "time"],
         suffixes=("_simple", "_directional"),
     )
 
-    ad_activity_per_sample_df = pd.merge(
-        ad_activity_per_sample_df,
+    ad_activity_per_barcode_df = pd.merge(
+        ad_activity_per_barcode_df,
         step1_map[["gene", "AD", "AD_end", "AD_BC", "RPTR_BC"]].drop_duplicates(),
         on="gene",
         how="left",
     )
 
-    ad_activity_per_sample_df["count_diff"] = (
-        ad_activity_per_sample_df["count_simple"]
-        - ad_activity_per_sample_df["count_directional"]
+    ad_activity_per_barcode_df["count_diff"] = (
+        ad_activity_per_barcode_df["count_simple"]
+        - ad_activity_per_barcode_df["count_directional"]
     )
 
-    ad_activity_per_sample_df["activity_score"] = compute_activity(
-        ad_activity_per_sample_df["count_simple"],
-        ad_activity_per_sample_df["count_directional"],
-    )
-
-    ad_activity_mean_by_time_df = (
-        ad_activity_per_sample_df
-        .groupby(["gene", "time"], as_index=False)["activity_score"]
-        .mean()
-        .rename(columns={"activity_score": "mean_activity_score"})
-    )
-
-    ad_activity_mean_by_time_df = pd.merge(
-        ad_activity_mean_by_time_df,
-        step1_map[["gene", "AD", "AD_end", "AD_BC", "RPTR_BC"]].drop_duplicates(),
-        on="gene",
-        how="left",
-    )
-
-    ad_activity_summed_by_time_df = (
-        ad_activity_per_sample_df
-        .groupby(["gene", "time"], as_index=False)[["count_simple", "count_directional"]]
-        .sum()
-    )
-
-    ad_activity_summed_by_time_df["count_diff"] = (
-        ad_activity_summed_by_time_df["count_simple"]
-        - ad_activity_summed_by_time_df["count_directional"]
-    )
-
-    ad_activity_summed_by_time_df["summed_activity_score"] = compute_activity(
-        ad_activity_summed_by_time_df["count_simple"],
-        ad_activity_summed_by_time_df["count_directional"],
-    )
-
-    ad_activity_summed_by_time_df = pd.merge(
-        ad_activity_summed_by_time_df,
-        step1_map[["gene", "AD", "AD_end", "AD_BC", "RPTR_BC"]].drop_duplicates(),
-        on="gene",
-        how="left",
+    ad_activity_per_barcode_df["activity_score"] = compute_activity(
+        ad_activity_per_barcode_df["count_simple"],
+        ad_activity_per_barcode_df["count_directional"],
     )
 
     output_dir = Path(self.output_path)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    ad_activity_per_sample_df.to_csv(
-        output_dir / "AD_activity_scores_per_sample.csv",
-        index=False,
-    )
-    ad_activity_mean_by_time_df.to_csv(
-        output_dir / "AD_activity_scores_mean_by_time.csv",
-        index=False,
-    )
-    ad_activity_summed_by_time_df.to_csv(
-        output_dir / "AD_activity_scores_summed_by_time.csv",
+    ad_activity_per_barcode_df.to_csv(
+        output_dir / "AD_activity_scores_per_barcode.csv",
         index=False,
     )
 
-    return (
-        ad_activity_per_sample_df,
-        ad_activity_mean_by_time_df,
-        ad_activity_summed_by_time_df,
-    )
+    return ad_activity_per_barcode_df

@@ -231,20 +231,14 @@ trebl_results = pipeline.trebl_experiment_analysis(
 print(f"AD results and RT results ready.")
 
 print("\n[5/6] Calculating activity scores...")
-(
-    ad_activity_per_sample_df,
-    ad_activity_mean_by_time_df,
-    ad_activity_summed_by_time_df,
-) = pipeline.calculate_activity_scores(
+ad_activity_per_barcode_df = pipeline.calculate_activity_scores(
     step1_path=f"{OUTPUT_DIR}/step1.csv",
     AD_bc_objects=AD_bc_objects,
     RT_bc_objects=RT_bc_objects,
     time_regex=r"_t(\d+)",
     rep_regex=r"_r(\d+)",
 )
-print(f"  - Activity rows (per sample): {len(ad_activity_per_sample_df)}")
-print(f"  - Activity rows (mean by time): {len(ad_activity_mean_by_time_df)}")
-print(f"  - Activity rows (summed by time): {len(ad_activity_summed_by_time_df)}")
+print(f"  - Activity rows (per barcode): {len(ad_activity_per_barcode_df)}")
 
 print("\n[6/6] Activity score tables written by calculate_activity_scores().")
 

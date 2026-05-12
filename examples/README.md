@@ -154,9 +154,7 @@ Both workflows generate:
 - `trebl_experiment_loss_*.png` - Loss summaries for AD and RT
 
 ### Activity Score Outputs
-- `AD_activity_scores_per_sample.csv` - Per-sample activity scores (`log10(directional/simple)`)
-- `AD_activity_scores_mean_by_time.csv` - Mean activity score across replicates for each gene/time
-- `AD_activity_scores_summed_by_time.csv` - Activity score computed from replicate-summed counts
+- `AD_activity_scores_per_barcode.csv` - Per-barcode activity scores (`log10(directional/simple)`)
 
 ### Database
 - `db/*.db` - DuckDB database files stored in the `db/` folder (can be deleted after analysis)
