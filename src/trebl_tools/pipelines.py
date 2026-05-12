@@ -351,46 +351,6 @@ class TreblPipeline:
             RT_seq_file, RT_bc_objects, step_name, reverse_complement
         )
 
-    def trebl_experiment_reads_distribution(
-        self,
-        AD_seq_files,
-        AD_bc_objects,
-        RT_seq_files,
-        RT_bc_objects,
-        reverse_complement,
-        step_suffix="",
-    ):
-        """
-        Convenience wrapper for TREBL Experiment AD and RT libraries.
-        Useful if using reads rather than UMI counts for thresholding.
-
-        Args:
-            AD_seq_file (str): FASTQ file for AD reads.
-            AD_bc_objects (list): AD barcode objects.
-            RT_seq_file (str): FASTQ file for RT reads.
-            RT_bc_objects (list): RT barcode objects.
-            reverse_complement (bool): Whether to reverse complement reads.
-            step_suffix (str, optional): Suffix appended to the step name.
-        """
-
-        step_name_base = "trebl_experiment" + step_suffix
-
-        for file_path in AD_seq_files:
-            base_name = os.path.basename(file_path)
-            name_only = base_name.split(".")[0]
-            step_name = f"{step_name_base}_{name_only}"
-            self.reads_distribution(
-                file_path, AD_bc_objects, step_name, reverse_complement
-            )
-
-        for file_path in RT_seq_files:
-            base_name = os.path.basename(file_path)
-            name_only = base_name.split(".")[0]
-            step_name = f"{step_name_base}_{name_only}"
-            self.reads_distribution(
-                file_path, RT_bc_objects, step_name, reverse_complement
-            )
-
     def run_step_1(
         self,
         seq_file,

@@ -31,15 +31,6 @@ RT_UMI = finder.Barcode(name="UMI", preceder="TGTCAC", post="", length=12)
 trebl_AD_seq_files = glob.glob("/path/to/AD_Assembled/*")   # ← update with your path
 trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")  # ← update with your path
 
-# Check reads distributions to pick threshold values
-pipeline.trebl_experiment_reads_distribution(
-    AD_seq_files=trebl_AD_seq_files,
-    AD_bc_objects=AD_bc_objects,
-    RT_seq_files=trebl_RT_seq_files,
-    RT_bc_objects=RT_bc_objects,
-    reverse_complement=True
-)
-
 # Run full TREBL experiment — always use umi_deduplication="both"
 pipeline.trebl_experiment_analysis(
     AD_seq_files=trebl_AD_seq_files,
@@ -88,22 +79,7 @@ trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")  # ← update with y
 - Here we use `glob` to generate a list of fastq or fastq.gz files from a folder.
 - Allows multiple sequencing runs to be analyzed together.
 
-### 3. Reads Distribution
-
-```python
-pipeline.trebl_experiment_reads_distribution(
-    AD_seq_files=trebl_AD_seq_files,
-    AD_bc_objects=[AD, AD_BC],
-    RT_seq_files=trebl_RT_seq_files,
-    RT_bc_objects=[RPTR_BC],
-    reverse_complement=True
-)
-```
-
-- Produces reads histograms for all AD and RT files.
-- Quick QC: check read counts.
-
-### 4. TREBL Experiment Analysis
+### 3. TREBL Experiment Analysis
 
 ```python
 pipeline.trebl_experiment_analysis(
@@ -130,7 +106,7 @@ Always use `"both"` — it takes a little longer but gives you the full picture.
 - Automatically saves CSVs and figures in `output_path`.
 - Saves loss summary figure in output of total reads, reads after barcode quality check, and reads after comparing to step 1.
 
-### 5. Tips
+### 4. Tips
 
 - Keep `step1_map_csv_path` pointing to the correct Step 1 CSV → ensures TREBL experiment maps correctly to Step 1.
 - Figures help verify mappings, read distributions, and detect barcode collisions.
