@@ -57,12 +57,12 @@ A comprehensive workflow for publication-quality analysis.
    - Activate your conda environment: `conda activate trebl_tools_env`
 
 2. **Jupyter Setup on Savio:**
-   - Start a Jupyter session via Savio Open OnDemand (OOD)
-   - Install the kernel if not already done:
-     ```bash
-     python -m ipykernel install --user --name trebl_tools_env
-     ```
-   - Select the `trebl_tools_env` kernel when opening a notebook
+    - Start a Jupyter session via Savio Open OnDemand (OOD)
+    - Install the kernel if not already done:
+      ```bash
+      python -m ipykernel install --user --name trebl_tools_shared --display-name "trebl_tools (shared)"
+      ```
+    - Select either `trebl_tools_shared` (shared env) or `trebl_tools_env` (your own env)
 
 ### Running a Notebook
 
@@ -111,7 +111,7 @@ Both notebooks follow the same overall structure:
 | Aspect | Quick Start | Full Analysis |
 |--------|-------------|---------------|
 | `error_correction` parameter | `False` | `True` |
-| `umi_deduplication` parameter | `'simple'` | `'both'` |
+| `umi_deduplication` parameter | `'both'` | `'both'` |
 | Loss table steps | Standard filtering | Includes 'error_corrected' step |
 | Output columns | Simple UMI counts | Both simple and complex UMI counts |
 | Activity score calculation | Included | Included |
@@ -160,12 +160,12 @@ These directories will contain:
 
 ### Kernel Not Found
 - Make sure you've installed the IPython kernel for your conda environment
-- Run: `python -m ipykernel install --user --name trebl_tools_env`
+- Run: `python -m ipykernel install --user --name trebl_tools_shared --display-name "trebl_tools (shared)"`
 - Refresh your Jupyter session
 
 ### Import Errors
 - Verify trebl_tools is installed: `pip show trebl_tools`
-- Make sure you selected the correct kernel (`trebl_tools_env`)
+- Make sure you selected the correct kernel (`trebl_tools_shared` or `trebl_tools_env`)
 - Check that all dependencies are installed
 
 ### Long Running Cells

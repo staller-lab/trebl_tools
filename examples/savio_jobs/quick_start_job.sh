@@ -23,6 +23,6 @@
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 # Run the analysis script (edit that file to configure your paths/barcodes)
-/global/scratch/projects/fc_mvslab/conda/trebl_tools/bin/python "run_quick_start.py"
+/global/scratch/projects/fc_mvslab/OpenProjects/conda/trebl_tools/bin/python "run_quick_start.py"
 
 echo "Job completed at: $(date)"

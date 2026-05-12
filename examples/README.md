@@ -25,7 +25,7 @@ examples/
 
 **Features:**
 - No error correction (faster processing)
-- Simple UMI deduplication only
+- Both simple + directional UMI deduplication
 - Typical runtime: 2-4 hours for standard datasets
 
 **Files:**
@@ -50,7 +50,7 @@ examples/
 | Feature | Quick Start | Full Analysis |
 |---------|-------------|---------------|
 | Error Correction | ❌ No | ✅ Yes |
-| UMI Deduplication | Simple only | Simple + Directional/Complex |
+| UMI Deduplication | Simple + Directional/Complex | Simple + Directional/Complex |
 | Processing Time | Faster (~2-4 hrs) | Slower (~6-12 hrs) |
 | Accuracy | Good | Best |
 | Use Case | Initial exploration | Final analysis |
@@ -63,7 +63,7 @@ examples/
 2. Navigate to `examples/notebooks/`
 3. Open either `quick_start_example.ipynb` or `full_analysis_example.ipynb`
 4. Update the file paths in the notebook to point to your data
-5. Select the `trebl_tools_env` kernel
+5. Select either `trebl_tools_shared` (shared env) or `trebl_tools_env` (your own env)
 6. Run the cells sequentially
 
 **Note:** For large files (>10M reads), plotting steps can be time-consuming. Consider using the Savio job submission method instead.
@@ -152,6 +152,9 @@ Both workflows generate:
 - `RT_trebl_experiment_results.csv` - RT library results with UMI counts
 - `trebl_experiment_reads_distribution_*.png` - Histograms for all files
 - `trebl_experiment_loss_*.png` - Loss summaries for AD and RT
+
+### Activity Score Outputs
+- `AD_activity_scores_per_barcode.csv` - Per-barcode activity scores (`log10(directional/simple)`)
 
 ### Database
 - `db/*.db` - DuckDB database files stored in the `db/` folder (can be deleted after analysis)

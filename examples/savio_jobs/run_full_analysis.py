@@ -135,7 +135,7 @@ RT_bc_objects = [RT_BC]
 # ==========================================
 # Initialize Pipeline
 # ==========================================
-print("\n[1/7] Initializing pipeline...")
+print("\n[1/6] Initializing pipeline...")
 pipeline = pipelines.TreblPipeline(
     db_path=DB_PATH,
     design_file_path=DESIGN_FILE,
@@ -147,7 +147,7 @@ pipeline = pipelines.TreblPipeline(
 # ==========================================
 # Step 1: TREBL Mapping with Error Correction
 # ==========================================
-print("\n[2/7] Running Step 1 mapping with error correction...")
+print("\n[2/6] Running Step 1 mapping with error correction...")
 
 print("  - Plotting reads distribution...")
 pipeline.step1_reads_distribution(
@@ -169,7 +169,7 @@ print(f"  - Step 1 complete: {len(step1_map)} entries")
 # ==========================================
 # Step 2: TREBL Step 2 Mapping with Error Correction
 # ==========================================
-print("\n[3/7] Running Step 2 mapping with error correction...")
+print("\n[3/6] Running Step 2 mapping with error correction...")
 
 print("  - Plotting Step 2 reads distribution...")
 pipeline.step2_reads_distribution(
@@ -202,7 +202,7 @@ print(f"  - RT Step 2: {len(RT_step2)} entries")
 # ==========================================
 # TREBL Experiment Analysis
 # ==========================================
-print("\n[4/7] Running TREBL experiment analysis with both UMI deduplication methods...")
+print("\n[4/6] Running TREBL experiment analysis with both UMI deduplication methods...")
 
 print(f"  - Using {len(AD_SEQ_FILES)} AD files and {len(RT_SEQ_FILES)} RT files")
 
@@ -231,4 +231,16 @@ trebl_results = pipeline.trebl_experiment_analysis(
 
 print(f"AD results and RT results ready.")
 
-print("\n[7/7] Analysis complete!")
+print("\n[5/6] Calculating activity scores...")
+ad_activity_per_barcode_df = pipeline.calculate_activity_scores(
+    step1_path=f"{OUTPUT_DIR}/step1.csv",
+    AD_bc_objects=AD_bc_objects,
+    RT_bc_objects=RT_bc_objects,
+    time_regex=r"_t(\d+)",
+    rep_regex=r"_r(\d+)",
+)
+print(f"  - Activity rows (per barcode): {len(ad_activity_per_barcode_df)}")
+
+print("\n[6/6] Activity score tables written by calculate_activity_scores().")
+
+print("\nAnalysis complete!")
