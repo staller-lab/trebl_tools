@@ -2,9 +2,20 @@
 
 This analysis is designed to run on Savio to handle large data and computations. You can either run the code in a jupyter notebook on OOD or submit a job (see [Advanced Usage](advanced_usage.md) for submitting as a job).
 
-## Recommended: Create Your Own Conda Environment
+## Option 1 (Savio): Use the shared lab environment
 
-We recommend creating your own conda environment for better package management and easier Jupyter integration:
+You can use the prebuilt lab conda environment directly:
+
+```bash
+conda activate /global/scratch/projects/fc_mvslab/OpenProjects/conda/trebl_tools
+
+# register a Jupyter kernel for this env (run once)
+python -m ipykernel install --user --name trebl_tools_shared --display-name "trebl_tools (shared)"
+```
+
+## Option 2: Create your own conda environment
+
+We still recommend creating your own conda environment for reproducibility and package isolation:
 
 ```bash
 # clone the latest release 
@@ -26,7 +37,9 @@ python -m ipykernel install --user --name trebl_tools_env --display-name "trebl_
 
 1. Start a jupyter server session on Savio OOD
 
-2. Open a notebook and select "trebl_tools_env" as the kernel
+2. Open a notebook and select either:
+   - `trebl_tools_shared` (shared lab environment), or
+   - `trebl_tools_env` (your own environment)
 
 3. The trebl_tools package will be available to import directly:
 

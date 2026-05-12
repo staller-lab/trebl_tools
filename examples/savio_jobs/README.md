@@ -42,7 +42,7 @@ Runs a quick TREBL analysis workflow optimized for speed.
 **Configuration:**
 - **CPUs:** 8 cores
 - **Time limit:** 4 hours
-- **Features:** No error correction, simple UMI deduplication only
+- **Features:** No error correction, both simple and directional UMI deduplication
 
 **Best for:**
 - Initial data exploration

@@ -140,11 +140,15 @@ Always use `"both"` — it takes a little longer but gives you the full picture.
 
 ### Calculating Activity Scores
 
-After completing the TREBL experiment analysis, calculate final activity scores by integrating AD and RT data through the Step 1 mapping. This produces gene-level activity metrics across timepoints and replicates.
+After completing TREBL experiment analysis with `umi_deduplication="both"`, calculate activity scores from AD simple vs directional counts.
 
 ```python
-# Calculate activity scores
-activity_scores = pipeline.calculate_activity_scores(
+# Calculate activity scores from AD simple + directional count tables
+(
+    ad_activity_per_sample_df,
+    ad_activity_mean_by_time_df,
+    ad_activity_summed_by_time_df,
+) = pipeline.calculate_activity_scores(
     step1_path="output/step1.csv",          # Path to Step 1 mapping CSV
     AD_bc_objects=AD_bc_objects,            # AD barcode objects
     RT_bc_objects=RT_bc_objects,            # RT barcode objects
@@ -158,6 +162,12 @@ activity_scores = pipeline.calculate_activity_scores(
 - **`step1_path`**: Path to the Step 1 CSV file that maps AD barcodes to genes
 - **`AD_bc_objects`** and **`RT_bc_objects`**: Same barcode objects used in previous steps
 - **`time_regex`** and **`rep_regex`**: Regular expressions to extract metadata from sample names
+
+Activity score is computed as:
+
+```python
+np.log10(count_directional / count_simple)
+```
 
 #### Regex Convention for Time and Replicate Extraction
 
@@ -186,20 +196,15 @@ If your naming convention differs, adjust the regex patterns accordingly. For ex
 
 #### Output
 
-The function returns a multi-indexed DataFrame with:
-- **Index**: (AD sequence, replicate) pairs
-- **Columns**: Hierarchical structure with (timepoint, metric)
-
-**Metrics calculated per timepoint**:
-- `bc_activity_avg`: Mean per-barcode activity (RT_UMI / AD_UMI)
-- `bc_activity_std`: Standard deviation of per-barcode activity
-- `pooled_activity`: AD-level activity (sum of RT_UMI / sum of AD_UMI)
+The function returns three DataFrames:
+- **`ad_activity_per_sample_df`**: Per-sample merged AD simple/directional counts with activity scores
+- **`ad_activity_mean_by_time_df`**: Mean activity score across replicates for each gene/time
+- **`ad_activity_summed_by_time_df`**: Activity score computed from counts summed across replicates for each gene/time
 
 **Files saved** (if `output_path` configured):
-- `bc_activities.csv`: Raw per-barcode activity scores
-- `AD_activities.csv`: Consolidated activity scores table
-
-The function integrates AD and RT experiment results to calculate activity ratios, providing both barcode-level (averaged) and gene-level (pooled) activity assessments.
+- `AD_activity_scores_per_sample.csv`
+- `AD_activity_scores_mean_by_time.csv`
+- `AD_activity_scores_summed_by_time.csv`
 
 ### Cleanup
 
