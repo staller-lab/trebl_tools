@@ -1068,226 +1068,162 @@ class TreblPipeline:
 
         return fig, axes
 
+def calculate_activity_scores(
+    self,
+    step1_path,
+    AD_bc_objects,
+    RT_bc_objects,
+    time_regex=r"AD_\d+_(\d+)",
+    rep_regex=r"AD_(\d+)_",
+):
+    """
+    Calculate activity scores from TREBL experiment AD simple and directional counts.
 
-    def calculate_activity_scores(
-        self, step1_path, AD_bc_objects, RT_bc_objects, time_regex, rep_regex
-    ):
-        """
-        Compute activity scores from AD and RT experiment results using Step 1 mapping.
+    Activity is defined as:
+        np.log10(count_directional / count_simple)
 
-        Calculates two complementary activity metrics by combining AD library UMI counts
-        (input) with RT library UMI counts (output) using the Step 1 barcode-to-gene
-        mapping as the linking table. Returns a consolidated table with both per-barcode
-        averaged activity and summed activity calculations.
+    Returns
+    -------
+    ad_activity_per_sample_df : pd.DataFrame
+        Per-sample merged AD simple/directional counts with activity scores.
+    ad_activity_mean_by_time_df : pd.DataFrame
+        Mean activity score across replicates for each AD and time.
+    ad_activity_summed_by_time_df : pd.DataFrame
+        Activity score computed from counts summed across replicates for each
+        AD and time.
+    """
+    from pathlib import Path
+    import glob
+    import os
+    import numpy as np
+    import pandas as pd
 
-        Args:
-            step1_path (str): Path to the Step 1 mapping CSV file containing the
-                canonical barcode-to-gene relationships.
-            AD_bc_objects (list[Barcode]): List of AD barcode objects with `.name`
-                attributes corresponding to columns in the Step 1 mapping.
-            RT_bc_objects (list[Barcode]): List of RT barcode objects with `.name`
-                attributes for reporter identification.
-            time_regex (str): Regular expression to extract timepoint values from
-                sample names. Should contain a capture group for the time value.
-                Example: r"(\d+)h" for "2h", r"t(\d+)" for "t24".
-            rep_regex (str): Regular expression to extract replicate identifiers
-                from sample names. Should contain a capture group for replicate number.
-                Example: r"rep(\d+)" for "rep1", r"r(\d+)" for "r2".
+    def read_and_label(files, label):
+        dfs = []
+        for f in files:
+            df = pd.read_csv(f, sep="\t")
+            df["file_base"] = f"{label}_{os.path.splitext(os.path.basename(f))[0]}"
+            dfs.append(df)
+        if not dfs:
+            return pd.DataFrame()
+        return pd.concat(dfs, ignore_index=True)
 
-        Returns:
-            pd.DataFrame: Consolidated activity scores table with hierarchical columns:
-                - Index: (AD, replicate) multi-index
-                - Columns: Multi-level structure with:
-                    - Level 0: timepoint values (e.g., 0, 2, 24)
-                    - Level 1: metric types ('mean_activity', 'std_activity', 'summed_activity')
+    def compute_activity(simple_vals, directional_vals):
+        return np.log10(directional_vals / simple_vals)
 
-                Example structure::
+    if self.output_path is None:
+        raise ValueError("self.output_path must be set to calculate activity scores.")
 
-                                        0                    2                    24
-                            mean  std  sum      mean  std  sum      mean  std  sum
-                    AD    rep
-                    GENE1  1      0.45  0.12  0.52    1.23  0.34  1.15    2.10  0.67  1.98
-                        2      0.48  0.15  0.55    1.18  0.29  1.12    2.05  0.71  1.95
+    step1_map = pd.read_csv(step1_path)
+    step1_map = step1_map[["AD", "AD_end", "AD_BC", "RPTR_BC"]].drop_duplicates()
+    step1_map["gene"] = step1_map["AD_end"] + step1_map["AD_BC"]
 
-        Note:
-            **Activity Score Calculations:**
+    trebl_root = Path(self.output_path) / "trebl_experiment_"
+    search_root = trebl_root if trebl_root.exists() else Path(self.output_path)
 
-            1. **Averaged Activity (Per-Barcode)**:
-                - For each barcode: activity = RT_UMIs / AD_UMIs
-                - Mean and std calculated per (AD, time, rep) group
-                - Results show variability across barcodes within each gene
+    simple_AD_files = glob.glob(
+        str(search_root / "**" / "*AD*" / "*simple*.tsv"),
+        recursive=True,
+    )
+    directional_AD_files = glob.glob(
+        str(search_root / "**" / "*AD*" / "*directional*.tsv"),
+        recursive=True,
+    )
 
-            2. **Summed Activity (Per-Gene)**:
-                - For each (AD, time, rep): sum all AD_UMIs and RT_UMIs across barcodes
-                - activity = sum(RT_UMIs) / sum(AD_UMIs)
-                - Results show overall gene-level activity
+    if len(simple_AD_files) == 0:
+        raise ValueError("No AD simple count files found.")
+    if len(directional_AD_files) == 0:
+        raise ValueError("No AD directional count files found.")
 
-            **Output Files (if output_path configured):**
-            - `unaggregated_activities.csv`: Raw per-barcode activity scores
-            - `consolidated_activity_scores.csv`: Combined table with all metrics
+    simple_AD_df = read_and_label(simple_AD_files, label="AD_simple")
+    directional_AD_df = read_and_label(directional_AD_files, label="AD_directional")
 
-            **Data Integration Workflow:**
-            1. Load AD and RT experiment results from previous analysis
-            2. Extract time/replicate metadata using provided regex patterns
-            3. Merge with Step 1 mapping to link AD and RT measurements
-            4. Calculate per-barcode activity ratios
-            5. Aggregate using both averaging and summing strategies
-            6. Consolidate into single multi-level DataFrame
+    simple_AD_df["gene"] = simple_AD_df["AD_end"] + simple_AD_df["AD_BC"]
+    simple_AD_df["rep"] = simple_AD_df["file_base"].str.extract(rep_regex).astype(int)
+    simple_AD_df["time"] = simple_AD_df["file_base"].str.extract(time_regex).astype(int)
 
-        Example:
-            >>> activity_df = pipeline.calculate_activity_scores(
-            ...     step1_path="results/step1.csv",
-            ...     AD_bc_objects=[ad_bc, adbc_bc],
-            ...     RT_bc_objects=[rt_bc],
-            ...     time_regex=r"(\d+)h",          # Extract "24" from "24h"
-            ...     rep_regex=r"rep(\d+)"          # Extract "1" from "rep1"
-            ... )
-            >>> print("Activity table shape:", activity_df.shape)
-            >>> print("Available timepoints:", activity_df.columns.get_level_values(0).unique())
-            >>> print("Available metrics:", activity_df.columns.get_level_values(1).unique())
-            >>>
-            >>> # Access specific metric for all timepoints
-            >>> mean_activities = activity_df.xs('mean_activity', level=1, axis=1)
-            >>> summed_activities = activity_df.xs('summed_activity', level=1, axis=1)
+    directional_AD_df["rep"] = directional_AD_df["file_base"].str.extract(rep_regex).astype(int)
+    directional_AD_df["time"] = directional_AD_df["file_base"].str.extract(time_regex).astype(int)
 
-        Raises:
-            ValueError: If regex patterns fail to match sample names
-            FileNotFoundError: If required input CSV files are not found
-            KeyError: If expected columns are missing from input files
-        """
+    ad_activity_per_sample_df = pd.merge(
+        simple_AD_df,
+        directional_AD_df,
+        on=["gene", "rep", "time"],
+        suffixes=("_simple", "_directional"),
+    )
 
-        def extract_with_regex(series, regex, group=1, column_name=""):
-            try:
-                extracted = series.astype(str).str.extract(regex).iloc[:, group - 1]
-                if extracted.isnull().any():
-                    raise ValueError(
-                        f"Regex failed to match all values in column '{column_name}'."
-                    )
-                return extracted
-            except Exception as e:
-                print(f"Error extracting '{column_name}' with regex '{regex}'.")
-                print(series.head(10))
-                raise e
+    ad_activity_per_sample_df = pd.merge(
+        ad_activity_per_sample_df,
+        step1_map[["gene", "AD", "AD_end", "AD_BC", "RPTR_BC"]].drop_duplicates(),
+        on="gene",
+        how="left",
+    )
 
-        # Load experiment results
-        ad_results_path = self.output_path / "AD_trebl_experiment_results.csv"
-        rt_results_path = self.output_path / "RT_trebl_experiment_results.csv"
+    ad_activity_per_sample_df["count_diff"] = (
+        ad_activity_per_sample_df["count_simple"]
+        - ad_activity_per_sample_df["count_directional"]
+    )
 
-        ad_column_names = [bc.name for bc in AD_bc_objects]
-        rt_column_names = [bc.name for bc in RT_bc_objects]
+    ad_activity_per_sample_df["activity_score"] = compute_activity(
+        ad_activity_per_sample_df["count_simple"],
+        ad_activity_per_sample_df["count_directional"],
+    )
 
-        ad_bc_results = pd.read_csv(ad_results_path)
-        ad_bc_results["time"] = extract_with_regex(
-            ad_bc_results["name"], time_regex, column_name="time"
-        )
-        ad_bc_results["rep"] = extract_with_regex(
-            ad_bc_results["name"], rep_regex, column_name="rep"
-        )
+    ad_activity_mean_by_time_df = (
+        ad_activity_per_sample_df
+        .groupby(["gene", "time"], as_index=False)["activity_score"]
+        .mean()
+        .rename(columns={"activity_score": "mean_activity_score"})
+    )
 
-        ad_bc_results = ad_bc_results[
-            ad_column_names + ["time", "rep", "AD_umi_count_simple"]
-        ].reset_index(drop=True)
+    ad_activity_mean_by_time_df = pd.merge(
+        ad_activity_mean_by_time_df,
+        step1_map[["gene", "AD", "AD_end", "AD_BC", "RPTR_BC"]].drop_duplicates(),
+        on="gene",
+        how="left",
+    )
 
-        rt_bc_results = pd.read_csv(rt_results_path)
-        rt_bc_results["time"] = extract_with_regex(
-            rt_bc_results["name"], time_regex, column_name="time"
-        )
-        rt_bc_results["rep"] = extract_with_regex(
-            rt_bc_results["name"], rep_regex, column_name="rep"
-        )
-        rt_bc_results = rt_bc_results[
-            rt_column_names + ["time", "rep", "RTBC_umi_count_simple"]
-        ].reset_index(drop=True)
+    ad_activity_summed_by_time_df = (
+        ad_activity_per_sample_df
+        .groupby(["gene", "time"], as_index=False)[["count_simple", "count_directional"]]
+        .sum()
+    )
 
-        # Load Step 1 mapping
-        step1_map = pd.read_csv(step1_path)
-        step1_map = step1_map[list(set(ad_column_names + rt_column_names + ["AD"]))]
+    ad_activity_summed_by_time_df["count_diff"] = (
+        ad_activity_summed_by_time_df["count_simple"]
+        - ad_activity_summed_by_time_df["count_directional"]
+    )
 
-        step1_map_with_ad = pd.merge(step1_map, ad_bc_results)
-        step1_map_with_rt = pd.merge(step1_map, rt_bc_results)
-        step1_map_with_ad_rt = pd.merge(
-            step1_map_with_ad, step1_map_with_rt, how="outer"
-        )
+    ad_activity_summed_by_time_df["summed_activity_score"] = compute_activity(
+        ad_activity_summed_by_time_df["count_simple"],
+        ad_activity_summed_by_time_df["count_directional"],
+    )
 
-        step1_map_with_ad_rt["AD_umi_count_simple"] = step1_map_with_ad_rt[
-            "AD_umi_count_simple"
-        ].fillna(0)
-        step1_map_with_ad_rt["RTBC_umi_count_simple"] = step1_map_with_ad_rt[
-            "RTBC_umi_count_simple"
-        ].fillna(0)
+    ad_activity_summed_by_time_df = pd.merge(
+        ad_activity_summed_by_time_df,
+        step1_map[["gene", "AD", "AD_end", "AD_BC", "RPTR_BC"]].drop_duplicates(),
+        on="gene",
+        how="left",
+    )
 
-        # Per-barcode activity
-        step1_map_with_ad_rt["activity"] = (
-            step1_map_with_ad_rt["RTBC_umi_count_simple"]
-            / step1_map_with_ad_rt["AD_umi_count_simple"]
-        )
+    output_dir = Path(self.output_path)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-        if self.output_path:
-            step1_map_with_ad_rt.to_csv(
-                self.output_path / "bc_activities.csv", index=False
-            )
+    ad_activity_per_sample_df.to_csv(
+        output_dir / "AD_activity_scores_per_sample.csv",
+        index=False,
+    )
+    ad_activity_mean_by_time_df.to_csv(
+        output_dir / "AD_activity_scores_mean_by_time.csv",
+        index=False,
+    )
+    ad_activity_summed_by_time_df.to_csv(
+        output_dir / "AD_activity_scores_summed_by_time.csv",
+        index=False,
+    )
 
-        # Calculate both averaged and summed activities
-        # Averaged activity across barcodes
-        grouped_avg = (
-            step1_map_with_ad_rt.groupby(["AD", "time", "rep"])["activity"]
-            .agg(["mean", "std"])
-            .reset_index()
-        )
-
-        # Summed activity across barcodes
-        grouped_sum = (
-            step1_map_with_ad_rt.groupby(["AD", "time", "rep"])
-            .agg(
-                summed_AD_UMIs=("AD_umi_count_simple", "sum"),
-                summed_RT_UMIs=("RTBC_umi_count_simple", "sum"),
-            )
-            .reset_index()
-        )
-
-        grouped_sum["summed_activity"] = (
-            grouped_sum["summed_RT_UMIs"] / grouped_sum["summed_AD_UMIs"]
-        )
-
-        # --- Pivot each metric ---
-        pivoted_mean = grouped_avg.pivot(
-            index=["AD", "rep"], columns="time", values="mean"
-        )
-        pivoted_std = grouped_avg.pivot(
-            index=["AD", "rep"], columns="time", values="std"
-        )
-        pivoted_summed = grouped_sum.pivot(
-            index=["AD", "rep"], columns="time", values="summed_activity"
-        )
-
-        # --- Ensure MultiIndex columns, even if only one timepoint ---
-        def make_multiindex(df, metric_name):
-            df = df.copy()
-            # If df.columns is not already MultiIndex, force it
-            if not isinstance(df.columns, pd.MultiIndex):
-                df.columns = pd.MultiIndex.from_product([df.columns, [metric_name]])
-            else:
-                # If MultiIndex, rename the second level
-                df.columns = pd.MultiIndex.from_tuples(
-                    [(lvl0, metric_name) for lvl0, _ in df.columns]
-                )
-            return df
-
-        pivoted_mean = make_multiindex(pivoted_mean, "bc_activity_avg")
-        pivoted_std = make_multiindex(pivoted_std, "bc_activity_std")
-        pivoted_summed = make_multiindex(pivoted_summed, "pooled_activity")
-
-        # --- Concatenate all metrics along columns ---
-        consolidated_df = pd.concat([pivoted_mean, pivoted_std, pivoted_summed], axis=1)
-
-        # --- Sort columns by timepoint first, then metric ---
-        consolidated_df = consolidated_df.sort_index(axis=1, level=0)
-
-        # --- Assign column level names ---
-        consolidated_df.columns.names = ["timepoint", "metric"]
-
-        # --- Optionally save ---
-        if self.output_path:
-            consolidated_df.to_csv(self.output_path / "AD_activities.csv")
-
-        return consolidated_df
+    return (
+        ad_activity_per_sample_df,
+        ad_activity_mean_by_time_df,
+        ad_activity_summed_by_time_df,
+    )

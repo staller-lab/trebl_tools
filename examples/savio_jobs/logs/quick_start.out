@@ -1,0 +1,454 @@
+
+[1/7] Initializing pipeline...
+
+[2/7] Running Step 1 mapping...
+  - Plotting reads distribution...
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.38 seconds.
+
+Reverse complement of sequences...
+Done in 1.24 seconds.
+
+Extracting 3 barcodes...
+False
+GGCTAGC
+TGACTAG
+AD: extracting between 'GGCTAGC' and 'TGACTAG'
+False
+CGCGCC
+GGGCCC
+AD_BC: extracting between 'CGCGCC' and 'GGGCCC'
+False
+CTCGAG
+GGCCGC
+RT_BC: extracting between 'CTCGAG' and 'GGCCGC'
+Done in 0.77 seconds.
+
+Done in 0.00 seconds.
+
+Merging with design file...
+Done in 0.49 seconds.
+
+Mapping complete.
+Base prefix (stable across descriptors): step1_AD_AD_BC_RT_BC_
+Full prefix for this instance: step1_AD_AD_BC_RT_BC_
+
+Using the following step order:
+1. initial
+2. grouped
+
+Grouping step1_AD_AD_BC_RT_BC_initial...
+Done in 1.59 seconds.
+
+Done.
+Saved loss summary table as 'step1_AD_AD_BC_RT_BC_loss_summary'
+Done in 0.31 seconds.
+
+  - Running Step 1 mapping...
+✓ Initial map already exists: step1_AD_AD_BC_RT_BC_initial — skipping
+Base prefix (stable across descriptors): step1_AD_AD_BC_RT_BC_
+Full prefix for this instance: step1_AD_AD_BC_RT_BC_
+
+Using the following step order:
+1. initial
+2. grouped
+3. thresholded
+4. barcode_exists
+5. unique_target
+6. quality
+7. designed
+
+Grouping step1_AD_AD_BC_RT_BC_initial...
+Done in 0.59 seconds.
+
+Thresholding...
+Using reads threshold of 1.
+Done in 0.53 seconds.
+
+Removing rows with null or empty barcodes (excluding AD)...
+Done in 0.09 seconds.
+
+Filtering fixed so that at least 90% of reads come from the most abundant target...
+	Processing mapping 1: RT_BC → AD
+Created filtered table: step1_AD_AD_BC_RT_BC_unique_target
+Done in 0.13 seconds.
+
+
+Filtering to high-quality reads...
+Created table: step1_AD_AD_BC_RT_BC_quality — filtered for TRUE in all *_qual columns.
+Done in 0.00 seconds.
+
+
+Filtering to designed sequences...
+Created table: step1_AD_AD_BC_RT_BC_designed — kept only Designed == 1.
+Done in 0.01 seconds.
+
+Done.
+Saved loss summary table as 'step1_AD_AD_BC_RT_BC_loss_summary'
+Done in 0.06 seconds.
+
+  - Step 1 complete: 71 entries
+
+[3/7] Running Step 2 mapping...
+  - Plotting Step 2 reads distribution...
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.29 seconds.
+
+Reverse complement of sequences...
+Done in 1.09 seconds.
+
+Extracting 2 barcodes...
+False
+GGCTAGC
+TGACTAG
+AD: extracting between 'GGCTAGC' and 'TGACTAG'
+False
+CGCGCC
+GGGCCC
+AD_BC: extracting between 'CGCGCC' and 'GGGCCC'
+Done in 0.81 seconds.
+
+Done in 0.00 seconds.
+
+Merging with design file...
+Done in 0.44 seconds.
+
+Mapping complete.
+Base prefix (stable across descriptors): step2_AD_AD_BC_
+Full prefix for this instance: step2_AD_AD_BC_
+
+Using the following step order:
+1. initial
+2. grouped
+
+Grouping step2_AD_AD_BC_initial...
+Done in 0.35 seconds.
+
+Done.
+Saved loss summary table as 'step2_AD_AD_BC_loss_summary'
+Done in 0.10 seconds.
+
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.35 seconds.
+
+Reverse complement of sequences...
+Done in 1.04 seconds.
+
+Extracting 1 barcodes...
+False
+CTCGAG
+GGCCGC
+RT_BC: extracting between 'CTCGAG' and 'GGCCGC'
+Done in 0.19 seconds.
+
+Done in 0.00 seconds.
+
+Done in 0.24 seconds.
+
+Mapping complete.
+Base prefix (stable across descriptors): step2_RT_BC_
+Full prefix for this instance: step2_RT_BC_
+
+Using the following step order:
+1. initial
+2. grouped
+
+Grouping step2_RT_BC_initial...
+Done in 0.60 seconds.
+
+Done.
+Saved loss summary table as 'step2_RT_BC_loss_summary'
+Done in 0.02 seconds.
+
+  - Running Step 2 mapping...
+✓ Initial map already exists: step2_AD_AD_BC_initial — skipping
+✓ Initial map already exists: step2_RT_BC_initial — skipping
+Base prefix (stable across descriptors): step2_AD_AD_BC_
+Full prefix for this instance: step2_AD_AD_BC_
+
+Using the following step order:
+1. initial
+2. grouped
+3. thresholded
+4. barcode_exists
+5. quality
+6. designed
+
+Base prefix (stable across descriptors): step2_RT_BC_
+Full prefix for this instance: step2_RT_BC_
+
+Using the following step order:
+1. initial
+2. grouped
+3. thresholded
+4. barcode_exists
+5. quality
+6. designed
+
+Grouping step2_AD_AD_BC_initial...
+Done in 0.33 seconds.
+
+Thresholding...
+Using reads threshold of 1.
+Done in 0.30 seconds.
+
+Removing rows with null or empty barcodes (excluding AD)...
+Done in 0.07 seconds.
+
+
+Filtering to high-quality reads...
+Created table: step2_AD_AD_BC_quality — filtered for TRUE in all *_qual columns.
+Done in 0.01 seconds.
+
+
+Filtering to designed sequences...
+Created table: step2_AD_AD_BC_designed — kept only Designed == 1.
+Done in 0.01 seconds.
+
+Done.
+Saved loss summary table as 'step2_AD_AD_BC_loss_summary'
+Done in 0.06 seconds.
+
+Grouping step2_RT_BC_initial...
+Done in 0.55 seconds.
+
+Thresholding...
+Using reads threshold of 1.
+Done in 0.44 seconds.
+
+Removing rows with null or empty barcodes (excluding AD)...
+Done in 0.01 seconds.
+
+
+Filtering to high-quality reads...
+Created table: step2_RT_BC_quality — filtered for TRUE in all *_qual columns.
+Done in 0.09 seconds.
+
+
+Filtering to designed sequences...
+Created table: step2_RT_BC_designed — kept only Designed == 1.
+Done in 0.01 seconds.
+
+Done.
+Saved loss summary table as 'step2_RT_BC_loss_summary'
+Done in 0.07 seconds.
+
+  - AD Step 2: 11756 entries
+  - RT Step 2: 15011 entries
+
+[4/7] Running TREBL experiment analysis...
+  - Using 2 AD files and 2 RT files
+  - Plotting TREBL experiment reads distribution...
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.53 seconds.
+
+Reverse complement of sequences...
+Done in 0.61 seconds.
+
+Extracting 2 barcodes...
+False
+GGCTAGC
+TGACTAG
+AD: extracting between 'GGCTAGC' and 'TGACTAG'
+False
+CGCGCC
+GGGCCC
+AD_BC: extracting between 'CGCGCC' and 'GGGCCC'
+Done in 0.62 seconds.
+
+Done in 0.00 seconds.
+
+Merging with design file...
+Done in 0.30 seconds.
+
+Mapping complete.
+Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_
+Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_
+
+Using the following step order:
+1. initial
+2. grouped
+
+Grouping trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_initial...
+Done in 0.37 seconds.
+
+Done.
+Saved loss summary table as 'trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_loss_summary'
+Done in 0.05 seconds.
+
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.29 seconds.
+
+Reverse complement of sequences...
+Done in 0.72 seconds.
+
+Extracting 2 barcodes...
+False
+GGCTAGC
+TGACTAG
+AD: extracting between 'GGCTAGC' and 'TGACTAG'
+False
+CGCGCC
+GGGCCC
+AD_BC: extracting between 'CGCGCC' and 'GGGCCC'
+Done in 0.44 seconds.
+
+Done in 0.00 seconds.
+
+Merging with design file...
+Done in 0.37 seconds.
+
+Mapping complete.
+Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_
+Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_
+
+Using the following step order:
+1. initial
+2. grouped
+
+Grouping trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_initial...
+Done in 0.37 seconds.
+
+Done.
+Saved loss summary table as 'trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_loss_summary'
+Done in 0.03 seconds.
+
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.21 seconds.
+
+Reverse complement of sequences...
+Done in 0.43 seconds.
+
+Extracting 1 barcodes...
+False
+CTCGAG
+GGCCGC
+RT_BC: extracting between 'CTCGAG' and 'GGCCGC'
+Done in 0.08 seconds.
+
+Done in 0.00 seconds.
+
+Done in 0.08 seconds.
+
+Mapping complete.
+Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_
+Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_
+
+Using the following step order:
+1. initial
+2. grouped
+
+Grouping trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_initial...
+Done in 0.36 seconds.
+
+Done.
+Saved loss summary table as 'trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_loss_summary'
+Done in 0.05 seconds.
+
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.51 seconds.
+
+Reverse complement of sequences...
+Done in 1.21 seconds.
+
+Extracting 1 barcodes...
+False
+CTCGAG
+GGCCGC
+RT_BC: extracting between 'CTCGAG' and 'GGCCGC'
+Done in 0.28 seconds.
+
+Done in 0.00 seconds.
+
+Done in 0.28 seconds.
+
+Mapping complete.
+Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_
+Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_
+
+Using the following step order:
+1. initial
+2. grouped
+
+Grouping trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_initial...
+Done in 0.56 seconds.
+
+Done.
+Saved loss summary table as 'trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_loss_summary'
+Done in 0.01 seconds.
+
+  - Running TREBL experiment with simple UMI deduplication...
+✓ Initial map already exists: trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_initial — skipping
+Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_
+Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_
+
+Using the following step order:
+1. initial
+2. quality
+
+
+Filtering to high-quality reads...
+
+ERROR processing /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../data/trebl_experiment_ChopTFs_AD_t10_r2.fastq
+Binder Error: Referenced column "UMI_qual" not found in FROM clause!
+Candidate bindings: "AD_qual", "AD_BC_qual"
+
+LINE 5:             WHERE AD_qual = TRUE AND AD_BC_qual = TRUE AND UMI_qual = TRUE;
+                                                                   ^
+✓ Initial map already exists: trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_initial — skipping
+Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_
+Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_
+
+Using the following step order:
+1. initial
+2. quality
+
+
+Filtering to high-quality reads...
+
+ERROR processing /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../data/trebl_experiment_ChopTFs_AD_t60_r2.fastq
+Binder Error: Referenced column "UMI_qual" not found in FROM clause!
+Candidate bindings: "AD_qual", "AD_BC_qual"
+
+LINE 5:             WHERE AD_qual = TRUE AND AD_BC_qual = TRUE AND UMI_qual = TRUE;
+                                                                   ^
+✓ Initial map already exists: trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_initial — skipping
+Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_
+Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_
+
+Using the following step order:
+1. initial
+2. quality
+
+
+Filtering to high-quality reads...
+
+ERROR processing /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../data/trebl_experiment_ChopTFs_RT_t10_r2.fastq
+Binder Error: Referenced column "UMI_qual" not found in FROM clause!
+Candidate bindings: "RT_BC_qual"
+
+LINE 5:             WHERE RT_BC_qual = TRUE AND UMI_qual = TRUE;
+                                                ^
+✓ Initial map already exists: trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_initial — skipping
+Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_
+Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_
+
+Using the following step order:
+1. initial
+2. quality
+
+
+Filtering to high-quality reads...
+
+ERROR processing /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../data/trebl_experiment_ChopTFs_RT_t60_r2.fastq
+Binder Error: Referenced column "UMI_qual" not found in FROM clause!
+Candidate bindings: "RT_BC_qual"
+
+LINE 5:             WHERE RT_BC_qual = TRUE AND UMI_qual = TRUE;
+                                                ^
+Plotting BCs:   0%|                                                                                                                                                                                                                | 0/4 [00:00<?, ?it/s]Plotting BCs:  75%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████                                                  | 3/4 [00:00<00:00, 28.63it/s]Plotting BCs: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:00<00:00, 29.20it/s]
+Plotting BCs:   0%|                                                                                                                                                                                                                | 0/4 [00:00<?, ?it/s]Plotting BCs: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:00<00:00, 32.38it/s]Plotting BCs: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:00<00:00, 32.33it/s]
+AD results and RT results ready.
+
+[7/7] Analysis complete!
+Job completed at: Tue May 12 12:36:19 PDT 2026
