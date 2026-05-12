@@ -82,7 +82,6 @@ A comprehensive workflow for publication-quality analysis.
 If your sequencing files are large (>10 million reads), the plotting steps can take significant time:
 - `step1_reads_distribution()` - Can take 10-30 minutes
 - `step2_reads_distribution()` - Can take 10-30 minutes  
-- `trebl_experiment_reads_distribution()` - Can take 30-60 minutes for multiple files
 
 **Recommendation:** For very large datasets, consider using the Savio job scripts in `../savio_jobs/` instead, which are optimized for cluster execution.
 

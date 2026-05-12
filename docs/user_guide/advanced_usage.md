@@ -37,14 +37,13 @@ RT_bc_objects = [RPTR_BC]
 trebl_AD_seq_files = glob.glob("/path/to/AD_Assembled/*")   # ← update with your path
 trebl_RT_seq_files = glob.glob("/path/to/RPTR_Assembled/*")  # ← update with your path
 
-# (Optional) Check reads distributions to pick threshold values
-pipeline.trebl_experiment_reads_distribution(
-    AD_seq_files=trebl_AD_seq_files,
-    AD_bc_objects=AD_bc_objects,
-    RT_seq_files=trebl_RT_seq_files,
-    RT_bc_objects=RT_bc_objects,
-    reverse_complement=True
-)
+# (Optional) Check reads distributions per file to pick threshold values
+for f in trebl_AD_seq_files:
+    sample = f.rsplit("/", 1)[-1].split(".")[0]
+    pipeline.reads_distribution(f, AD_bc_objects, f"trebl_experiment_{sample}", True)
+for f in trebl_RT_seq_files:
+    sample = f.rsplit("/", 1)[-1].split(".")[0]
+    pipeline.reads_distribution(f, RT_bc_objects, f"trebl_experiment_{sample}", True)
 
 # Run TREBL experiment — no UMI objects, use reads thresholds instead
 pipeline.trebl_experiment_analysis(
@@ -61,7 +60,7 @@ pipeline.trebl_experiment_analysis(
 )
 ```
 
-Use the reads distribution histograms to pick appropriate `reads_threshold_AD` and `reads_threshold_RT` values before running the analysis.
+Use these per-file reads distribution histograms to pick appropriate `reads_threshold_AD` and `reads_threshold_RT` values before running the analysis.
 
 ## Repeating an Analysis Step with Multiple Datasets
 

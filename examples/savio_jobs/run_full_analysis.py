@@ -206,15 +206,6 @@ print("\n[4/6] Running TREBL experiment analysis with both UMI deduplication met
 
 print(f"  - Using {len(AD_SEQ_FILES)} AD files and {len(RT_SEQ_FILES)} RT files")
 
-print("  - Plotting TREBL experiment reads distribution...")
-pipeline.trebl_experiment_reads_distribution(
-    AD_seq_files=AD_SEQ_FILES,
-    AD_bc_objects=AD_bc_objects,
-    RT_seq_files=RT_SEQ_FILES,
-    RT_bc_objects=RT_bc_objects,
-    reverse_complement=True,
-)
-
 print("  - Running TREBL experiment with both simple and directional UMI deduplication...")
 print("    (This may take significant time for large datasets)")
 trebl_results = pipeline.trebl_experiment_analysis(
