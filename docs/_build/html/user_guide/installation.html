@@ -199,6 +199,7 @@
 <li class="toctree-l1"><a class="reference internal" href="step1.html">Step 1: TREBL Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step2.html">Step 2: TREBL Step 2 Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="savio_jobs.html">Running on Savio (Cluster Jobs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced_usage.html">Advanced Usage</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
@@ -252,7 +253,7 @@
 <h2>Recommended: Create Your Own Conda Environment<a class="headerlink" href="#recommended-create-your-own-conda-environment" title="Link to this heading">¶</a></h2>
 <p>We recommend creating your own conda environment for better package management and easier Jupyter integration:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># clone the latest release </span>
-git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>v0.1.4<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span><span class="w"> </span>https://github.com/staller-lab/trebl_tools.git
+git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>v0.1.5<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span><span class="w"> </span>https://github.com/staller-lab/trebl_tools.git
 <span class="nb">cd</span><span class="w"> </span>trebl_tools
 
 <span class="c1"># create and activate conda env from the repo YAML</span>
@@ -263,7 +264,7 @@ conda<span class="w"> </span>activate<span class="w"> </span>trebl_tools_env<spa
 pip<span class="w"> </span>install<span class="w"> </span>.
 
 <span class="c1"># install Jupyter kernel for this env</span>
-python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--name<span class="w"> </span>trebl_tools_env<span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;trebl_tools (v0.1.4)&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--name<span class="w"> </span>trebl_tools_env<span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;trebl_tools (v0.1.5)&quot;</span>
 </pre></div>
 </div>
 </section>

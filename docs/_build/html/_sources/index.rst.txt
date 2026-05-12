@@ -82,6 +82,7 @@ User Guide
    user_guide/step1
    user_guide/step2
    user_guide/trebl_experiment
+   user_guide/savio_jobs
    user_guide/advanced_usage
 
 API Reference
