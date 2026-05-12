@@ -1077,20 +1077,17 @@ def calculate_activity_scores(
     rep_regex=r"AD_(\d+)_",
 ):
     """
-    Calculate activity scores from TREBL experiment AD simple and directional counts.
+    Calculate per-barcode activity scores from TREBL experiment AD simple and
+    directional counts.
 
     Activity is defined as:
         np.log10(count_directional / count_simple)
 
     Returns
     -------
-    ad_activity_per_sample_df : pd.DataFrame
-        Per-sample merged AD simple/directional counts with activity scores.
-    ad_activity_mean_by_time_df : pd.DataFrame
-        Mean activity score across replicates for each AD and time.
-    ad_activity_summed_by_time_df : pd.DataFrame
-        Activity score computed from counts summed across replicates for each
-        AD and time.
+    ad_activity_per_barcode_df : pd.DataFrame
+        Per-barcode, per-sample merged AD simple/directional counts with
+        activity scores.
     """
     from pathlib import Path
     import glob
@@ -1114,9 +1111,25 @@ def calculate_activity_scores(
     if self.output_path is None:
         raise ValueError("self.output_path must be set to calculate activity scores.")
 
+    ad_col_names = [bc.name for bc in AD_bc_objects]
+    rt_col_names = [bc.name for bc in RT_bc_objects]
+
+    if len(ad_col_names) < 2:
+        raise ValueError("AD_bc_objects must contain at least two barcode objects.")
+
+    step1_required_cols = ad_col_names + rt_col_names
     step1_map = pd.read_csv(step1_path)
-    step1_map = step1_map[["AD", "AD_end", "AD_BC", "RPTR_BC"]].drop_duplicates()
-    step1_map["gene"] = step1_map["AD_end"] + step1_map["AD_BC"]
+
+    missing_step1_cols = [col for col in step1_required_cols if col not in step1_map.columns]
+    if missing_step1_cols:
+        raise ValueError(
+            f"Step 1 map is missing required columns: {missing_step1_cols}"
+        )
+
+    step1_map = step1_map[step1_required_cols].drop_duplicates()
+
+    ad_gene_cols = ad_col_names
+    step1_map["gene"] = step1_map[ad_gene_cols].astype(str).agg("".join, axis=1)
 
     trebl_root = Path(self.output_path) / "trebl_experiment_"
     search_root = trebl_root if trebl_root.exists() else Path(self.output_path)
@@ -1138,92 +1151,61 @@ def calculate_activity_scores(
     simple_AD_df = read_and_label(simple_AD_files, label="AD_simple")
     directional_AD_df = read_and_label(directional_AD_files, label="AD_directional")
 
-    simple_AD_df["gene"] = simple_AD_df["AD_end"] + simple_AD_df["AD_BC"]
+    missing_simple_cols = [col for col in ad_gene_cols if col not in simple_AD_df.columns]
+    if missing_simple_cols:
+        raise ValueError(
+            f"AD simple files are missing required columns: {missing_simple_cols}"
+        )
+
+    simple_AD_df["gene"] = simple_AD_df[ad_gene_cols].astype(str).agg("".join, axis=1)
     simple_AD_df["rep"] = simple_AD_df["file_base"].str.extract(rep_regex).astype(int)
     simple_AD_df["time"] = simple_AD_df["file_base"].str.extract(time_regex).astype(int)
+
+    if "gene" not in directional_AD_df.columns:
+        missing_directional_cols = [col for col in ad_gene_cols if col not in directional_AD_df.columns]
+        if missing_directional_cols:
+            raise ValueError(
+                "AD directional files must contain either a 'gene' column "
+                f"or these barcode columns: {missing_directional_cols}"
+            )
+        directional_AD_df["gene"] = (
+            directional_AD_df[ad_gene_cols].astype(str).agg("".join, axis=1)
+        )
 
     directional_AD_df["rep"] = directional_AD_df["file_base"].str.extract(rep_regex).astype(int)
     directional_AD_df["time"] = directional_AD_df["file_base"].str.extract(time_regex).astype(int)
 
-    ad_activity_per_sample_df = pd.merge(
+    ad_activity_per_barcode_df = pd.merge(
         simple_AD_df,
         directional_AD_df,
         on=["gene", "rep", "time"],
         suffixes=("_simple", "_directional"),
     )
 
-    ad_activity_per_sample_df = pd.merge(
-        ad_activity_per_sample_df,
-        step1_map[["gene", "AD", "AD_end", "AD_BC", "RPTR_BC"]].drop_duplicates(),
+    step1_merge_cols = ["gene"] + step1_required_cols
+    ad_activity_per_barcode_df = pd.merge(
+        ad_activity_per_barcode_df,
+        step1_map[step1_merge_cols].drop_duplicates(),
         on="gene",
         how="left",
     )
 
-    ad_activity_per_sample_df["count_diff"] = (
-        ad_activity_per_sample_df["count_simple"]
-        - ad_activity_per_sample_df["count_directional"]
+    ad_activity_per_barcode_df["count_diff"] = (
+        ad_activity_per_barcode_df["count_simple"]
+        - ad_activity_per_barcode_df["count_directional"]
     )
 
-    ad_activity_per_sample_df["activity_score"] = compute_activity(
-        ad_activity_per_sample_df["count_simple"],
-        ad_activity_per_sample_df["count_directional"],
-    )
-
-    ad_activity_mean_by_time_df = (
-        ad_activity_per_sample_df
-        .groupby(["gene", "time"], as_index=False)["activity_score"]
-        .mean()
-        .rename(columns={"activity_score": "mean_activity_score"})
-    )
-
-    ad_activity_mean_by_time_df = pd.merge(
-        ad_activity_mean_by_time_df,
-        step1_map[["gene", "AD", "AD_end", "AD_BC", "RPTR_BC"]].drop_duplicates(),
-        on="gene",
-        how="left",
-    )
-
-    ad_activity_summed_by_time_df = (
-        ad_activity_per_sample_df
-        .groupby(["gene", "time"], as_index=False)[["count_simple", "count_directional"]]
-        .sum()
-    )
-
-    ad_activity_summed_by_time_df["count_diff"] = (
-        ad_activity_summed_by_time_df["count_simple"]
-        - ad_activity_summed_by_time_df["count_directional"]
-    )
-
-    ad_activity_summed_by_time_df["summed_activity_score"] = compute_activity(
-        ad_activity_summed_by_time_df["count_simple"],
-        ad_activity_summed_by_time_df["count_directional"],
-    )
-
-    ad_activity_summed_by_time_df = pd.merge(
-        ad_activity_summed_by_time_df,
-        step1_map[["gene", "AD", "AD_end", "AD_BC", "RPTR_BC"]].drop_duplicates(),
-        on="gene",
-        how="left",
+    ad_activity_per_barcode_df["activity_score"] = compute_activity(
+        ad_activity_per_barcode_df["count_simple"],
+        ad_activity_per_barcode_df["count_directional"],
     )
 
     output_dir = Path(self.output_path)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    ad_activity_per_sample_df.to_csv(
-        output_dir / "AD_activity_scores_per_sample.csv",
-        index=False,
-    )
-    ad_activity_mean_by_time_df.to_csv(
-        output_dir / "AD_activity_scores_mean_by_time.csv",
-        index=False,
-    )
-    ad_activity_summed_by_time_df.to_csv(
-        output_dir / "AD_activity_scores_summed_by_time.csv",
+    ad_activity_per_barcode_df.to_csv(
+        output_dir / "AD_activity_scores_per_barcode.csv",
         index=False,
     )
 
-    return (
-        ad_activity_per_sample_df,
-        ad_activity_mean_by_time_df,
-        ad_activity_summed_by_time_df,
-    )
+    return ad_activity_per_barcode_df
