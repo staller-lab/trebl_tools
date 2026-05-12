@@ -1,2 +1,2 @@
-/var/spool/slurmd/job34214569/slurm_script: line 26: /global/scratch/projects/fc_mvslab/OpenProjects/conda/trebl_tools/bin/python: No such file or directory
+/var/spool/slurmd/job34214569/slurm_script: line 26: /global/scratch/projects/fc_mvslab/conda/trebl_tools/bin/python: No such file or directory
 Job completed at: Tue May 12 13:05:26 PDT 2026
