@@ -1,247 +1,177 @@
 # Savio Job Scripts
 
-This directory contains SLURM batch scripts for running complete TREBL analysis workflows on the Savio cluster.
+This directory contains SLURM batch scripts and matching Python analysis scripts for running complete TREBL analysis workflows on the Savio cluster.
 
-Each script covers all three analysis steps:
+## File Structure
+
+Each workflow is split into two files — **edit the `.py` file**, then submit the `.sh` file.
+
+| File | Purpose |
+|------|---------|
+| `run_quick_start.py` | **Edit this** — all paths, barcodes, and parameters for the quick-start workflow |
+| `quick_start_job.sh` | SLURM wrapper — submits `run_quick_start.py` as a cluster job |
+| `run_full_analysis.py` | **Edit this** — all paths, barcodes, and parameters for the full analysis workflow |
+| `full_analysis_job.sh` | SLURM wrapper — submits `run_full_analysis.py` as a cluster job |
+
+Each workflow covers all three analysis steps:
 1. **Step 1**: Initial TREBL mapping to establish barcode relationships
 2. **Step 2**: Process separated AD and RT libraries
-3. **TREBL Experiment**: Full experiment analysis with UMI deduplication
+3. **TREBL Experiment**: Full experiment analysis with UMI deduplication and activity scores
 
-## Available Scripts
+---
 
-### 1. `quick_start_job.sh`
+## When to Use a Savio Job
+
+Use a Savio batch job instead of a Jupyter notebook when:
+
+- **Any sequencing file is large (>10M reads)** — reads distribution plots and mapping steps can take 30+ minutes per file interactively.
+- **You are running error correction** — the full analysis workflow is significantly slower; a job guarantees it won't be interrupted.
+- **You have many TREBL experiment files** — processing 10+ FASTQ files sequentially benefits from dedicated compute time.
+- **You need reproducibility** — job logs capture everything that was run and any errors.
+
+For small datasets or quick exploration, the interactive Jupyter notebooks (`../notebooks/`) are easier to use.
+
+---
+
+## Available Workflows
+
+### 1. Quick Start (`run_quick_start.py` + `quick_start_job.sh`)
 
 Runs a quick TREBL analysis workflow optimized for speed.
 
 **Configuration:**
 - **CPUs:** 8 cores
 - **Time limit:** 4 hours
-- **Memory:** Auto-allocated (~16-32 GB)
 - **Features:** No error correction, simple UMI deduplication only
 
 **Best for:**
 - Initial data exploration
-- Testing pipelines
+- Testing your barcode/path configuration
 - Time-sensitive analysis
 
 ---
 
-### 2. `full_analysis_job.sh`
+### 2. Full Analysis (`run_full_analysis.py` + `full_analysis_job.sh`)
 
 Runs a comprehensive TREBL analysis with maximum accuracy.
 
 **Configuration:**
 - **CPUs:** 16 cores
 - **Time limit:** 12 hours
-- **Memory:** Auto-allocated (~32-64 GB)
-- **Features:** Error correction enabled, both simple and directional/complex UMI deduplication
+- **Features:** Error correction enabled, both simple and directional UMI deduplication
 
 **Best for:**
-- Final, publication-quality analysis
+- Final, publication-quality results
 - Variable-quality data
 - Comprehensive UMI deduplication comparison
 
 ---
 
-## How to Use These Scripts
+## How to Run
 
-### Step 1: Prepare Your Environment
+### Step 1: Edit the Python analysis file
 
-1. **Create necessary directories:**
-   ```bash
-   mkdir -p output/quick_start logs
-   # or
-   mkdir -p output/full_analysis logs
-   ```
+Open `run_quick_start.py` (or `run_full_analysis.py`) and update the **CONFIGURATION** section at the top:
 
-2. **Ensure conda environment is set up:**
-   ```bash
-   conda activate trebl_tools_env
-   # Verify installation
-   pip show trebl_tools
-   ```
+```python
+# Path to your data folder
+DATA_DIR = "/global/scratch/projects/fc_mvslab/data/my_experiment"
 
-### Step 2: Customize the Script
+# Input files
+DESIGN_FILE    = f"{DATA_DIR}/design_file.txt"
+STEP1_SEQ_FILE = f"{DATA_DIR}/step1.fastq"
+# ... etc.
 
-1. **Copy the script to your working directory:**
-   ```bash
-   cp examples/savio_jobs/quick_start_job.sh my_analysis.sh
-   # or
-   cp examples/savio_jobs/full_analysis_job.sh my_analysis.sh
-   ```
-
-2. **Edit the configuration section** in the Python code within the script:
-
-   ```python
-   # ==========================================
-   # CONFIGURATION - UPDATE THESE PATHS
-   # ==========================================
-   DESIGN_FILE = "/path/to/your/design_file.txt"
-   STEP1_SEQ_FILE = "/path/to/your/step1_sequencing_file.fastq"
-   STEP2_AD_SEQ_FILE = "/path/to/your/step2_AD_file.fastq"
-   STEP2_RT_SEQ_FILE = "/path/to/your/step2_RT_file.fastq"
-   AD_SEQ_FILES_PATTERN = "/path/to/AD_assembled/*"
-   RT_SEQ_FILES_PATTERN = "/path/to/RT_assembled/*"
-   OUTPUT_DIR = "output/quick_start"
-   ```
-
-3. **Optional: Customize barcode sequences** if your experiment differs from the examples:
-   ```python
-   AD = finder.Barcode(
-       name="AD",
-       preceder="YOUR_PRECEDER",
-       post="YOUR_POST",
-       length=YOUR_LENGTH
-   )
-   ```
-
-4. **Optional: Adjust SLURM parameters** if needed:
-   ```bash
-   #SBATCH --time=4:00:00      # Increase if your data is very large
-   #SBATCH --cpus-per-task=8   # More CPUs = more memory
-   ```
-
-### Step 3: Submit the Job
-
-```bash
-sbatch my_analysis.sh
+# Barcode flanking sequences — update for your experiment
+AD = finder.Barcode(
+    name="AD",
+    preceder="GGCTAGC",  # ← sequence just BEFORE the AD in your reads
+    post="TGACTAG",      # ← sequence just AFTER the AD
+    length=120,
+)
+# ... and the other barcodes / UMIs
 ```
 
-### Step 4: Monitor the Job
+### Step 2: Create required directories
 
-**Check job status:**
 ```bash
+mkdir -p output/quick_start db logs
+# or for full analysis:
+mkdir -p output/full_analysis db logs
+```
+
+### Step 3: Submit the job
+
+```bash
+sbatch examples/savio_jobs/quick_start_job.sh
+# or
+sbatch examples/savio_jobs/full_analysis_job.sh
+```
+
+To run with the bundled example data without any edits, submit from the repo root — the default `DATA_DIR` already points to `examples/data/`.
+
+### Step 4: Monitor the job
+
+```bash
+# Check queue status
 squeue -u $USER
-```
 
-**View job output in real-time:**
-```bash
+# Watch live output
 tail -f logs/quick_start_*.out
-# or
-tail -f logs/full_analysis_*.out
-```
 
-**View any errors:**
-```bash
+# Check for errors
 tail -f logs/quick_start_*.err
-# or
-tail -f logs/full_analysis_*.err
 ```
 
-### Step 5: Review Results
+### Step 5: Review results
 
 Once the job completes, check:
-- Output CSV files in your output directory
-- PNG visualizations of loss tables and distributions
+- CSV files and PNG plots in your `OUTPUT_DIR`
 - Log files for any warnings or errors
 
 ---
 
-## Script Details
-
-### SLURM Header Parameters
-
-Both scripts use these common SLURM directives:
-
-```bash
-#SBATCH --account=fc_mvslab           # Billing account
-#SBATCH --partition=savio3            # Partition (node type)
-#SBATCH --nodes=1                     # Single node
-#SBATCH --output=logs/NAME_%j.out     # Standard output log
-#SBATCH --error=logs/NAME_%j.err      # Standard error log
-```
-
-**Difference between scripts:**
-
-| Parameter | Quick Start | Full Analysis |
-|-----------|-------------|---------------|
-| `--cpus-per-task` | 8 | 16 |
-| `--time` | 4:00:00 | 12:00:00 |
-
-### Python Script Structure
-
-Both scripts follow this workflow:
-
-1. **Initialize pipeline** with appropriate settings
-2. **Define barcodes** for AD, AD_BC, RT_BC, and UMIs
-3. **Run Step 1:**
-   - Plot reads distribution
-   - Run mapping
-4. **Run Step 2:**
-   - Plot Step 2 reads distribution
-   - Run Step 2 mapping
-5. **Run TREBL experiment:**
-   - Plot TREBL experiment reads distribution
-   - Run analysis with UMI deduplication
-6. **Output summary statistics**
-
-### Key Differences Between Scripts
+## Key Differences Between Workflows
 
 | Feature | Quick Start | Full Analysis |
 |---------|-------------|---------------|
 | `error_correction` | `False` | `True` |
 | `umi_deduplication` | `'simple'` | `'both'` |
-| Processing time | ~2-4 hours | ~6-12 hours |
+| Processing time | ~2–4 hours | ~6–12 hours |
 | CPU cores | 8 | 16 |
 
 ---
 
 ## Customization Guide
 
-### Adjusting Resource Allocation
+### Adjusting SLURM Resource Allocation
 
-#### For Larger Datasets
-
-If you have very large datasets (>50M reads per file):
+Edit the `#SBATCH` header lines in the `.sh` file:
 
 ```bash
-#SBATCH --cpus-per-task=32     # More CPUs for parallel processing
-#SBATCH --time=24:00:00        # Extend time limit
+#SBATCH --cpus-per-task=32   # More CPUs for very large datasets (>50M reads)
+#SBATCH --time=24:00:00      # Extend time limit if needed
 ```
 
-#### For Smaller Datasets
+### Testing with a Subset of Reads
 
-If you have small datasets (<5M reads per file):
-
-```bash
-#SBATCH --cpus-per-task=4      # Fewer CPUs needed
-#SBATCH --time=2:00:00         # Reduce time limit
-```
-
-### Testing with Subset of Data
-
-Add `test_n_reads` parameter to process only first N reads:
+In the `.py` file, uncomment the `test_n_reads` line:
 
 ```python
 pipeline = pipelines.TreblPipeline(
-    db_path="test.db",
-    design_file_path=DESIGN_FILE,
-    error_correction=False,
-    output_path=OUTPUT_DIR,
-    test_n_reads=100000  # Test with 100k reads
+    ...
+    test_n_reads=100000  # Test with first 100k reads
 )
 ```
 
-### Changing Output Locations
+### Adjusting Reads Thresholds
 
-Update the `OUTPUT_DIR` variable and ensure the directory exists:
+Edit `READS_THRESHOLD`, `READS_THRESHOLD_AD`, and `READS_THRESHOLD_RT` in the `.py` file based on the reads distribution plots from Step 1 / Step 2. Start with `1` and increase if you want to filter low-count barcodes.
 
-```python
-OUTPUT_DIR = "/path/to/your/custom/output"
-```
+### Using a Different Conda Environment
 
+Edit the `.sh` file:
 ```bash
-mkdir -p /path/to/your/custom/output
-```
-
-### Using Different Conda Environment
-
-If your environment has a different name:
-
-```bash
-# Change this line in the script
-source activate trebl_tools_env
-# to
 source activate YOUR_ENV_NAME
 ```
 
@@ -251,155 +181,47 @@ source activate YOUR_ENV_NAME
 
 ### Job Fails Immediately
 
-**Check the error log:**
 ```bash
 cat logs/quick_start_*.err
-# or
-cat logs/full_analysis_*.err
 ```
 
-**Common causes:**
-- Conda environment not found → Check environment name
-- Module not available → Ensure Python module is loaded
-- Permissions issue → Check file/directory permissions
+Common causes:
+- Conda environment not found → check environment name in the `.sh` file
+- File not found → verify all paths in the `.py` CONFIGURATION section
+- Permissions issue → `ls -l /path/to/your/files`
 
 ### Job Times Out
 
-**Symptoms:** Job ends with TIMEOUT error
-
-**Solutions:**
-- Increase `--time` in SBATCH header
-- Reduce dataset size for testing
-- Use more CPUs to speed up processing
+- Increase `--time` in the `.sh` SBATCH header
+- Test with `test_n_reads=100000` first to estimate run time
+- Use more CPUs: `--cpus-per-task=32`
 
 ### Out of Memory
 
-**Symptoms:** Job ends with OOM (Out of Memory) error
+- Increase `--cpus-per-task` (more CPUs = more memory allocated on Savio)
+- Test with `test_n_reads` first
 
-**Solutions:**
-- Increase `--cpus-per-task` (more CPUs = more memory)
-- Use `test_n_reads` to process subset first
-- Split large files into smaller chunks
+### Wrong Output Files / File Not Found
 
-### File Not Found Errors
-
-**Check:**
-- All paths in CONFIGURATION section are correct
-- Files have read permissions: `ls -l /path/to/file`
-- Wildcards expand correctly: `ls /path/to/pattern/*`
+- Check `OUTPUT_DIR` and `DATA_DIR` in the `.py` file
+- Confirm `mkdir -p output/... db logs` was run before submitting
 
 ### Import Errors
 
-**Check:**
-- Conda environment activated correctly
-- trebl_tools installed: `conda activate trebl_tools_env && pip show trebl_tools`
-- All dependencies installed
-
-### Wrong Results Directory
-
-**Issue:** Can't find output files
-
-**Check:**
-- `OUTPUT_DIR` variable in script
-- Current working directory when job was submitted
-- Use absolute paths for clarity
-
----
-
-## Best Practices
-
-### 1. Always Test First
-
-Before running on full dataset:
-```python
-test_n_reads=100000  # Test with subset
-```
-
-### 2. Use Descriptive Job Names
-
-Modify the job name to track different analyses:
 ```bash
-#SBATCH --job-name=trebl_experiment1_quick
-```
-
-### 3. Organize Output
-
-Create separate output directories for different experiments:
-```bash
-mkdir -p output/experiment1/quick_start
-mkdir -p output/experiment1/full_analysis
-```
-
-### 4. Keep Logs
-
-Don't delete log files until you've verified results:
-```bash
-logs/
-├── quick_start_12345.out
-├── quick_start_12345.err
-├── full_analysis_67890.out
-└── full_analysis_67890.err
-```
-
-### 5. Document Your Analysis
-
-Add comments to your customized script:
-```bash
-# Analysis for Experiment 1 - ChopTF data from June 2025
-# Using standard barcodes with 12bp UMIs
+conda activate trebl_tools_env
+pip show trebl_tools
 ```
 
 ---
 
-## Job Monitoring Tips
-
-### Check Queue Position
+## Job Monitoring Commands
 
 ```bash
-squeue -u $USER
-```
-
-### Check Job Details
-
-```bash
-scontrol show job JOBID
-```
-
-### Cancel a Job
-
-```bash
-scancel JOBID
-```
-
-### View Resource Usage
-
-After job completes:
-```bash
-seff JOBID
-```
-
----
-
-## Example Workflow
-
-Here's a complete example of running a quick start analysis:
-
-```bash
-# 1. Set up directories
-mkdir -p output/my_experiment/quick_start logs
-
-# 2. Copy and customize script
-cp examples/savio_jobs/quick_start_job.sh my_experiment_quick.sh
-nano my_experiment_quick.sh  # Edit paths
-
-# 3. Submit job
-sbatch my_experiment_quick.sh
-
-# 4. Monitor progress
-tail -f logs/quick_start_*.out
-
-# 5. Check results
-ls output/my_experiment/quick_start/
+squeue -u $USER          # Check queue position / status
+scontrol show job JOBID  # Detailed job info
+scancel JOBID            # Cancel a job
+seff JOBID               # Resource usage after job completes
 ```
 
 ---
@@ -408,5 +230,6 @@ ls output/my_experiment/quick_start/
 
 - **Main Examples README:** `../README.md`
 - **Notebook Examples:** `../notebooks/`
+- **Read the Docs:** User Guide → Running on Savio
 - **Savio Documentation:** https://docs-research-it.berkeley.edu/services/high-performance-computing/
 - **SLURM Documentation:** https://slurm.schedmd.com/sbatch.html
