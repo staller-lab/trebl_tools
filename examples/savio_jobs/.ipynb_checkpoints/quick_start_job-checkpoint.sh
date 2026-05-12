@@ -3,8 +3,8 @@
 #SBATCH --account=fc_mvslab
 #SBATCH --partition=savio3
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=8
-#SBATCH --time=4:00:00
+#SBATCH --cpus-per-task=32
+#SBATCH --time=1:00:00
 #SBATCH --output=logs/quick_start.out
 # TREBL Quick Start Analysis Job
 #
@@ -23,6 +23,6 @@
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 # Run the analysis script (edit that file to configure your paths/barcodes)
-/global/scratch/projects/fc_mvslab/conda/trebl_tools/bin/python "run_quick_start.py"
+/global/scratch/projects/fc_mvslab/OpenProjects/conda/trebl_tools/bin/python "run_quick_start.py"
 
 echo "Job completed at: $(date)"

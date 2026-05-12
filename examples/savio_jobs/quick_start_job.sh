@@ -3,8 +3,8 @@
 #SBATCH --account=fc_mvslab
 #SBATCH --partition=savio3
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=8
-#SBATCH --time=4:00:00
+#SBATCH --cpus-per-task=32
+#SBATCH --time=1:00:00
 #SBATCH --output=logs/quick_start.out
 # TREBL Quick Start Analysis Job
 #
