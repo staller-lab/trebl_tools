@@ -150,7 +150,6 @@ Both workflows generate:
 ### TREBL Experiment Outputs
 - `AD_trebl_experiment_results.csv` - AD library results with UMI counts
 - `RT_trebl_experiment_results.csv` - RT library results with UMI counts
-- `trebl_experiment_reads_distribution_*.png` - Histograms for all files
 - `trebl_experiment_loss_*.png` - Loss summaries for AD and RT
 
 ### Activity Score Outputs
