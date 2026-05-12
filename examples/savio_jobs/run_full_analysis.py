@@ -231,7 +231,7 @@ trebl_results = pipeline.trebl_experiment_analysis(
 
 print(f"AD results and RT results ready.")
 
-print("\n[5/7] Calculating activity scores...")
+print("\n[5/6] Calculating activity scores...")
 (
     ad_activity_per_sample_df,
     ad_activity_mean_by_time_df,
@@ -247,6 +247,6 @@ print(f"  - Activity rows (per sample): {len(ad_activity_per_sample_df)}")
 print(f"  - Activity rows (mean by time): {len(ad_activity_mean_by_time_df)}")
 print(f"  - Activity rows (summed by time): {len(ad_activity_summed_by_time_df)}")
 
-print("\n[6/7] Activity score tables written to output directory.")
+print("\n[6/6] Activity score tables written by calculate_activity_scores().")
 
-print("\n[7/7] Analysis complete!")
+print("\nAnalysis complete!")
