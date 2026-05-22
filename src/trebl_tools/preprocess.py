@@ -201,7 +201,7 @@ def run_fastp(input_dir, output_dir, script_path="savio_jobs/fastp.sh"):
     as .fastq files.
     
     Args:
-        input_dir (str): Path to folder containing .fastq.gz files.
+        input_dir (str): Path to folder containing .fastq or .fastq.gz files.
         output_dir (str): Path to folder where output should be written.
         script_path (str, optional): Path to the existing fastp.sh script.
             Defaults to "savio_jobs/fastp.sh".
@@ -230,7 +230,10 @@ def run_fastp(input_dir, output_dir, script_path="savio_jobs/fastp.sh"):
         raise FileNotFoundError(f"Script not found: {script_path}")
     
     # Grab all .fastq.gz files to determine array size
-    files = sorted([f for f in os.listdir(input_dir) if f.endswith(".fastq.gz")])
+    files = sorted([f for f in os.listdir(input_dir) if f.endswith(".fastq.gz") or f.endswith(".fastq")])
+
+    if not files:
+        raise ValueError(f"No .fastq or .fastq.gz files found in {input_dir}")
     
     if not files:
         raise ValueError(f"No .fastq.gz files found in {input_dir}")

@@ -1028,144 +1028,167 @@ class TreblPipeline:
 
         return fig, axes
 
-def calculate_activity_scores(
-    self,
-    step1_path,
-    AD_bc_objects,
-    RT_bc_objects,
-    time_regex=r"AD_\d+_(\d+)",
-    rep_regex=r"AD_(\d+)_",
-):
-    """
-    Calculate per-barcode activity scores from TREBL experiment AD simple and
-    directional counts.
-
-    Activity is defined as:
-        np.log10(count_directional / count_simple)
-
-    Returns
-    -------
-    ad_activity_per_barcode_df : pd.DataFrame
-        Per-barcode, per-sample merged AD simple/directional counts with
-        activity scores.
-    """
-    from pathlib import Path
-    import glob
-    import os
-    import numpy as np
-    import pandas as pd
-
-    def read_and_label(files, label):
-        dfs = []
-        for f in files:
-            df = pd.read_csv(f, sep="\t")
-            df["file_base"] = f"{label}_{os.path.splitext(os.path.basename(f))[0]}"
-            dfs.append(df)
-        if not dfs:
-            return pd.DataFrame()
-        return pd.concat(dfs, ignore_index=True)
-
-    def compute_activity(simple_vals, directional_vals):
-        return np.log10(directional_vals / simple_vals)
-
-    if self.output_path is None:
-        raise ValueError("self.output_path must be set to calculate activity scores.")
-
-    ad_col_names = [bc.name for bc in AD_bc_objects]
-    rt_col_names = [bc.name for bc in RT_bc_objects]
-
-    if len(ad_col_names) < 2:
-        raise ValueError("AD_bc_objects must contain at least two barcode objects.")
-
-    step1_required_cols = ad_col_names + rt_col_names
-    step1_map = pd.read_csv(step1_path)
-
-    missing_step1_cols = [col for col in step1_required_cols if col not in step1_map.columns]
-    if missing_step1_cols:
-        raise ValueError(
-            f"Step 1 map is missing required columns: {missing_step1_cols}"
+    def calculate_activity_scores(
+        self,
+        step1_path,
+        AD_bc_objects,
+        RT_bc_objects,
+        step_name_suffix="",
+        time_regex=r"(?:AD|RT)_\d+_(\d+)",
+        rep_regex=r"(?:AD|RT)_(\d+)_",
+    ):
+        from pathlib import Path
+        import glob
+        import os
+        import numpy as np
+        import pandas as pd
+    
+        def read_and_label(files, label):
+            dfs = []
+            for f in files:
+                df = pd.read_csv(f, sep="\t")
+                df["source_file"] = os.path.basename(f)
+                df["file_base"] = f"{label}_{os.path.splitext(os.path.basename(f))[0]}"
+                dfs.append(df)
+            if not dfs:
+                return pd.DataFrame()
+            return pd.concat(dfs, ignore_index=True)
+    
+        def require_columns(df, cols, label):
+            missing = [c for c in cols if c not in df.columns]
+            if missing:
+                raise ValueError(f"{label} missing required columns: {missing}")
+    
+        def add_rep_time(df):
+            df = df.copy()
+            df["rep"] = df["file_base"].str.extract(rep_regex).astype(int)
+            df["time"] = df["file_base"].str.extract(time_regex).astype(int)
+            return df
+    
+        if self.output_path is None:
+            raise ValueError("self.output_path must be set to calculate activity scores.")
+    
+        ad_col_names = [bc.name for bc in AD_bc_objects]
+        rt_col_names = [bc.name for bc in RT_bc_objects]
+    
+        if len(ad_col_names) < 2:
+            raise ValueError("AD_bc_objects must contain at least two barcode objects.")
+        if len(rt_col_names) < 1:
+            raise ValueError("RT_bc_objects must contain at least one barcode object.")
+    
+        # Load Step 1 map
+        step1_map = pd.read_csv(step1_path)
+        step1_required_cols = ad_col_names + rt_col_names
+        missing_step1_cols = [col for col in step1_required_cols if col not in step1_map.columns]
+        if missing_step1_cols:
+            raise ValueError(f"Step 1 map is missing required columns: {missing_step1_cols}")
+        step1_map = step1_map[step1_required_cols].drop_duplicates().copy()
+    
+        # Find files
+        step_name_prefix = "trebl_experiment_" + step_name_suffix
+        trebl_root = Path(self.output_path) / step_name_prefix
+        search_root = trebl_root if trebl_root.exists() else Path(self.output_path)
+    
+        simple_AD_files      = glob.glob(str(search_root / "**" / "*_AD_*" / "*simple_umi_counts.tsv"), recursive=True)
+        directional_AD_files = glob.glob(str(search_root / "**" / "*_AD_*" / "*directional_umi_counts.tsv"), recursive=True)
+        simple_RT_files      = glob.glob(str(search_root / "**" / "*_RT_*" / "*simple_umi_counts.tsv"), recursive=True)
+        directional_RT_files = glob.glob(str(search_root / "**" / "*_RT_*" / "*directional_umi_counts.tsv"), recursive=True)
+    
+        if not simple_AD_files:
+            raise ValueError(f"No AD simple count files found under {search_root}")
+        if not simple_RT_files:
+            raise ValueError(f"No RT simple count files found under {search_root}")
+    
+        # Determine whether directional results exist
+        has_directional = bool(directional_AD_files and directional_RT_files)
+        if not has_directional:
+            print("No directional count files found — using simple deduplication only.")
+        else:
+            print("Found both simple and directional count files — computing both.")
+    
+        # Load and label all files
+        simple_AD_df = read_and_label(simple_AD_files, "AD_simple")
+        simple_RT_df = read_and_label(simple_RT_files, "RT_simple")
+    
+        require_columns(simple_AD_df, ad_col_names + ["count"], "AD simple files")
+        require_columns(simple_RT_df, rt_col_names + ["count"], "RT simple files")
+    
+        simple_AD_df = add_rep_time(simple_AD_df).rename(columns={"count": "AD_count_simple"})
+        simple_RT_df = add_rep_time(simple_RT_df).rename(columns={"count": "RT_count_simple"})
+    
+        if has_directional:
+            directional_AD_df = read_and_label(directional_AD_files, "AD_directional")
+            directional_RT_df = read_and_label(directional_RT_files, "RT_directional")
+            require_columns(directional_AD_df, ad_col_names + ["count"], "AD directional files")
+            require_columns(directional_RT_df, rt_col_names + ["count"], "RT directional files")
+            directional_AD_df = add_rep_time(directional_AD_df).rename(columns={"count": "AD_count_directional"})
+            directional_RT_df = add_rep_time(directional_RT_df).rename(columns={"count": "RT_count_directional"})
+    
+        # Start from step1 map and inner-merge everything so no barcodes are silently dropped
+        activity_df = step1_map.copy()
+    
+        activity_df = pd.merge(
+            activity_df,
+            simple_AD_df[ad_col_names + ["rep", "time", "AD_count_simple"]],
+            on=ad_col_names,
+            how="inner",
         )
-
-    step1_map = step1_map[step1_required_cols].drop_duplicates()
-
-    ad_gene_cols = ad_col_names
-    step1_map["gene"] = step1_map[ad_gene_cols].astype(str).agg("".join, axis=1)
-
-    trebl_root = Path(self.output_path) / "trebl_experiment_"
-    search_root = trebl_root if trebl_root.exists() else Path(self.output_path)
-
-    simple_AD_files = glob.glob(
-        str(search_root / "**" / "*AD*" / "*simple*.tsv"),
-        recursive=True,
-    )
-    directional_AD_files = glob.glob(
-        str(search_root / "**" / "*AD*" / "*directional*.tsv"),
-        recursive=True,
-    )
-
-    if len(simple_AD_files) == 0:
-        raise ValueError("No AD simple count files found.")
-    if len(directional_AD_files) == 0:
-        raise ValueError("No AD directional count files found.")
-
-    simple_AD_df = read_and_label(simple_AD_files, label="AD_simple")
-    directional_AD_df = read_and_label(directional_AD_files, label="AD_directional")
-
-    missing_simple_cols = [col for col in ad_gene_cols if col not in simple_AD_df.columns]
-    if missing_simple_cols:
-        raise ValueError(
-            f"AD simple files are missing required columns: {missing_simple_cols}"
+        activity_df = pd.merge(
+            activity_df,
+            simple_RT_df[rt_col_names + ["rep", "time", "RT_count_simple"]],
+            on=rt_col_names + ["rep", "time"],
+            how="inner",
         )
-
-    simple_AD_df["gene"] = simple_AD_df[ad_gene_cols].astype(str).agg("".join, axis=1)
-    simple_AD_df["rep"] = simple_AD_df["file_base"].str.extract(rep_regex).astype(int)
-    simple_AD_df["time"] = simple_AD_df["file_base"].str.extract(time_regex).astype(int)
-
-    if "gene" not in directional_AD_df.columns:
-        missing_directional_cols = [col for col in ad_gene_cols if col not in directional_AD_df.columns]
-        if missing_directional_cols:
-            raise ValueError(
-                "AD directional files must contain either a 'gene' column "
-                f"or these barcode columns: {missing_directional_cols}"
+    
+        if has_directional:
+            activity_df = pd.merge(
+                activity_df,
+                directional_AD_df[ad_col_names + ["rep", "time", "AD_count_directional"]],
+                on=ad_col_names + ["rep", "time"],
+                how="inner",
             )
-        directional_AD_df["gene"] = (
-            directional_AD_df[ad_gene_cols].astype(str).agg("".join, axis=1)
+            activity_df = pd.merge(
+                activity_df,
+                directional_RT_df[rt_col_names + ["rep", "time", "RT_count_directional"]],
+                on=rt_col_names + ["rep", "time"],
+                how="inner",
+            )
+    
+        # Calculate log10 activity scores, NaN where counts are 0 or missing
+        activity_df["activity_simple"] = np.nan
+        valid_simple = (
+            activity_df["AD_count_simple"].notna()
+            & activity_df["RT_count_simple"].notna()
+            & (activity_df["AD_count_simple"] > 0)
+            & (activity_df["RT_count_simple"] > 0)
         )
-
-    directional_AD_df["rep"] = directional_AD_df["file_base"].str.extract(rep_regex).astype(int)
-    directional_AD_df["time"] = directional_AD_df["file_base"].str.extract(time_regex).astype(int)
-
-    ad_activity_per_barcode_df = pd.merge(
-        simple_AD_df,
-        directional_AD_df,
-        on=["gene", "rep", "time"],
-        suffixes=("_simple", "_directional"),
-    )
-
-    step1_merge_cols = ["gene"] + step1_required_cols
-    ad_activity_per_barcode_df = pd.merge(
-        ad_activity_per_barcode_df,
-        step1_map[step1_merge_cols].drop_duplicates(),
-        on="gene",
-        how="left",
-    )
-
-    ad_activity_per_barcode_df["count_diff"] = (
-        ad_activity_per_barcode_df["count_simple"]
-        - ad_activity_per_barcode_df["count_directional"]
-    )
-
-    ad_activity_per_barcode_df["activity_score"] = compute_activity(
-        ad_activity_per_barcode_df["count_simple"],
-        ad_activity_per_barcode_df["count_directional"],
-    )
-
-    output_dir = Path(self.output_path)
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    ad_activity_per_barcode_df.to_csv(
-        output_dir / "AD_activity_scores_per_barcode.csv",
-        index=False,
-    )
-
-    return ad_activity_per_barcode_df
+        activity_df.loc[valid_simple, "activity_simple"] = np.log10(
+            activity_df.loc[valid_simple, "RT_count_simple"]
+            / activity_df.loc[valid_simple, "AD_count_simple"]
+        )
+    
+        if has_directional:
+            activity_df["activity_directional"] = np.nan
+            valid_directional = (
+                activity_df["AD_count_directional"].notna()
+                & activity_df["RT_count_directional"].notna()
+                & (activity_df["AD_count_directional"] > 0)
+                & (activity_df["RT_count_directional"] > 0)
+            )
+            activity_df.loc[valid_directional, "activity_directional"] = np.log10(
+                activity_df.loc[valid_directional, "RT_count_directional"]
+                / activity_df.loc[valid_directional, "AD_count_directional"]
+            )
+    
+        # Save output
+        output_dir = Path(self.output_path)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        output_filename = (
+            f"trebl_experiment_{step_name_prefix}activity_scores_per_barcode.csv"
+            if step_name_suffix
+            else "trebl_experiment_activity_scores_per_barcode.csv"
+        )
+        activity_df.to_csv(output_dir / output_filename, index=False)
+        print(f"Saved activity scores ({len(activity_df)} rows) → {output_dir / output_filename}")
+    
+        return activity_df

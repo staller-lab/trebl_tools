@@ -7,7 +7,7 @@ This analysis is designed to run on Savio to handle large data and computations.
 You can use the prebuilt lab conda environment directly:
 
 ```bash
-conda activate /global/scratch/projects/fc_mvslab/conda/trebl_tools
+source activate /global/scratch/projects/fc_mvslab/conda/trebl_tools
 
 # register a Jupyter kernel for this env (run once)
 python -m ipykernel install --user --name trebl_tools_shared --display-name "trebl_tools (shared)"

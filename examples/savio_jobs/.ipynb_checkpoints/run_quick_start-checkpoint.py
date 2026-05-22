@@ -119,9 +119,11 @@ RT_UMI = finder.Barcode(
 )
 
 # Minimum reads to keep a barcode (adjust based on your reads distribution)
-READS_THRESHOLD = 1
-READS_THRESHOLD_AD = 1
-READS_THRESHOLD_RT = 1
+STEP1_READS_THRESHOLD = 1
+STEP2_READS_THRESHOLD_AD = 1
+STEP2_READS_THRESHOLD_RT = 1
+TREBL_EXP_READS_THRESHOLD_AD = 1 
+TREBL_EXP_READS_THRESHOLD_RT = 1
 
 # ==========================================
 # (No edits needed below this line)
@@ -135,7 +137,7 @@ RT_bc_objects = [RT_BC]
 # ==========================================
 # Initialize Pipeline
 # ==========================================
-print("\n[1/7] Initializing pipeline...")
+print("\n[1/6] Initializing pipeline...")
 pipeline = pipelines.TreblPipeline(
     db_path=DB_PATH,
     design_file_path=DESIGN_FILE,
@@ -147,7 +149,7 @@ pipeline = pipelines.TreblPipeline(
 # ==========================================
 # Step 1: TREBL Mapping
 # ==========================================
-print("\n[2/7] Running Step 1 mapping...")
+print("\n[2/6] Running Step 1 mapping...")
 
 print("  - Plotting reads distribution...")
 pipeline.step1_reads_distribution(
@@ -161,7 +163,7 @@ step1_map = pipeline.run_step_1(
     seq_file=STEP1_SEQ_FILE,
     bc_objects=bc_objects,
     column_pairs=[("RT_BC", "AD")],
-    reads_threshold=READS_THRESHOLD,
+    reads_threshold=STEP1_READS_THRESHOLD,
     reverse_complement=False,
 )
 print(f"  - Step 1 complete: {len(step1_map)} entries")
@@ -169,7 +171,7 @@ print(f"  - Step 1 complete: {len(step1_map)} entries")
 # ==========================================
 # Step 2: TREBL Step 2 Mapping
 # ==========================================
-print("\n[3/7] Running Step 2 mapping...")
+print("\n[3/6] Running Step 2 mapping...")
 
 print("  - Plotting Step 2 reads distribution...")
 pipeline.step2_reads_distribution(
@@ -187,8 +189,8 @@ step2 = pipeline.run_step_2(
     RT_seq_file=STEP2_RT_SEQ_FILE,
     RT_bc_objects=RT_bc_objects,
     reverse_complement=True,
-    reads_threshold_AD=READS_THRESHOLD_AD,
-    reads_threshold_RT=READS_THRESHOLD_RT,
+    reads_threshold_AD=STEP2_READS_THRESHOLD_AD,
+    reads_threshold_RT=STEP2_READS_THRESHOLD_RT,
     step1_map_csv_path=f"{OUTPUT_DIR}/step1.csv",
 )
 
@@ -202,20 +204,11 @@ print(f"  - RT Step 2: {len(RT_step2)} entries")
 # ==========================================
 # TREBL Experiment Analysis
 # ==========================================
-print("\n[4/7] Running TREBL experiment analysis...")
+print("\n[4/6] Running TREBL experiment analysis...")
 
 print(f"  - Using {len(AD_SEQ_FILES)} AD files and {len(RT_SEQ_FILES)} RT files")
 
-print("  - Plotting TREBL experiment reads distribution...")
-pipeline.trebl_experiment_reads_distribution(
-    AD_seq_files=AD_SEQ_FILES,
-    AD_bc_objects=AD_bc_objects,
-    RT_seq_files=RT_SEQ_FILES,
-    RT_bc_objects=RT_bc_objects,
-    reverse_complement=True,
-)
-
-print("  - Running TREBL experiment with simple UMI deduplication...")
+print("  - Running TREBL experiment with both simple and directional UMI deduplication...")
 trebl_results = pipeline.trebl_experiment_analysis(
     AD_seq_files=AD_SEQ_FILES,
     AD_bc_objects=AD_bc_objects,
@@ -225,10 +218,23 @@ trebl_results = pipeline.trebl_experiment_analysis(
     step1_map_csv_path=f"{OUTPUT_DIR}/step1.csv",
     AD_umi_object=AD_UMI,
     RT_umi_object=RT_UMI,
-    umi_deduplication="simple",  # Quick start: simple deduplication only
+    umi_deduplication="both",  # Quick start: keep both simple and directional counts
+    reads_threshold_AD=TREBL_EXP_READS_THRESHOLD_AD,
+    reads_threshold_RT=TREBL_EXP_READS_THRESHOLD_RT,
 )
 
 print(f"AD results and RT results ready.")
 
+print("\n[5/6] Calculating activity scores...")
+ad_activity_per_barcode_df = pipeline.calculate_activity_scores(
+    step1_path=f"{OUTPUT_DIR}/step1.csv",
+    AD_bc_objects=AD_bc_objects,
+    RT_bc_objects=RT_bc_objects,
+    time_regex=r"_t(\d+)",
+    rep_regex=r"_r(\d+)",
+)
+print(f"  - Activity rows (per barcode): {len(ad_activity_per_barcode_df)}")
 
-print("\n[7/7] Analysis complete!")
+print("\n[6/6] Activity score tables written by calculate_activity_scores().")
+
+print("\nAnalysis complete!")

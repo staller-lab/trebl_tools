@@ -320,28 +320,27 @@ class UMIDeduplicator:
     def run_umi_tools_deduplication(self):
         """
         Run umi_tools count_tab on preprocessed DuckDB table instead of FASTQ/BAM.
-        Exports TSV and produces count_tab output in the same location as previous outputs.
+        Exports TSV and produces normalized directional counts output with barcode columns.
         """
         import subprocess
+        import pandas as pd
     
-        # Ensure output directory exists
         os.makedirs(self.output_path, exist_ok=True)
     
-        # Step 1: Export TSV
         tsv_path = os.path.join(self.output_path, f"{self.base}_umi_count_input.tsv")
         concat_cols = " || ".join(self.cols)
+    
         self.con.execute(f"""
             COPY (
                 SELECT '_' || UMI AS umi_col,
                        {concat_cols} AS gene
                 FROM {self.table_prefix}{self.refined_map_suffix}
-                ORDER BY {concat_cols}  
+                ORDER BY {concat_cols}
             ) TO '{tsv_path}'
             WITH (FORMAT 'csv', DELIMITER E'\t', HEADER FALSE)
         """)
         print(f"Exported TSV for count_tab to {tsv_path}")
     
-        # Step 2: Run umi_tools count_tab
         output_path = os.path.join(self.output_path, f"{self.base}_directional_umi_counts.tsv")
         cmd = [
             "umi_tools",
@@ -352,8 +351,24 @@ class UMIDeduplicator:
         subprocess.run(cmd, check=True)
         self.count_tab_output = output_path
         print(f"Count_tab output saved to {output_path}")
-
-        # Step 3: Delete intermediate TSV
+    
+        # Normalize output: split gene back into barcode columns
+        directional_df = pd.read_csv(output_path, sep="\t")
+    
+        if "gene" in directional_df.columns:
+            start = 0
+            for bc in self.bc_objects:
+                end = start + bc.length
+                directional_df[bc.name] = directional_df["gene"].astype(str).str.slice(start, end)
+                start = end
+    
+        # remaining_cols = [c for c in directional_df.columns if c not in ordered_cols]
+        # directional_df = directional_df[ordered_cols + remaining_cols]
+        directional_df = directional_df.drop(columns = "gene")
+    
+        directional_df.to_csv(output_path, sep="\t", index=False)
+        print(f"Normalized directional output saved to {output_path}")
+    
         if os.path.exists(tsv_path):
             os.remove(tsv_path)
             print(f"Deleted intermediate file {tsv_path}")

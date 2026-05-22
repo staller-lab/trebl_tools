@@ -3,7 +3,33 @@
 
 [2/6] Running Step 1 mapping with error correction...
   - Plotting reads distribution...
-✓ Initial map already exists: step1_AD_AD_BC_RT_BC_initial — skipping
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.39 seconds.
+
+Reverse complement of sequences...
+Done in 1.40 seconds.
+
+Extracting 3 barcodes...
+False
+GGCTAGC
+TGACTAG
+AD: extracting between 'GGCTAGC' and 'TGACTAG'
+False
+CGCGCC
+GGGCCC
+AD_BC: extracting between 'CGCGCC' and 'GGGCCC'
+False
+CTCGAG
+GGCCGC
+RT_BC: extracting between 'CTCGAG' and 'GGCCGC'
+Done in 0.93 seconds.
+
+Done in 0.00 seconds.
+
+Merging with design file...
+Done in 0.51 seconds.
+
+Mapping complete.
 Base prefix (stable across descriptors): step1_AD_AD_BC_RT_BC_
 Full prefix for this instance: step1_AD_AD_BC_RT_BC_
 
@@ -12,11 +38,11 @@ Using the following step order:
 2. grouped
 
 Grouping step1_AD_AD_BC_RT_BC_initial...
-Done in 1.83 seconds.
+Done in 2.03 seconds.
 
 Done.
 Saved loss summary table as 'step1_AD_AD_BC_RT_BC_loss_summary'
-Done in 0.25 seconds.
+Done in 0.57 seconds.
 
   - Running Step 1 mapping with error correction...
 ✓ Initial map already exists: step1_AD_AD_BC_RT_BC_initial — skipping
@@ -34,12 +60,12 @@ Using the following step order:
 8. designed
 
 Removing rows with null or empty barcodes (excluding AD)...
-Done in 0.04 seconds.
+Done in 0.03 seconds.
 
 
 Filtering to high-quality reads...
 Created table: step1_AD_AD_BC_RT_BC_quality — filtered for TRUE in all *_qual columns.
-Done in 0.11 seconds.
+Done in 0.01 seconds.
 
 
 === Running error correction step on step1_AD_AD_BC_RT_BC_quality ===
@@ -47,7 +73,7 @@ Done in 0.11 seconds.
 === Applying whitelist for step1 ===
 Generating FASTQ: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/figures/step1_AD_AD_BC_RT_BC_filtered_barcodes_extracted.fastq
 Wrote 4168 reads to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/figures/step1_AD_AD_BC_RT_BC_filtered_barcodes_extracted.fastq
-Done in 0.03 seconds.
+Done in 0.01 seconds.
 
 Using automatic detection of expected barcode count.
 Running umi_tools whitelist...
@@ -60,22 +86,22 @@ Whitelist complete.
 - Plots: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/figures/step1_AD_AD_BC_RT_BC_filtered_barcodes_extracted_plots_*.png
 Unique canonical barcodes: 71
 Merging with design file...
-Done in 0.11 seconds.
+Done in 0.08 seconds.
 
 Whitelist application complete for step1 at step1_AD_AD_BC_RT_BC_error_corrected
-Done in 10.29 seconds.
+Done in 7.51 seconds.
 
 Grouping step1_AD_AD_BC_RT_BC_error_corrected...
-Done in 0.42 seconds.
+Done in 0.41 seconds.
 
 Thresholding...
 Using reads threshold of 1.
-Done in 0.59 seconds.
+Done in 0.37 seconds.
 
 Filtering fixed so that at least 90% of reads come from the most abundant target...
 	Processing mapping 1: RT_BC → AD
 Created filtered table: step1_AD_AD_BC_RT_BC_unique_target
-Done in 0.06 seconds.
+Done in 0.04 seconds.
 
 
 Filtering to designed sequences...
@@ -84,13 +110,35 @@ Done in 0.00 seconds.
 
 Done.
 Saved loss summary table as 'step1_AD_AD_BC_RT_BC_loss_summary'
-Done in 0.06 seconds.
+Done in 0.13 seconds.
 
   - Step 1 complete: 71 entries
 
 [3/6] Running Step 2 mapping with error correction...
   - Plotting Step 2 reads distribution...
-✓ Initial map already exists: step2_AD_AD_BC_initial — skipping
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.29 seconds.
+
+Reverse complement of sequences...
+Done in 1.18 seconds.
+
+Extracting 2 barcodes...
+False
+GGCTAGC
+TGACTAG
+AD: extracting between 'GGCTAGC' and 'TGACTAG'
+False
+CGCGCC
+GGGCCC
+AD_BC: extracting between 'CGCGCC' and 'GGGCCC'
+Done in 0.82 seconds.
+
+Done in 0.00 seconds.
+
+Merging with design file...
+Done in 0.64 seconds.
+
+Mapping complete.
 Base prefix (stable across descriptors): step2_AD_AD_BC_
 Full prefix for this instance: step2_AD_AD_BC_
 
@@ -99,13 +147,30 @@ Using the following step order:
 2. grouped
 
 Grouping step2_AD_AD_BC_initial...
-Done in 0.51 seconds.
+Done in 0.39 seconds.
 
 Done.
 Saved loss summary table as 'step2_AD_AD_BC_loss_summary'
-Done in 0.59 seconds.
+Done in 0.07 seconds.
 
-✓ Initial map already exists: step2_RT_BC_initial — skipping
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.57 seconds.
+
+Reverse complement of sequences...
+Done in 1.07 seconds.
+
+Extracting 1 barcodes...
+False
+CTCGAG
+GGCCGC
+RT_BC: extracting between 'CTCGAG' and 'GGCCGC'
+Done in 0.18 seconds.
+
+Done in 0.00 seconds.
+
+Done in 0.30 seconds.
+
+Mapping complete.
 Base prefix (stable across descriptors): step2_RT_BC_
 Full prefix for this instance: step2_RT_BC_
 
@@ -114,11 +179,11 @@ Using the following step order:
 2. grouped
 
 Grouping step2_RT_BC_initial...
-Done in 0.69 seconds.
+Done in 0.64 seconds.
 
 Done.
 Saved loss summary table as 'step2_RT_BC_loss_summary'
-Done in 0.06 seconds.
+Done in 0.02 seconds.
 
   - Running Step 2 mapping with error correction...
 ✓ Initial map already exists: step2_AD_AD_BC_initial — skipping
@@ -153,7 +218,7 @@ Done in 0.08 seconds.
 
 Filtering to high-quality reads...
 Created table: step2_AD_AD_BC_quality — filtered for TRUE in all *_qual columns.
-Done in 0.06 seconds.
+Done in 0.04 seconds.
 
 
 === Running error correction step on step2_AD_AD_BC_quality ===
@@ -161,7 +226,7 @@ Done in 0.06 seconds.
 === Applying whitelist for step2 ===
 Generating FASTQ: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/figures/step2_AD_AD_BC_filtered_barcodes_extracted.fastq
 Wrote 62138 reads to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/figures/step2_AD_AD_BC_filtered_barcodes_extracted.fastq
-Done in 0.17 seconds.
+Done in 0.10 seconds.
 
 Inferring expected barcode count from grouped reads...
 Using reads threshold of 1
@@ -177,34 +242,34 @@ Whitelist complete.
 - Plots: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/figures/step2_AD_AD_BC_filtered_barcodes_extracted_plots_*.png
 Unique canonical barcodes: 11999
 Merging with design file...
-Done in 0.20 seconds.
+Done in 0.12 seconds.
 
 Whitelist application complete for step2 at step2_AD_AD_BC_error_corrected
-Done in 14.83 seconds.
+Done in 11.47 seconds.
 
 Grouping step2_AD_AD_BC_error_corrected...
-Done in 0.44 seconds.
+Done in 0.43 seconds.
 
 Thresholding...
 Using reads threshold of 1.
-Done in 0.41 seconds.
+Done in 0.45 seconds.
 
 
 Filtering to designed sequences...
 Created table: step2_AD_AD_BC_designed — kept only Designed == 1.
-Done in 0.02 seconds.
+Done in 0.04 seconds.
 
 Done.
 Saved loss summary table as 'step2_AD_AD_BC_loss_summary'
-Done in 0.11 seconds.
+Done in 0.08 seconds.
 
 Removing rows with null or empty barcodes (excluding AD)...
-Done in 0.04 seconds.
+Done in 0.03 seconds.
 
 
 Filtering to high-quality reads...
 Created table: step2_RT_BC_quality — filtered for TRUE in all *_qual columns.
-Done in 0.03 seconds.
+Done in 0.02 seconds.
 
 
 === Running error correction step on step2_RT_BC_quality ===
@@ -212,7 +277,7 @@ Done in 0.03 seconds.
 === Applying whitelist for step2 ===
 Generating FASTQ: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/figures/step2_RT_BC_filtered_barcodes_extracted.fastq
 Wrote 85069 reads to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/figures/step2_RT_BC_filtered_barcodes_extracted.fastq
-Done in 0.22 seconds.
+Done in 0.15 seconds.
 
 Inferring expected barcode count from grouped reads...
 Using reads threshold of 1
@@ -227,17 +292,17 @@ Whitelist complete.
 - Output: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/figures/step2_RT_BC_filtered_barcodes_extracted_whitelist.txt
 - Plots: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/figures/step2_RT_BC_filtered_barcodes_extracted_plots_*.png
 Unique canonical barcodes: 15011
-Done in 0.03 seconds.
+Done in 0.02 seconds.
 
 Whitelist application complete for step2 at step2_RT_BC_error_corrected
-Done in 16.15 seconds.
+Done in 12.13 seconds.
 
 Grouping step2_RT_BC_error_corrected...
-Done in 0.54 seconds.
+Done in 0.53 seconds.
 
 Thresholding...
 Using reads threshold of 1.
-Done in 0.40 seconds.
+Done in 0.39 seconds.
 
 
 Filtering to designed sequences...
@@ -246,77 +311,43 @@ Done in 0.01 seconds.
 
 Done.
 Saved loss summary table as 'step2_RT_BC_loss_summary'
-Done in 0.05 seconds.
+Done in 0.11 seconds.
 
   - AD Step 2: 11756 entries
   - RT Step 2: 15011 entries
 
 [4/6] Running TREBL experiment analysis with both UMI deduplication methods...
   - Using 2 AD files and 2 RT files
-  - Plotting TREBL experiment reads distribution...
-✓ Initial map already exists: trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_initial — skipping
-Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_
-Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_
-
-Using the following step order:
-1. initial
-2. grouped
-
-Grouping trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_initial...
-Done in 0.98 seconds.
-
-Done.
-Saved loss summary table as 'trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_loss_summary'
-Done in 0.06 seconds.
-
-✓ Initial map already exists: trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_initial — skipping
-Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_
-Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_
-
-Using the following step order:
-1. initial
-2. grouped
-
-Grouping trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_initial...
-Done in 0.65 seconds.
-
-Done.
-Saved loss summary table as 'trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_loss_summary'
-Done in 0.09 seconds.
-
-✓ Initial map already exists: trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_initial — skipping
-Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_
-Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_
-
-Using the following step order:
-1. initial
-2. grouped
-
-Grouping trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_initial...
-Done in 0.49 seconds.
-
-Done.
-Saved loss summary table as 'trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_loss_summary'
-Done in 0.04 seconds.
-
-✓ Initial map already exists: trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_initial — skipping
-Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_
-Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_
-
-Using the following step order:
-1. initial
-2. grouped
-
-Grouping trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_initial...
-Done in 0.53 seconds.
-
-Done.
-Saved loss summary table as 'trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_loss_summary'
-Done in 0.11 seconds.
-
   - Running TREBL experiment with both simple and directional UMI deduplication...
     (This may take significant time for large datasets)
-✓ Initial map already exists: trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_initial — skipping
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.43 seconds.
+
+Reverse complement of sequences...
+Done in 0.57 seconds.
+
+Extracting 2 barcodes...
+False
+GGCTAGC
+TGACTAG
+AD: extracting between 'GGCTAGC' and 'TGACTAG'
+False
+CGCGCC
+GGGCCC
+AD_BC: extracting between 'CGCGCC' and 'GGGCCC'
+Done in 0.61 seconds.
+
+Extracting UMI...
+True
+TGATTT
+
+UMI: extracting 12bp UMI after flank 'TGATTT' near end of read
+Done in 0.07 seconds.
+
+Merging with design file...
+Done in 0.34 seconds.
+
+Mapping complete.
 Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_
 Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_
 
@@ -328,18 +359,21 @@ Using the following step order:
 
 Filtering to high-quality reads...
 Created table: trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_quality — filtered for TRUE in all *_qual columns.
-Done in 0.07 seconds.
+Done in 0.03 seconds.
 
 
 === Running error correction step on trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_quality ===
 
 === Applying whitelist for trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2 ===
 Generating FASTQ: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_filtered_barcodes_extracted.fastq
-Wrote 35595 reads to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_filtered_barcodes_extracted.fastq
+Wrote 35474 reads to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_filtered_barcodes_extracted.fastq
 Done in 0.07 seconds.
 
-Using automatic detection of expected barcode count.
+Inferring expected barcode count from grouped reads...
+Using reads threshold of 2
+Inferred expected barcode count: 2544
 Running umi_tools whitelist...
+Using custom cell number.
 Running umi_tools whitelist on trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_filtered_barcodes_extracted.fastq ...
 /global/home/users/sanjanakotha/.local/lib/python3.11/site-packages/umi_tools/whitelist_methods.py:207: UserWarning: Attempt to set non-positive xlim on a log-scaled axis will be ignored.
   fig3.set_xlim(0, len(counts)*1.25)
@@ -347,19 +381,19 @@ Whitelist complete.
 - Log: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_filtered_barcodes_extracted_whitelist.log
 - Output: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_filtered_barcodes_extracted_whitelist.txt
 - Plots: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_filtered_barcodes_extracted_plots_*.png
-Unique canonical barcodes: 26
-Done in 0.01 seconds.
+Unique canonical barcodes: 2544
+Done in 0.02 seconds.
 
 Whitelist application complete for trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2 at trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_error_corrected
-Done in 14.10 seconds.
+Done in 10.71 seconds.
 
 Done.
 Saved loss summary table as 'trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_loss_summary'
-Done in 0.06 seconds.
+Done in 0.03 seconds.
 
 ['/global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_filtered_barcodes_extracted_whitelist.txt']
 Saved barcode whitelist plots: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2_AD_AD_BC_whitelist_summary.png
-Done in 0.74 seconds.
+Done in 0.90 seconds.
 
 Starting simple deduplication.
 Finished simple deduplication.
@@ -368,8 +402,8 @@ Starting UMI Tools directional deduplication.
 Exported TSV for count_tab to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_ChopTFs_AD_t10_r2_umi_count_input.tsv
 # UMI-tools version: 1.1.6
 # output generated by count_tab --stdin /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_ChopTFs_AD_t10_r2_umi_count_input.tsv --stdout /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_ChopTFs_AD_t10_r2_directional_umi_counts.tsv
-# job started at Tue May 12 14:13:31 2026 on n0080.savio3 -- e1256fe8-9565-4763-8a00-569b0c3c0257
-# pid: 278735, system: Linux 4.18.0-553.58.1.el8_10.x86_64 #1 SMP Thu Jun 26 15:50:39 UTC 2025 x86_64
+# job started at Wed May 13 14:50:26 2026 on n0195.savio3 -- 5e2c28b1-6282-4ecd-9a8b-0250e40f5dd6
+# pid: 189677, system: Linux 4.18.0-553.58.1.el8_10.x86_64 #1 SMP Thu Jun 26 15:50:39 UTC 2025 x86_64
 # bc_sep                                  : _
 # compresslevel                           : 6
 # log2stderr                              : False
@@ -390,17 +424,45 @@ Exported TSV for count_tab to /global/scratch/projects/fc_mvslab/OpenProjects/Sa
 # timeit_header                           : None
 # timeit_name                             : all
 # tmpdir                                  : None
-2026-05-12 14:13:31,642 INFO Number of reads counted: 1600
-# job finished in 0 seconds at Tue May 12 14:13:31 2026 --  9.46  0.62  0.00  0.00 -- e1256fe8-9565-4763-8a00-569b0c3c0257
+2026-05-13 14:50:26,642 INFO Number of reads counted: 14722
+# job finished in 0 seconds at Wed May 13 14:50:26 2026 --  8.94  0.28  0.00  0.00 -- 5e2c28b1-6282-4ecd-9a8b-0250e40f5dd6
 Count_tab output saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_ChopTFs_AD_t10_r2_directional_umi_counts.tsv
+Normalized directional output saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_ChopTFs_AD_t10_r2_directional_umi_counts.tsv
 Deleted intermediate file /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_ChopTFs_AD_t10_r2_umi_count_input.tsv
 Finished UMI Tools directional deduplication.
 
 Saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_ChopTFs_AD_t10_r2_simple_umi_counts.tsv
 Saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t10_r2/trebl_experiment_ChopTFs_AD_t10_r2_reads_per_umi.tsv
-Done in 0.20 seconds.
+Done in 0.12 seconds.
 
-✓ Initial map already exists: trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_initial — skipping
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.22 seconds.
+
+Reverse complement of sequences...
+Done in 0.70 seconds.
+
+Extracting 2 barcodes...
+False
+GGCTAGC
+TGACTAG
+AD: extracting between 'GGCTAGC' and 'TGACTAG'
+False
+CGCGCC
+GGGCCC
+AD_BC: extracting between 'CGCGCC' and 'GGGCCC'
+Done in 0.40 seconds.
+
+Extracting UMI...
+True
+TGATTT
+
+UMI: extracting 12bp UMI after flank 'TGATTT' near end of read
+Done in 0.08 seconds.
+
+Merging with design file...
+Done in 0.40 seconds.
+
+Mapping complete.
 Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_
 Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_
 
@@ -412,18 +474,21 @@ Using the following step order:
 
 Filtering to high-quality reads...
 Created table: trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_quality — filtered for TRUE in all *_qual columns.
-Done in 0.07 seconds.
+Done in 0.03 seconds.
 
 
 === Running error correction step on trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_quality ===
 
 === Applying whitelist for trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2 ===
 Generating FASTQ: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_filtered_barcodes_extracted.fastq
-Wrote 34540 reads to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_filtered_barcodes_extracted.fastq
-Done in 0.07 seconds.
+Wrote 34444 reads to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_filtered_barcodes_extracted.fastq
+Done in 0.24 seconds.
 
-Using automatic detection of expected barcode count.
+Inferring expected barcode count from grouped reads...
+Using reads threshold of 2
+Inferred expected barcode count: 2508
 Running umi_tools whitelist...
+Using custom cell number.
 Running umi_tools whitelist on trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_filtered_barcodes_extracted.fastq ...
 /global/home/users/sanjanakotha/.local/lib/python3.11/site-packages/umi_tools/whitelist_methods.py:207: UserWarning: Attempt to set non-positive xlim on a log-scaled axis will be ignored.
   fig3.set_xlim(0, len(counts)*1.25)
@@ -431,19 +496,19 @@ Whitelist complete.
 - Log: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_filtered_barcodes_extracted_whitelist.log
 - Output: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_filtered_barcodes_extracted_whitelist.txt
 - Plots: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_filtered_barcodes_extracted_plots_*.png
-Unique canonical barcodes: 32
-Done in 0.01 seconds.
+Unique canonical barcodes: 2508
+Done in 0.02 seconds.
 
 Whitelist application complete for trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2 at trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_error_corrected
-Done in 12.59 seconds.
+Done in 10.69 seconds.
 
 Done.
 Saved loss summary table as 'trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_loss_summary'
-Done in 0.05 seconds.
+Done in 0.04 seconds.
 
 ['/global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_filtered_barcodes_extracted_whitelist.txt']
 Saved barcode whitelist plots: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2_AD_AD_BC_whitelist_summary.png
-Done in 0.69 seconds.
+Done in 1.02 seconds.
 
 Starting simple deduplication.
 Finished simple deduplication.
@@ -452,8 +517,8 @@ Starting UMI Tools directional deduplication.
 Exported TSV for count_tab to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_ChopTFs_AD_t60_r2_umi_count_input.tsv
 # UMI-tools version: 1.1.6
 # output generated by count_tab --stdin /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_ChopTFs_AD_t60_r2_umi_count_input.tsv --stdout /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_ChopTFs_AD_t60_r2_directional_umi_counts.tsv
-# job started at Tue May 12 14:13:51 2026 on n0080.savio3 -- f7a2d8a6-ae84-4410-bc9a-97fc20a015c5
-# pid: 278861, system: Linux 4.18.0-553.58.1.el8_10.x86_64 #1 SMP Thu Jun 26 15:50:39 UTC 2025 x86_64
+# job started at Wed May 13 14:50:44 2026 on n0195.savio3 -- 06b0b373-b2a3-454a-bedb-faef07fe77ae
+# pid: 189803, system: Linux 4.18.0-553.58.1.el8_10.x86_64 #1 SMP Thu Jun 26 15:50:39 UTC 2025 x86_64
 # bc_sep                                  : _
 # compresslevel                           : 6
 # log2stderr                              : False
@@ -474,17 +539,40 @@ Exported TSV for count_tab to /global/scratch/projects/fc_mvslab/OpenProjects/Sa
 # timeit_header                           : None
 # timeit_name                             : all
 # tmpdir                                  : None
-2026-05-12 14:13:51,063 INFO Number of reads counted: 1821
-# job finished in 0 seconds at Tue May 12 14:13:51 2026 --  9.45  0.58  0.00  0.00 -- f7a2d8a6-ae84-4410-bc9a-97fc20a015c5
+2026-05-13 14:50:44,327 INFO Number of reads counted: 14337
+# job finished in 0 seconds at Wed May 13 14:50:44 2026 --  8.93  0.31  0.00  0.00 -- 06b0b373-b2a3-454a-bedb-faef07fe77ae
 Count_tab output saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_ChopTFs_AD_t60_r2_directional_umi_counts.tsv
+Normalized directional output saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_ChopTFs_AD_t60_r2_directional_umi_counts.tsv
 Deleted intermediate file /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_ChopTFs_AD_t60_r2_umi_count_input.tsv
 Finished UMI Tools directional deduplication.
 
 Saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_ChopTFs_AD_t60_r2_simple_umi_counts.tsv
 Saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_AD_t60_r2/trebl_experiment_ChopTFs_AD_t60_r2_reads_per_umi.tsv
-Done in 0.12 seconds.
+Done in 0.08 seconds.
 
-✓ Initial map already exists: trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_initial — skipping
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.16 seconds.
+
+Reverse complement of sequences...
+Done in 0.34 seconds.
+
+Extracting 1 barcodes...
+False
+CTCGAG
+GGCCGC
+RT_BC: extracting between 'CTCGAG' and 'GGCCGC'
+Done in 0.18 seconds.
+
+Extracting UMI...
+True
+TGTCAC
+
+UMI: extracting 12bp UMI after flank 'TGTCAC' near end of read
+Done in 0.05 seconds.
+
+Done in 0.05 seconds.
+
+Mapping complete.
 Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_
 Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_
 
@@ -496,18 +584,21 @@ Using the following step order:
 
 Filtering to high-quality reads...
 Created table: trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_quality — filtered for TRUE in all *_qual columns.
-Done in 0.08 seconds.
+Done in 0.01 seconds.
 
 
 === Running error correction step on trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_quality ===
 
 === Applying whitelist for trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2 ===
 Generating FASTQ: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_filtered_barcodes_extracted.fastq
-Wrote 31134 reads to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_filtered_barcodes_extracted.fastq
-Done in 0.08 seconds.
+Wrote 31015 reads to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_filtered_barcodes_extracted.fastq
+Done in 0.26 seconds.
 
-Using automatic detection of expected barcode count.
+Inferring expected barcode count from grouped reads...
+Using reads threshold of 2
+Inferred expected barcode count: 2213
 Running umi_tools whitelist...
+Using custom cell number.
 Running umi_tools whitelist on trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_filtered_barcodes_extracted.fastq ...
 /global/home/users/sanjanakotha/.local/lib/python3.11/site-packages/umi_tools/whitelist_methods.py:207: UserWarning: Attempt to set non-positive xlim on a log-scaled axis will be ignored.
   fig3.set_xlim(0, len(counts)*1.25)
@@ -515,19 +606,19 @@ Whitelist complete.
 - Log: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_filtered_barcodes_extracted_whitelist.log
 - Output: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_filtered_barcodes_extracted_whitelist.txt
 - Plots: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_filtered_barcodes_extracted_plots_*.png
-Unique canonical barcodes: 80
+Unique canonical barcodes: 2213
 Done in 0.01 seconds.
 
 Whitelist application complete for trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2 at trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_error_corrected
-Done in 11.72 seconds.
+Done in 8.66 seconds.
 
 Done.
 Saved loss summary table as 'trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_loss_summary'
-Done in 0.04 seconds.
+Done in 0.02 seconds.
 
 ['/global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_filtered_barcodes_extracted_whitelist.txt']
 Saved barcode whitelist plots: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2_RT_BC_whitelist_summary.png
-Done in 0.98 seconds.
+Done in 0.78 seconds.
 
 Starting simple deduplication.
 Finished simple deduplication.
@@ -536,8 +627,8 @@ Starting UMI Tools directional deduplication.
 Exported TSV for count_tab to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_ChopTFs_RT_t10_r2_umi_count_input.tsv
 # UMI-tools version: 1.1.6
 # output generated by count_tab --stdin /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_ChopTFs_RT_t10_r2_umi_count_input.tsv --stdout /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_ChopTFs_RT_t10_r2_directional_umi_counts.tsv
-# job started at Tue May 12 14:14:09 2026 on n0080.savio3 -- 0a254c98-9bd2-496c-92b2-f4b4e88f4898
-# pid: 278987, system: Linux 4.18.0-553.58.1.el8_10.x86_64 #1 SMP Thu Jun 26 15:50:39 UTC 2025 x86_64
+# job started at Wed May 13 14:50:58 2026 on n0195.savio3 -- dd74e03c-111f-487c-bcc0-7a8ea0370937
+# pid: 189947, system: Linux 4.18.0-553.58.1.el8_10.x86_64 #1 SMP Thu Jun 26 15:50:39 UTC 2025 x86_64
 # bc_sep                                  : _
 # compresslevel                           : 6
 # log2stderr                              : False
@@ -558,17 +649,40 @@ Exported TSV for count_tab to /global/scratch/projects/fc_mvslab/OpenProjects/Sa
 # timeit_header                           : None
 # timeit_name                             : all
 # tmpdir                                  : None
-2026-05-12 14:14:09,391 INFO Number of reads counted: 2975
-# job finished in 0 seconds at Tue May 12 14:14:09 2026 --  9.44  0.57  0.00  0.00 -- 0a254c98-9bd2-496c-92b2-f4b4e88f4898
+2026-05-13 14:50:58,085 INFO Number of reads counted: 14982
+# job finished in 0 seconds at Wed May 13 14:50:58 2026 --  8.90  0.33  0.00  0.00 -- dd74e03c-111f-487c-bcc0-7a8ea0370937
 Count_tab output saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_ChopTFs_RT_t10_r2_directional_umi_counts.tsv
+Normalized directional output saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_ChopTFs_RT_t10_r2_directional_umi_counts.tsv
 Deleted intermediate file /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_ChopTFs_RT_t10_r2_umi_count_input.tsv
 Finished UMI Tools directional deduplication.
 
 Saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_ChopTFs_RT_t10_r2_simple_umi_counts.tsv
 Saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t10_r2/trebl_experiment_ChopTFs_RT_t10_r2_reads_per_umi.tsv
-Done in 0.10 seconds.
+Done in 0.04 seconds.
 
-✓ Initial map already exists: trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_initial — skipping
+Reading 1 FASTQ/TXT file(s)...
+Done in 0.51 seconds.
+
+Reverse complement of sequences...
+Done in 1.18 seconds.
+
+Extracting 1 barcodes...
+False
+CTCGAG
+GGCCGC
+RT_BC: extracting between 'CTCGAG' and 'GGCCGC'
+Done in 0.38 seconds.
+
+Extracting UMI...
+True
+TGTCAC
+
+UMI: extracting 12bp UMI after flank 'TGTCAC' near end of read
+Done in 0.28 seconds.
+
+Done in 0.26 seconds.
+
+Mapping complete.
 Base prefix (stable across descriptors): trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_
 Full prefix for this instance: trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_
 
@@ -580,18 +694,21 @@ Using the following step order:
 
 Filtering to high-quality reads...
 Created table: trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_quality — filtered for TRUE in all *_qual columns.
-Done in 0.10 seconds.
+Done in 0.04 seconds.
 
 
 === Running error correction step on trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_quality ===
 
 === Applying whitelist for trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2 ===
 Generating FASTQ: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_filtered_barcodes_extracted.fastq
-Wrote 108290 reads to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_filtered_barcodes_extracted.fastq
-Done in 0.13 seconds.
+Wrote 107872 reads to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_filtered_barcodes_extracted.fastq
+Done in 0.16 seconds.
 
-Using automatic detection of expected barcode count.
+Inferring expected barcode count from grouped reads...
+Using reads threshold of 2
+Inferred expected barcode count: 7277
 Running umi_tools whitelist...
+Using custom cell number.
 Running umi_tools whitelist on trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_filtered_barcodes_extracted.fastq ...
 /global/home/users/sanjanakotha/.local/lib/python3.11/site-packages/umi_tools/whitelist_methods.py:207: UserWarning: Attempt to set non-positive xlim on a log-scaled axis will be ignored.
   fig3.set_xlim(0, len(counts)*1.25)
@@ -599,19 +716,19 @@ Whitelist complete.
 - Log: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_filtered_barcodes_extracted_whitelist.log
 - Output: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_filtered_barcodes_extracted_whitelist.txt
 - Plots: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_filtered_barcodes_extracted_plots_*.png
-Unique canonical barcodes: 103
-Done in 0.02 seconds.
+Unique canonical barcodes: 7277
+Done in 0.04 seconds.
 
 Whitelist application complete for trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2 at trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_error_corrected
-Done in 17.16 seconds.
+Done in 15.86 seconds.
 
 Done.
 Saved loss summary table as 'trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_loss_summary'
-Done in 0.04 seconds.
+Done in 0.02 seconds.
 
 ['/global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_filtered_barcodes_extracted_whitelist.txt']
 Saved barcode whitelist plots: /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2_RT_BC_whitelist_summary.png
-Done in 0.64 seconds.
+Done in 0.98 seconds.
 
 Starting simple deduplication.
 Finished simple deduplication.
@@ -620,8 +737,8 @@ Starting UMI Tools directional deduplication.
 Exported TSV for count_tab to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_ChopTFs_RT_t60_r2_umi_count_input.tsv
 # UMI-tools version: 1.1.6
 # output generated by count_tab --stdin /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_ChopTFs_RT_t60_r2_umi_count_input.tsv --stdout /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_ChopTFs_RT_t60_r2_directional_umi_counts.tsv
-# job started at Tue May 12 14:14:32 2026 on n0080.savio3 -- b4073b91-307e-415b-9f78-0491e2ce6216
-# pid: 279113, system: Linux 4.18.0-553.58.1.el8_10.x86_64 #1 SMP Thu Jun 26 15:50:39 UTC 2025 x86_64
+# job started at Wed May 13 14:51:20 2026 on n0195.savio3 -- c94150d2-efb6-4a88-9a73-c863f05fd2e2
+# pid: 190073, system: Linux 4.18.0-553.58.1.el8_10.x86_64 #1 SMP Thu Jun 26 15:50:39 UTC 2025 x86_64
 # bc_sep                                  : _
 # compresslevel                           : 6
 # log2stderr                              : False
@@ -642,42 +759,27 @@ Exported TSV for count_tab to /global/scratch/projects/fc_mvslab/OpenProjects/Sa
 # timeit_header                           : None
 # timeit_name                             : all
 # tmpdir                                  : None
-2026-05-12 14:14:32,937 INFO Number of reads counted: 14000
-# job finished in 0 seconds at Tue May 12 14:14:32 2026 --  9.54  0.56  0.00  0.00 -- b4073b91-307e-415b-9f78-0491e2ce6216
+2026-05-13 14:51:21,284 INFO Number of reads counted: 81370
+# job finished in 0 seconds at Wed May 13 14:51:21 2026 --  9.16  0.30  0.00  0.00 -- c94150d2-efb6-4a88-9a73-c863f05fd2e2
 Count_tab output saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_ChopTFs_RT_t60_r2_directional_umi_counts.tsv
+Normalized directional output saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_ChopTFs_RT_t60_r2_directional_umi_counts.tsv
 Deleted intermediate file /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_ChopTFs_RT_t60_r2_umi_count_input.tsv
 Finished UMI Tools directional deduplication.
 
 Saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_ChopTFs_RT_t60_r2_simple_umi_counts.tsv
 Saved to /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_/trebl_experiment_trebl_experiment_ChopTFs_RT_t60_r2/trebl_experiment_ChopTFs_RT_t60_r2_reads_per_umi.tsv
-Done in 0.10 seconds.
+Done in 0.13 seconds.
 
-Plotting BCs:   0%|                                                                                                                                                                                                                | 0/4 [00:00<?, ?it/s]Plotting BCs:  75%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████                                                  | 3/4 [00:00<00:00, 24.33it/s]Plotting BCs: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:00<00:00, 25.42it/s]
-Plotting BCs:   0%|                                                                                                                                                                                                                | 0/4 [00:00<?, ?it/s]Plotting BCs:  75%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████                                                  | 3/4 [00:00<00:00, 28.89it/s]Plotting BCs: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:00<00:00, 29.47it/s]
+Plotting BCs:   0%|                                                                                                                      | 0/2 [00:00<?, ?it/s]Plotting BCs: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00, 27.74it/s]
+Plotting BCs:   0%|                                                                                                                      | 0/2 [00:00<?, ?it/s]Plotting BCs: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00, 31.33it/s]
 AD results and RT results ready.
 
 [5/6] Calculating activity scores...
-Traceback (most recent call last):
-  File "/global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/run_full_analysis.py", line 235, in <module>
-    ad_activity_per_barcode_df = pipeline.calculate_activity_scores(
-                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/global/scratch/projects/fc_mvslab/conda/trebl_tools/lib/python3.11/site-packages/trebl_tools/pipelines.py", line 1179, in calculate_activity_scores
-    ad_bc_results = pd.read_csv(ad_results_path)
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/global/home/users/sanjanakotha/.local/lib/python3.11/site-packages/pandas/io/parsers/readers.py", line 873, in read_csv
-    return _read(filepath_or_buffer, kwds)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/global/home/users/sanjanakotha/.local/lib/python3.11/site-packages/pandas/io/parsers/readers.py", line 300, in _read
-    parser = TextFileReader(filepath_or_buffer, **kwds)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/global/home/users/sanjanakotha/.local/lib/python3.11/site-packages/pandas/io/parsers/readers.py", line 1645, in __init__
-    self._engine = self._make_engine(f, self.engine)
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/global/home/users/sanjanakotha/.local/lib/python3.11/site-packages/pandas/io/parsers/readers.py", line 1904, in _make_engine
-    self.handles = get_handle(
-                   ^^^^^^^^^^^
-  File "/global/home/users/sanjanakotha/.local/lib/python3.11/site-packages/pandas/io/common.py", line 926, in get_handle
-    handle = open(
-             ^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: '/global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/AD_trebl_experiment_results.csv'
-Job completed at: Tue May 12 14:14:37 PDT 2026
+Found both simple and directional count files — computing both.
+Saved activity scores (1 rows) → /global/scratch/projects/fc_mvslab/OpenProjects/Sanjana/trebl_tools/examples/savio_jobs/../output/full_analysis/trebl_experiment_activity_scores_per_barcode.csv
+  - Activity rows (per barcode): 1
+
+[6/6] Activity score tables written by calculate_activity_scores().
+
+Analysis complete!
+Job completed at: Wed May 13 14:51:25 PDT 2026

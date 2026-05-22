@@ -119,9 +119,11 @@ RT_UMI = finder.Barcode(
 )
 
 # Minimum reads to keep a barcode (adjust based on your reads distribution)
-READS_THRESHOLD = 1
-READS_THRESHOLD_AD = 1
-READS_THRESHOLD_RT = 1
+STEP1_READS_THRESHOLD = 1
+STEP2_READS_THRESHOLD_AD = 1
+STEP2_READS_THRESHOLD_RT = 1
+TREBL_EXP_READS_THRESHOLD_AD = 2 # Choose 1 for auto reads threshold detection. 
+TREBL_EXP_READS_THRESHOLD_RT = 2 # Else, choose 0 for no threshold or N for other threshold
 
 # ==========================================
 # (No edits needed below this line)
@@ -161,7 +163,7 @@ step1_map = pipeline.run_step_1(
     seq_file=STEP1_SEQ_FILE,
     bc_objects=bc_objects,
     column_pairs=[("RT_BC", "AD")],
-    reads_threshold=READS_THRESHOLD,
+    reads_threshold=STEP1_READS_THRESHOLD,
     reverse_complement=False,
 )
 print(f"  - Step 1 complete: {len(step1_map)} entries")
@@ -187,8 +189,8 @@ step2 = pipeline.run_step_2(
     RT_seq_file=STEP2_RT_SEQ_FILE,
     RT_bc_objects=RT_bc_objects,
     reverse_complement=True,
-    reads_threshold_AD=READS_THRESHOLD_AD,
-    reads_threshold_RT=READS_THRESHOLD_RT,
+    reads_threshold_AD=STEP2_READS_THRESHOLD_AD,
+    reads_threshold_RT=STEP2_READS_THRESHOLD_RT,
     step1_map_csv_path=f"{OUTPUT_DIR}/step1.csv",
 )
 
@@ -206,15 +208,6 @@ print("\n[4/6] Running TREBL experiment analysis with both UMI deduplication met
 
 print(f"  - Using {len(AD_SEQ_FILES)} AD files and {len(RT_SEQ_FILES)} RT files")
 
-print("  - Plotting TREBL experiment reads distribution...")
-pipeline.trebl_experiment_reads_distribution(
-    AD_seq_files=AD_SEQ_FILES,
-    AD_bc_objects=AD_bc_objects,
-    RT_seq_files=RT_SEQ_FILES,
-    RT_bc_objects=RT_bc_objects,
-    reverse_complement=True,
-)
-
 print("  - Running TREBL experiment with both simple and directional UMI deduplication...")
 print("    (This may take significant time for large datasets)")
 trebl_results = pipeline.trebl_experiment_analysis(
@@ -227,6 +220,8 @@ trebl_results = pipeline.trebl_experiment_analysis(
     AD_umi_object=AD_UMI,
     RT_umi_object=RT_UMI,
     umi_deduplication="both",  # Full analysis: both simple and directional deduplication
+    reads_threshold_AD=TREBL_EXP_READS_THRESHOLD_AD,
+    reads_threshold_RT=TREBL_EXP_READS_THRESHOLD_RT,
 )
 
 print(f"AD results and RT results ready.")
