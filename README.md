@@ -23,7 +23,7 @@ We still recommend creating your own conda environment for reproducibility and p
 
 ```bash
 # clone the latest release 
-git clone --branch v0.1.5 --depth 1 https://github.com/staller-lab/trebl_tools.git
+git clone --branch v1.0.0 --depth 1 https://github.com/staller-lab/trebl_tools.git
 cd trebl_tools
 
 # create and activate conda env from the repo YAML
@@ -34,5 +34,5 @@ conda activate trebl_tools_env
 pip install .
 
 # install Jupyter kernel for this env
-python -m ipykernel install --user --name trebl_tools_env --display-name "trebl_tools (v0.1.5)"
+python -m ipykernel install --user --name trebl_tools_env --display-name "trebl_tools (v1.0.0)"
 ```

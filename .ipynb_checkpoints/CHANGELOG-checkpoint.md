@@ -4,6 +4,10 @@ All notable changes to this project will be documented here.
 ## [Unreleased]
 - Coming up: Example savio scripts.
 
+## [v1.0.0]
+- Updated fastp to allow for fastq files.
+- Updated read the docs example TREBL experiment. 
+
 ## [v0.1.5] - 2026-05-02
 - Updated read the docs with flow charts.
 
