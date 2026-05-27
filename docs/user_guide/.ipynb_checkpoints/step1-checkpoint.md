@@ -1,6 +1,12 @@
 # Step 1: TREBL Mapping
 
-The example below is Marissa's Chop TFs data on Savio. Feel free to follow along, this step 1 code will likely need around 10-20 minutes to run.
+Step 1 maps your sequencing reads to barcodes and activations domains (ADs). This step will likely need around 10–20 minutes to run.
+
+> **Example notebooks:**
+> [`quick_start_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/quick_start_example.ipynb) |
+> [`full_analysis_example.ipynb`](https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/full_analysis_example.ipynb)
+
+**Note:** For large files (>10M reads), the reads distribution plot can be computationally intensive. Consider submitting as a Savio job rather than running interactively.
 
 ## Copy-Paste Ready Block
 
@@ -29,19 +35,24 @@ RT_BC = finder.Barcode(
     length=14              # Reporter barcode length
 )
 
-# Combine all barcodes into a single list for easier input
+# Combine all barcodes into a single list for step 1
 bc_objects = [AD, AD_BC, RT_BC]
 
+# Also split by AD and RT — needed for Step 2 and TREBL experiment
+AD_bc_objects = [AD, AD_BC]  # AD and AD barcode
+RT_bc_objects = [RT_BC]      # Reporter barcode
+
 # Specify sequencing file(s)
-step1_seq_file = "/global/scratch/projects/fc_mvslab/data/sequencing/CZB_Feb2024/A10_A11/results/A11_S2.fastq.gz.assembled.fastq"
+step1_seq_file = "/path/to/step1.fastq"   # ← update with your path
 # Can be a single file (string) or multiple files (list of strings)
 # Supported formats: .fastq or .fastq.gz
 
 # Plot reads distribution
+# NOTE: For large files (>10M reads), consider submitting as a Savio job
 pipeline.step1_reads_distribution(
     seq_file=step1_seq_file,   # FASTQ file to analyze
     bc_objects=bc_objects,     # List of barcodes to search for
-    reverse_complement=True    # Search both forward and reverse complement
+    reverse_complement=True    # Search reverse complement of reads too
 )
 # Produces histogram of reads per barcode
 # Helps pick appropriate reads_threshold for filtering
@@ -52,8 +63,8 @@ step1_map = pipeline.run_step_1(
     seq_file=step1_seq_file,         # FASTQ file input
     bc_objects=bc_objects,           # Barcodes to map
     column_pairs=[("RT_BC", "AD")],  # Check for collisions between reporter barcode and AD
-    reads_threshold=10,              # Minimum number of reads to keep a barcode
-    reverse_complement=True         # Do not reverse complement reads for mapping
+    reads_threshold=1,               # Minimum reads to keep; adjust based on your distribution
+    reverse_complement=False         # Reads already assembled — do not reverse complement
 )
 # Returns a DataFrame of Step 1 mapping
 # Saves:
@@ -87,12 +98,17 @@ RT_BC = finder.Barcode(
     length=14
 )
 
-bc_objects = [AD, AD_BC, RT_BC]  # Combine barcodes for input
+bc_objects = [AD, AD_BC, RT_BC]  # All barcodes for step 1
+
+# Also split by AD and RT — needed for Step 2 and TREBL experiment
+AD_bc_objects = [AD, AD_BC]
+RT_bc_objects = [RT_BC]
 ```
 
-Each barcode object defines what TREBL should extract from reads. `preceder` and `post` sequences help locate the barcode/AD in the read.
+Each barcode object defines what TREBL should extract from reads. `preceder` and `post` sequences help locate the barcode/AD in the read. 
 
 **Extraction rules:**
+- If specified, the read is reverse-complemented before searching for `preceder` and `post`.
 - If both `preceder` and `post` are provided, I extract the sequence between them.
 - If only one of `preceder` or `post` is provided, I extract a sequence starting from the provided flanking sequence and extending `length` bases.
 - If both `preceder` and `post` are empty, TREBL extracts the last `length` bases of the read.
@@ -104,7 +120,7 @@ Each barcode object defines what TREBL should extract from reads. `preceder` and
 ### 2. Specify Sequencing Files
 
 ```python
-step1_seq_file = "/global/scratch/projects/fc_mvslab/data/sequencing/CZB_Feb2024/A10_A11/results/A11_S2.fastq.gz.assembled.fastq"
+step1_seq_file = "/path/to/step1.fastq"   # ← update with your path
 ```
 
 - Can be a single file or multiple files in a list.
@@ -131,8 +147,8 @@ step1_map = pipeline.run_step_1(
     seq_file=step1_seq_file,
     bc_objects=bc_objects,
     column_pairs=[("RT_BC", "AD")],
-    reads_threshold=10,
-    reverse_complement=True
+    reads_threshold=1,               # Adjust based on your reads distribution
+    reverse_complement=False         # Reads already assembled — do not reverse complement
 )
 ```
 
