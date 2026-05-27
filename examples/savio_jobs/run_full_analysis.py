@@ -122,8 +122,8 @@ RT_UMI = finder.Barcode(
 STEP1_READS_THRESHOLD = 1
 STEP2_READS_THRESHOLD_AD = 1
 STEP2_READS_THRESHOLD_RT = 1
-TREBL_EXP_READS_THRESHOLD_AD = 2 # Choose 1 for auto reads threshold detection. 
-TREBL_EXP_READS_THRESHOLD_RT = 2 # Else, choose 0 for no threshold or N for other threshold
+TREBL_EXP_READS_THRESHOLD_AD = 1 # Choose 1 for auto reads threshold detection. 
+TREBL_EXP_READS_THRESHOLD_RT = 1 # Else, choose 0 for no threshold or N for other threshold
 
 # ==========================================
 # (No edits needed below this line)
