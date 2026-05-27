@@ -10,7 +10,7 @@ You can use the prebuilt lab conda environment directly:
 source activate /global/scratch/projects/fc_mvslab/conda/trebl_tools
 
 # register a Jupyter kernel for this env (run once)
-python -m ipykernel install --user --name trebl_tools_shared --display-name "trebl_tools (shared)"
+python -m ipykernel install --user --name trebl_tools_shared --display-name "trebl_tools (v1.0.0)"
 ```
 
 ## Option 2: Create your own conda environment
@@ -30,7 +30,7 @@ conda activate trebl_tools_env
 pip install .
 
 # install Jupyter kernel for this env
-python -m ipykernel install --user --name trebl_tools_env --display-name "trebl_tools (v1.0.0)"
+python -m ipykernel install --user --name trebl_tools_env --display-name "trebl_tools_env"
 ```
 
 ## Using Jupyter on Savio
@@ -38,7 +38,7 @@ python -m ipykernel install --user --name trebl_tools_env --display-name "trebl_
 1. Start a jupyter server session on Savio OOD
 
 2. Open a notebook and select either:
-   - `trebl_tools_shared` (shared lab environment), or
+   - `trebl_tools (v1.0.0)` (shared lab environment), or
    - `trebl_tools_env` (your own environment)
 
 3. The trebl_tools package will be available to import directly:
