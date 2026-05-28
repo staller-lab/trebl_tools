@@ -232,6 +232,14 @@ pipeline.calculate_activity_scores(...)
 
 the pipeline saves:
 
+1. Files which contain the UMI counts before the step 1 overlap, aggregated across all samples. 
+```text
+RT_BC_trebl_experiment_results.csv
+AD_trebl_experiment_results.csv
+```
+
+2. File with the UMI counts merged to step 1 to calculate an activitiy score per barcode. 
+
 ```text
 trebl_experiment_activity_scores_per_barcode.csv
 ```
@@ -257,6 +265,7 @@ time
 ```
 
 Where "AD_count_simple" and "RT_count_simple" are the UMI counts from simple UMI deduplication, and "activity_simple" is the corresponding log10(RT/AD) activity score. "AD_count_directional" and "RT_count_directional" are the UMI counts from directional UMI deduplication, and "activity_directional" is the corresponding log10(RT/AD) activity score. 
+
 
 
 #### TREBL experiment loss summary
