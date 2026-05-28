@@ -2,9 +2,10 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import sys
 
-sys.path = [
-    p for p in sys.path if "/.local/lib" not in p
-]  # Use conda env installation of duckdb
+if "sphinx" not in sys.modules:
+    sys.path = [
+        p for p in sys.path if "/.local/lib" not in p
+    ]  # Use conda env installation of duckdb
 
 import duckdb
 import os
@@ -755,29 +756,29 @@ class TreblPipeline:
                     else:
                         deduplicator.run_both_deduplications()
         
-                    # # Merge results immediately to final CSV
-                    # for suffix in ["simple", "directional_umi_counts"]:
-                    #     file_name = f"{name_only}_{suffix}.tsv"
-                    #     file_path_full = output_dir / file_name
-                    #     if file_path_full.exists():
-                    #         df = pd.read_csv(file_path_full, sep="\t")
-                    #         df["name"] = name_only
-                    #         if suffix == "simple":
-                    #             if concat_gene:
-                    #                 concat_cols = [bc.name for bc in bc_objects]
-                    #                 df[gene_col_name] = df[concat_cols].agg("".join, axis=1)
-                    #             else:
-                    #                 bc_col = bc_objects[0].name
-                    #                 df[gene_col_name] = df.get(bc_col, df.get(gene_col_name))
+                    # Merge results immediately to final CSV
+                    for suffix in ["simple", "directional_umi_counts"]:
+                        file_name = f"{name_only}_{suffix}.tsv"
+                        file_path_full = output_dir / file_name
+                        if file_path_full.exists():
+                            df = pd.read_csv(file_path_full, sep="\t")
+                            df["name"] = name_only
+                            if suffix == "simple":
+                                if concat_gene:
+                                    concat_cols = [bc.name for bc in bc_objects]
+                                    df[gene_col_name] = df[concat_cols].agg("".join, axis=1)
+                                else:
+                                    bc_col = bc_objects[0].name
+                                    df[gene_col_name] = df.get(bc_col, df.get(gene_col_name))
         
-                    #         # Append to final CSV
-                    #         df.to_csv(
-                    #             merged_output_file,
-                    #             sep=",",
-                    #             index=False,
-                    #             mode="a",
-                    #             header=not merged_output_file.exists(),
-                    #         )
+                            # Append to final CSV
+                            df.to_csv(
+                                merged_output_file,
+                                sep=",",
+                                index=False,
+                                mode="a",
+                                header=not merged_output_file.exists(),
+                            )
         
                     # Writes reads per UMI
                     one_file_reads_per_UMI = deduplicator.counts_per_umi()
