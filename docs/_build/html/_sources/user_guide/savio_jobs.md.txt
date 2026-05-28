@@ -37,7 +37,7 @@ The job scripts are in `examples/savio_jobs/`. Each workflow is split into two f
 | | Quick Start | Full Analysis |
 |--|-------------|---------------|
 | **Error correction** | No | Yes |
-| **UMI deduplication** | Simple only | Simple + directional |
+| **UMI deduplication** | Simple + directional | Simple + directional |
 | **Time limit** | 4 hours | 12 hours |
 | **Best for** | Exploration / testing | Publication results |
 
@@ -141,7 +141,7 @@ tail -f logs/quick_start_*.err
 Once complete, outputs are in your `OUTPUT_DIR`:
 - `step1.csv` — Step 1 barcode map (needed for Step 2 and TREBL experiment)
 - `step2_AD.csv` / `step2_RT.csv` — Step 2 mappings
-- `AD_activities.csv` / `bc_activities.csv` — activity scores
+- `AD_activity_scores_per_barcode.csv` — per-barcode activity scores (`log10(directional/simple)`)
 - PNG plots for each step
 
 ---

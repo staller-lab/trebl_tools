@@ -198,6 +198,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide/step1.html">Step 1: TREBL Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/savio_jobs.html">Running on Savio (Cluster Jobs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide/advanced_usage.html">Advanced Usage</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
@@ -312,8 +313,7 @@
 <div class="viewcode-block" id="TreblPipeline">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TreblPipeline</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    End-to-end TREBL analysis pipeline orchestrator.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;End-to-end TREBL analysis pipeline orchestrator.</span>
 
 <span class="sd">    This class coordinates the complete TREBL workflow including initial barcode</span>
 <span class="sd">    mapping, quality filtering, error correction, UMI deduplication, and activity</span>
@@ -387,8 +387,7 @@
         <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">test_n_reads</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize a TREBL pipeline run.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a TREBL pipeline run.</span>
 
 <span class="sd">        Sets up database connection, output directories, and processing configuration.</span>
 <span class="sd">        Creates necessary directory structure for results and figures if output_path</span>
@@ -410,8 +409,9 @@
 
 <span class="sd">        Note:</span>
 <span class="sd">            When output_path is provided, creates subdirectories:</span>
-<span class="sd">            - {output_path}/figures/ for all plots and visualizations</span>
-<span class="sd">            - {output_path}/{sample_name}/ for per-sample intermediate files</span>
+
+<span class="sd">            - ``{output_path}/figures/`` for all plots and visualizations.</span>
+<span class="sd">            - ``{output_path}/{sample_name}/`` for per-sample intermediate files.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db_path</span> <span class="o">=</span> <span class="n">db_path</span>
@@ -430,23 +430,23 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_run_initial_mappers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapper_specs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Execute one or more InitialMapper instances with specified configurations.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute one or more InitialMapper instances with specified configurations.</span>
 
 <span class="sd">        Internal helper method that creates and runs InitialMapper objects based</span>
 <span class="sd">        on the provided specifications. Automatically handles test mode if enabled.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            mapper_specs (list[dict]): List of mapper specifications. Each dict</span>
-<span class="sd">                must contain:</span>
-<span class="sd">                    - seq_file (str): FASTQ file path for barcode extraction</span>
-<span class="sd">                    - step_name (str): Step name prefix for DuckDB table naming</span>
-<span class="sd">                    - bc_objects (list): Barcode objects defining extraction patterns</span>
-<span class="sd">                    - reverse_complement (bool): Whether to reverse complement reads</span>
-<span class="sd">                    - design_file_path (str or None): Design validation file path</span>
+<span class="sd">                must contain the following keys:</span>
+
+<span class="sd">                - ``seq_file`` (str): FASTQ file path for barcode extraction.</span>
+<span class="sd">                - ``step_name`` (str): Step name prefix for DuckDB table naming.</span>
+<span class="sd">                - ``bc_objects`` (list): Barcode objects defining extraction patterns.</span>
+<span class="sd">                - ``reverse_complement`` (bool): Whether to reverse complement reads.</span>
+<span class="sd">                - ``design_file_path`` (str or None): Design validation file path.</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            Respects the test_n_reads setting for rapid testing. Each mapper</span>
+<span class="sd">            Respects the ``test_n_reads`` setting for rapid testing. Each mapper</span>
 <span class="sd">            creates its own initial mapping table in the connected database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">mapper_specs</span><span class="p">:</span>
@@ -464,8 +464,7 @@
                 <span class="n">mapper</span><span class="o">.</span><span class="n">create_map</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_run_refiners</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refiners</span><span class="p">,</span> <span class="n">plot_titles</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Execute MapRefiner instances and optionally generate loss plots.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute MapRefiner instances and optionally generate loss plots.</span>
 
 <span class="sd">        Internal helper method that runs refinement pipelines and creates</span>
 <span class="sd">        standardized loss visualization plots if output path is configured.</span>
@@ -474,8 +473,8 @@
 <span class="sd">            refiners (list[MapRefiner]): List of MapRefiner instances to execute.</span>
 <span class="sd">                Each refiner should be fully configured with processing parameters.</span>
 <span class="sd">            plot_titles (list[str or None]): Titles for generated loss plots.</span>
-<span class="sd">                Must match the length of refiners list. Use None to skip plotting</span>
-<span class="sd">                for a particular refiner.</span>
+<span class="sd">                Must match the length of ``refiners``. Use ``None`` to skip</span>
+<span class="sd">                plotting for a particular refiner.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            list[MapRefiner]: The same refiner objects after execution, allowing</span>
@@ -483,7 +482,7 @@
 
 <span class="sd">        Note:</span>
 <span class="sd">            Loss plots show processing efficiency across refinement steps and</span>
-<span class="sd">            are saved automatically if output_figures_path is configured.</span>
+<span class="sd">            are saved automatically if ``output_figures_path`` is configured.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">refiner</span><span class="p">,</span> <span class="n">plot_title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">refiners</span><span class="p">,</span> <span class="n">plot_titles</span><span class="p">):</span>
             <span class="n">refiner</span><span class="o">.</span><span class="n">refine_map_from_db</span><span class="p">()</span>
@@ -497,8 +496,7 @@
 <div class="viewcode-block" id="TreblPipeline.reads_distribution">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.reads_distribution">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reads_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_file</span><span class="p">,</span> <span class="n">bc_objects</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Visualize read-count distributions for threshold determination.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualize read-count distributions for threshold determination.</span>
 
 <span class="sd">        Performs initial mapping and grouping for a single FASTQ file and generates</span>
 <span class="sd">        a histogram showing the distribution of read counts per barcode combination.</span>
@@ -515,7 +513,7 @@
 
 <span class="sd">        Note:</span>
 <span class="sd">            Creates grouped barcode combinations table and generates a read count</span>
-<span class="sd">            histogram. Useful for determining reads_threshold parameters before</span>
+<span class="sd">            histogram. Useful for determining ``reads_threshold`` parameters before</span>
 <span class="sd">            running full refinement pipelines.</span>
 
 <span class="sd">        Example:</span>
@@ -560,14 +558,14 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">step1_reads_distribution</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">seq_file</span><span class="p">,</span> <span class="n">bc_objects</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">,</span> <span class="n">step_suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Convenience wrapper for Step 1 read distributions.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convenience wrapper for Step 1 read distributions.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            seq_file (str): FASTQ file path.</span>
 <span class="sd">            bc_objects (list): Barcode objects.</span>
 <span class="sd">            reverse_complement (bool): Whether to reverse complement reads.</span>
 <span class="sd">            step_suffix (str, optional): Suffix appended to the step name.</span>
+<span class="sd">                Defaults to ``&quot;&quot;``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">step_name</span> <span class="o">=</span> <span class="s2">&quot;step1&quot;</span> <span class="o">+</span> <span class="n">step_suffix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reads_distribution</span><span class="p">(</span><span class="n">seq_file</span><span class="p">,</span> <span class="n">bc_objects</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">reverse_complement</span><span class="p">)</span></div>
@@ -584,8 +582,7 @@
         <span class="n">reverse_complement</span><span class="p">,</span>
         <span class="n">step_suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Convenience wrapper for Step 2 AD and RT libraries.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convenience wrapper for Step 2 AD and RT read distributions.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            AD_seq_file (str): FASTQ file for AD reads.</span>
@@ -594,6 +591,7 @@
 <span class="sd">            RT_bc_objects (list): RT barcode objects.</span>
 <span class="sd">            reverse_complement (bool): Whether to reverse complement reads.</span>
 <span class="sd">            step_suffix (str, optional): Suffix appended to the step name.</span>
+<span class="sd">                Defaults to ``&quot;&quot;``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">step_name</span> <span class="o">=</span> <span class="s2">&quot;step2&quot;</span> <span class="o">+</span> <span class="n">step_suffix</span>
@@ -604,49 +602,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">reads_distribution</span><span class="p">(</span>
             <span class="n">RT_seq_file</span><span class="p">,</span> <span class="n">RT_bc_objects</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">reverse_complement</span>
         <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="TreblPipeline.trebl_experiment_reads_distribution">
-<a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.trebl_experiment_reads_distribution">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">trebl_experiment_reads_distribution</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">AD_seq_files</span><span class="p">,</span>
-        <span class="n">AD_bc_objects</span><span class="p">,</span>
-        <span class="n">RT_seq_files</span><span class="p">,</span>
-        <span class="n">RT_bc_objects</span><span class="p">,</span>
-        <span class="n">reverse_complement</span><span class="p">,</span>
-        <span class="n">step_suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Convenience wrapper for TREBL Experiment AD and RT libraries.</span>
-<span class="sd">        Useful if using reads rather than UMI counts for thresholding.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            AD_seq_file (str): FASTQ file for AD reads.</span>
-<span class="sd">            AD_bc_objects (list): AD barcode objects.</span>
-<span class="sd">            RT_seq_file (str): FASTQ file for RT reads.</span>
-<span class="sd">            RT_bc_objects (list): RT barcode objects.</span>
-<span class="sd">            reverse_complement (bool): Whether to reverse complement reads.</span>
-<span class="sd">            step_suffix (str, optional): Suffix appended to the step name.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">step_name_base</span> <span class="o">=</span> <span class="s2">&quot;trebl_experiment&quot;</span> <span class="o">+</span> <span class="n">step_suffix</span>
-
-        <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">AD_seq_files</span><span class="p">:</span>
-            <span class="n">base_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
-            <span class="n">name_only</span> <span class="o">=</span> <span class="n">base_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">step_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">step_name_base</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">name_only</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reads_distribution</span><span class="p">(</span>
-                <span class="n">file_path</span><span class="p">,</span> <span class="n">AD_bc_objects</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">reverse_complement</span>
-            <span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">RT_seq_files</span><span class="p">:</span>
-            <span class="n">base_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
-            <span class="n">name_only</span> <span class="o">=</span> <span class="n">base_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">step_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">step_name_base</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">name_only</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reads_distribution</span><span class="p">(</span>
-                <span class="n">file_path</span><span class="p">,</span> <span class="n">RT_bc_objects</span><span class="p">,</span> <span class="n">step_name</span><span class="p">,</span> <span class="n">reverse_complement</span>
-            <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TreblPipeline.run_step_1">
@@ -662,8 +617,7 @@
         <span class="n">min_fraction_major_target</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>  
         <span class="n">custom_map_order</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Run TREBL Step 1: map reads to designed AD barcodes.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run TREBL Step 1: map reads to designed AD barcodes.</span>
 
 <span class="sd">        Performs initial mapping, refinement, optional error correction,</span>
 <span class="sd">        and outputs the final designed map.</span>
@@ -671,29 +625,22 @@
 <span class="sd">        Args:</span>
 <span class="sd">            seq_file (str): FASTQ file containing Step 1 reads.</span>
 <span class="sd">            bc_objects (list): Barcode objects defining extraction rules.</span>
-<span class="sd">            column_pairs (list[tuple]): Column-pair checks used</span>
-<span class="sd">                to remove barcode collisions.</span>
+<span class="sd">            column_pairs (list[tuple]): Column-pair checks used to remove barcode</span>
+<span class="sd">                collisions. Each tuple has the form ``(key_column(s), target_column(s))``</span>
+<span class="sd">                where each element can be a single column name (str) or a</span>
+<span class="sd">                tuple/list of column names.</span>
 
-<span class="sd">                Each tuple has the form:</span>
-
-<span class="sd">                    (key_column(s), target_column(s))</span>
-
-<span class="sd">                where `key_column(s)` and `target_column(s)` can be either</span>
-<span class="sd">                a single column name (str) or a tuple/list of column names.</span>
-
-<span class="sd">                The constraint enforces that, for each **key**, at least</span>
-<span class="sd">                90% of its reads must map to a single **target**. If a key</span>
-<span class="sd">                value maps to multiple targets without one reaching the 90%</span>
-<span class="sd">                threshold, the key is considered ambiguous and discarded.</span>
+<span class="sd">                The constraint enforces that, for each **key**, at least 90% of</span>
+<span class="sd">                its reads must map to a single **target**. Ambiguous keys are</span>
+<span class="sd">                discarded.</span>
 
 <span class="sd">                **Single-column example**::</span>
 
 <span class="sd">                    column_pairs = [(&quot;RPTR_BC&quot;, &quot;AD&quot;)]</span>
 
-<span class="sd">                This ensures that each reporter barcode (``RPTR_BC``) maps</span>
-<span class="sd">                predominantly to a single AD. If a reporter barcode has</span>
-<span class="sd">                reads mapping to multiple ADs without one exceeding 90%,</span>
-<span class="sd">                that reporter barcode is removed.</span>
+<span class="sd">                This ensures each reporter barcode maps predominantly to a single</span>
+<span class="sd">                AD. If a reporter barcode maps to multiple ADs without one</span>
+<span class="sd">                exceeding 90%, it is removed.</span>
 
 <span class="sd">                **Multi-column example**::</span>
 
@@ -701,9 +648,8 @@
 <span class="sd">                        ((&quot;RPTR_BC&quot;), (&quot;Hawk_BC&quot;, &quot;AD_BC&quot;))</span>
 <span class="sd">                    ]</span>
 
-<span class="sd">                This checks that each RPTR BC</span>
-<span class="sd">                maps to a single Hawkins AD barcode and AD barcode combination</span>
-<span class="sd">                with ≥90% of reads. Ambiguous key combinations are removed.</span>
+<span class="sd">                This checks that each RPTR BC maps to a single Hawkins AD</span>
+<span class="sd">                barcode and AD barcode combination with ≥90% of reads.</span>
 
 <span class="sd">                Multiple constraints may be applied sequentially::</span>
 
@@ -718,21 +664,19 @@
 <span class="sd">            reverse_complement (bool, optional): Whether reads should be</span>
 <span class="sd">                reverse complemented prior to barcode extraction.</span>
 <span class="sd">                Defaults to False.</span>
-<span class="sd">            step_suffix (str, optional): Suffix appended to the step name</span>
-<span class="sd">                for DuckDB table naming. This is useful when you want</span>
-<span class="sd">                to distinguish multiple runs or subsets of the same step.</span>
-
-<span class="sd">                Example:</span>
-<span class="sd">                    &quot;_spike_in&quot; — if processing spike-in samples separately</span>
-<span class="sd">                    from your main dataset.</span>
-<span class="sd">                    &quot;_new_data&quot; — for data from new sequencing run.</span>
-<span class="sd">            min_fraction_major_target (float): Fraction threshold for target filtering.</span>
-<span class="sd">            custom_map_order (list): List of strings with a custom intermediate order </span>
-<span class="sd">                if preferred.</span>
+<span class="sd">            step_suffix (str, optional): Suffix appended to the step name for</span>
+<span class="sd">                DuckDB table naming. Useful when distinguishing multiple runs</span>
+<span class="sd">                or subsets of the same step. For example, ``&quot;_spike_in&quot;`` or</span>
+<span class="sd">                ``&quot;_new_data&quot;``. Defaults to ``&quot;&quot;``.</span>
+<span class="sd">            min_fraction_major_target (float, optional): Fraction threshold for</span>
+<span class="sd">                target filtering. Defaults to ``0.9``.</span>
+<span class="sd">            custom_map_order (list, optional): List of strings specifying a</span>
+<span class="sd">                custom intermediate refinement order. If ``None``, the default</span>
+<span class="sd">                order from ``MAP_ORDERS`` is used. Defaults to ``None``.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            pd.DataFrame: Final designed Step 1 mapping after all refinement</span>
-<span class="sd">            steps have been applied.</span>
+<span class="sd">                steps have been applied.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">step_name</span> <span class="o">=</span> <span class="s2">&quot;step1&quot;</span> <span class="o">+</span> <span class="n">step_suffix</span>
@@ -800,8 +744,7 @@
         <span class="n">step1_map_csv_path</span><span class="p">,</span>  <span class="c1"># Updated argument to accept CSV path</span>
         <span class="n">step_suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Run TREBL Step 2: Analyze intermediate complexity.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run TREBL Step 2: analyze intermediate complexity.</span>
 
 <span class="sd">        Performs separate refinement for AD and RT libraries and computes</span>
 <span class="sd">        overlap with the Step 1 map.</span>
@@ -816,12 +759,15 @@
 <span class="sd">            reads_threshold_RT (int): Minimum reads per RT barcode.</span>
 <span class="sd">            step1_map_csv_path (str): Path to the Step 1 map CSV file.</span>
 <span class="sd">            step_suffix (str, optional): Suffix appended to the step name.</span>
+<span class="sd">                Defaults to ``&quot;&quot;``.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            dict: Dictionary with keys:</span>
-<span class="sd">                - &quot;AD_step2&quot;: AD DataFrame</span>
-<span class="sd">                - &quot;RT_step2&quot;: RT DataFrame</span>
-<span class="sd">                - &quot;step1_overlap&quot;: Overlap statistics</span>
+<span class="sd">            dict: A dictionary with the following keys:</span>
+
+<span class="sd">                - ``&quot;AD_step2&quot;`` (pd.DataFrame): Refined AD barcode DataFrame.</span>
+<span class="sd">                - ``&quot;RT_step2&quot;`` (pd.DataFrame): Refined RT barcode DataFrame.</span>
+<span class="sd">                - ``&quot;step1_overlap&quot;`` (pd.DataFrame): Overlap statistics between</span>
+<span class="sd">                  the Step 2 barcodes and the Step 1 map.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">step_name</span> <span class="o">=</span> <span class="s2">&quot;step2&quot;</span> <span class="o">+</span> <span class="n">step_suffix</span>
 
@@ -907,8 +853,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_duckdb_safe_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Convert a filename to a DuckDB-safe table name.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a filename to a DuckDB-safe table name.</span>
 
 <span class="sd">        Replaces periods, hyphens, and spaces with underscores, removes special</span>
 <span class="sd">        characters, and ensures the name doesn&#39;t start with a digit.</span>
@@ -939,9 +884,56 @@
         <span class="n">concat_gene</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">umi_deduplication</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Memory-efficient TREBL experiment runner. Writes everything to disk in the</span>
-<span class="sd">        original output paths, no DataFrames are returned.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the core per-sample processing loop for a TREBL experiment.</span>
+
+<span class="sd">        Memory-efficient internal helper that processes each FASTQ file</span>
+<span class="sd">        individually, writing all outputs directly to disk. No DataFrames</span>
+<span class="sd">        are held in memory across samples.</span>
+
+<span class="sd">        For each sample the method performs:</span>
+
+<span class="sd">        1. Initial barcode mapping via ``InitialMapper``.</span>
+<span class="sd">        2. Optional quality filtering and error correction via ``MapRefiner``.</span>
+<span class="sd">        3. UMI deduplication (simple and/or directional) when a ``umi_object``</span>
+<span class="sd">           is supplied, or thresholded count export otherwise.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            seq_files (list[str]): Paths to FASTQ files to process, one per</span>
+<span class="sd">                sample.</span>
+<span class="sd">            bc_objects (list): Barcode objects defining extraction rules for</span>
+<span class="sd">                this library (AD or RT).</span>
+<span class="sd">            reverse_complement (bool): Whether reads should be reverse</span>
+<span class="sd">                complemented prior to barcode extraction.</span>
+<span class="sd">            reads_threshold (int, optional): Minimum read count per barcode</span>
+<span class="sd">                combination. Defaults to ``1``.</span>
+<span class="sd">            umi_object (UMI or None, optional): UMI object used during mapping</span>
+<span class="sd">                and deduplication. If ``None``, the non-UMI thresholded workflow</span>
+<span class="sd">                is used. Defaults to ``None``.</span>
+<span class="sd">            step_name_suffix (str, optional): Suffix appended to the</span>
+<span class="sd">                ``&quot;trebl_experiment_&quot;`` prefix for DuckDB table and directory</span>
+<span class="sd">                naming. Defaults to ``&quot;&quot;``.</span>
+<span class="sd">            count_col_name (str or None, optional): Name for the UMI count</span>
+<span class="sd">                output column. Not used in the current implementation but</span>
+<span class="sd">                reserved for future use. Defaults to ``None``.</span>
+<span class="sd">            gene_col_name (str or None, optional): Name of the gene identifier</span>
+<span class="sd">                column. Not used in the current implementation but reserved for</span>
+<span class="sd">                future use. Defaults to ``None``.</span>
+<span class="sd">            concat_gene (bool, optional): Whether to concatenate barcode columns</span>
+<span class="sd">                into a single gene identifier. Not used in the current</span>
+<span class="sd">                implementation but reserved for future use. Defaults to ``False``.</span>
+<span class="sd">            umi_deduplication (str, optional): Deduplication strategy to run.</span>
+<span class="sd">                One of:</span>
+
+<span class="sd">                - ``&quot;simple&quot;``: run simple deduplication only.</span>
+<span class="sd">                - ``&quot;both&quot;``: run both simple and directional deduplication.</span>
+
+<span class="sd">                Defaults to ``&quot;both&quot;``.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            All per-sample outputs are written to</span>
+<span class="sd">            ``{output_path}/trebl_experiment_{step_name_suffix}/{step_name}/``.</span>
+<span class="sd">            Errors for individual samples are caught and printed; processing</span>
+<span class="sd">            continues with remaining samples.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">step_name_prefix</span> <span class="o">=</span> <span class="s2">&quot;trebl_experiment_&quot;</span> <span class="o">+</span> <span class="n">step_name_suffix</span>
     
@@ -1094,9 +1086,46 @@
         <span class="n">step_name_suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">umi_deduplication</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Memory-efficient TREBL experiment analysis for AD and RT libraries.</span>
-<span class="sd">        Saves all outputs to the same locations as the original pipeline.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run memory-efficient TREBL experiment analysis for AD and RT libraries.</span>
+
+<span class="sd">        Processes AD and RT FASTQ files through the full per-sample pipeline</span>
+<span class="sd">        (mapping → refinement → UMI deduplication) and saves all outputs to</span>
+<span class="sd">        disk in the standard directory layout. Optionally generates loss plots</span>
+<span class="sd">        relative to the Step 1 map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            AD_seq_files (list[str]): Paths to AD FASTQ files, one per sample.</span>
+<span class="sd">            AD_bc_objects (list): Barcode objects defining AD extraction rules.</span>
+<span class="sd">            RT_seq_files (list[str]): Paths to RT FASTQ files, one per sample.</span>
+<span class="sd">            RT_bc_objects (list): Barcode objects defining RT extraction rules.</span>
+<span class="sd">            reverse_complement (bool): Whether reads should be reverse</span>
+<span class="sd">                complemented prior to barcode extraction.</span>
+<span class="sd">            step1_map_csv_path (str or None, optional): Path to the Step 1 map</span>
+<span class="sd">                CSV. If provided, loss plots comparing experiment barcodes</span>
+<span class="sd">                against the Step 1 map are generated for both AD and RT</span>
+<span class="sd">                libraries. Defaults to ``None``.</span>
+<span class="sd">            AD_umi_object (UMI or None, optional): UMI object for AD libraries.</span>
+<span class="sd">                If ``None``, UMI deduplication is skipped for AD. Defaults to</span>
+<span class="sd">                ``None``.</span>
+<span class="sd">            RT_umi_object (UMI or None, optional): UMI object for RT libraries.</span>
+<span class="sd">                If ``None``, UMI deduplication is skipped for RT. Defaults to</span>
+<span class="sd">                ``None``.</span>
+<span class="sd">            reads_threshold_AD (int, optional): Minimum reads per AD barcode</span>
+<span class="sd">                combination. Defaults to ``1``.</span>
+<span class="sd">            reads_threshold_RT (int, optional): Minimum reads per RT barcode</span>
+<span class="sd">                combination. Defaults to ``1``.</span>
+<span class="sd">            step_name_suffix (str, optional): Suffix appended to</span>
+<span class="sd">                ``&quot;trebl_experiment_&quot;`` for table and directory naming.</span>
+<span class="sd">                Defaults to ``&quot;&quot;``.</span>
+<span class="sd">            umi_deduplication (str, optional): Deduplication strategy passed</span>
+<span class="sd">                to the helper. One of ``&quot;simple&quot;`` or ``&quot;both&quot;``.</span>
+<span class="sd">                Defaults to ``&quot;both&quot;``.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            All outputs are written to</span>
+<span class="sd">            ``{output_path}/trebl_experiment_{step_name_suffix}/`` and</span>
+<span class="sd">            subdirectories therein. No DataFrames are returned; use</span>
+<span class="sd">            :meth:`calculate_activity_scores` to aggregate results afterwards.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">experiments</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;AD&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -1154,6 +1183,33 @@
                                        <span class="n">table_type</span><span class="o">=</span><span class="s2">&quot;AD&quot;</span><span class="p">,</span>
                                         <span class="n">rep_regex</span><span class="o">=</span><span class="s2">&quot;AD_(\d+)&quot;</span><span class="p">,</span>
                                         <span class="n">time_regex</span><span class="o">=</span><span class="s2">&quot;AD_\d+_(\d+)&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot per-replicate and per-timepoint TREBL experiment loss.</span>
+
+<span class="sd">        Delegates to ``plotting.plot_trebl_experiment_loss`` to generate</span>
+<span class="sd">        structured loss plots that are broken down by replicate and time</span>
+<span class="sd">        using regex-extracted labels from table names.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bc_objects (list): Barcode objects for the library being plotted.</span>
+<span class="sd">            step1_map_csv_path (str): Path to the Step 1 map CSV used as the</span>
+<span class="sd">                reference for computing overlap loss.</span>
+<span class="sd">            step_name_prefix (str): Prefix identifying the relevant DuckDB</span>
+<span class="sd">                tables, e.g. ``&quot;trebl_experiment_&quot;`` or</span>
+<span class="sd">                ``&quot;trebl_experiment_mysuffix_&quot;``.</span>
+<span class="sd">            table_type (str, optional): Label indicating the library type</span>
+<span class="sd">                (``&quot;AD&quot;`` or ``&quot;RT&quot;``). Passed through to the plotting</span>
+<span class="sd">                function. Defaults to ``&quot;AD&quot;``.</span>
+<span class="sd">            rep_regex (str, optional): Regular expression with one capture</span>
+<span class="sd">                group used to extract the replicate identifier from table</span>
+<span class="sd">                names. Defaults to ``&quot;AD_(\\d+)&quot;``.</span>
+<span class="sd">            time_regex (str, optional): Regular expression with one capture</span>
+<span class="sd">                group used to extract the timepoint identifier from table</span>
+<span class="sd">                names. Defaults to ``&quot;AD_\\d+_(\\d+)&quot;``.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The generated figure is saved to ``self.output_figures_path`` by</span>
+<span class="sd">            the underlying ``plotting.plot_trebl_experiment_loss`` function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">bc_names_str</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">bc</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="n">bc_objects</span><span class="p">])</span>
 
@@ -1178,30 +1234,34 @@
         <span class="n">step1_map_csv_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">step_name_prefix</span><span class="o">=</span><span class="s2">&quot;trebl_experiment_&quot;</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plot barcode quality and mapping loss for a TREBL experiment.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot barcode quality and mapping loss for a TREBL experiment.</span>
 
 <span class="sd">        Generates bar plots showing:</span>
-<span class="sd">            1. Total number of reads in each initial mapping table.</span>
-<span class="sd">            2. Number of reads passing barcode quality checks (`_qual` columns).</span>
-<span class="sd">            3. Number of reads that match the Step 1 map for all barcodes.</span>
 
-<span class="sd">        Plots are saved as a PNG file in `self.output_figures_path` and</span>
-<span class="sd">        returned as Matplotlib figure and axes objects.</span>
+<span class="sd">        1. Total number of reads in each initial mapping table.</span>
+<span class="sd">        2. Number of reads passing barcode quality checks (``_qual`` columns).</span>
+<span class="sd">        3. Number of reads that match the Step 1 map for all barcodes.</span>
+
+<span class="sd">        Plots are saved as a PNG file in ``self.output_figures_path``.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            bc_objects (list): List of barcode objects to evaluate.</span>
-<span class="sd">            step1_map_csv_path (str, optional): Path to Step 1 map CSV for </span>
-<span class="sd">                computing overlap plots.</span>
+<span class="sd">            step1_map_csv_path (str or None, optional): Path to the Step 1 map</span>
+<span class="sd">                CSV for computing overlap plots. If ``None``, Step 1 overlap</span>
+<span class="sd">                bars are set to zero. Defaults to ``None``.</span>
 <span class="sd">            step_name_prefix (str, optional): Prefix used to identify TREBL</span>
-<span class="sd">                experiment tables in DuckDB. Defaults to ``&quot;trebl_experiment_&quot;``.</span>
+<span class="sd">                experiment tables in DuckDB. Defaults to</span>
+<span class="sd">                ``&quot;trebl_experiment_&quot;``.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            tuple: (fig, axes)</span>
-<span class="sd">                - fig (matplotlib.figure.Figure): Figure object containing all subplots.</span>
-<span class="sd">                - axes (list[matplotlib.axes._subplots.AxesSubplot]): Flattened list of subplot axes.</span>
-<span class="sd">                  Returns None, None if no matching tables are found.</span>
+<span class="sd">            tuple: A ``(fig, axes)`` pair where:</span>
 
+<span class="sd">                - ``fig`` (matplotlib.figure.Figure): Figure containing all</span>
+<span class="sd">                  subplots.</span>
+<span class="sd">                - ``axes`` (list[matplotlib.axes.Axes]): Flattened list of</span>
+<span class="sd">                  subplot axes.</span>
+
+<span class="sd">            Returns ``(None, None)`` if no matching tables are found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Connect to DuckDB</span>
@@ -1341,231 +1401,220 @@
         <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span></div>
 
 
-
 <div class="viewcode-block" id="TreblPipeline.calculate_activity_scores">
 <a class="viewcode-back" href="../../trebl_tools.html#trebl_tools.pipelines.TreblPipeline.calculate_activity_scores">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">calculate_activity_scores</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">step1_path</span><span class="p">,</span> <span class="n">AD_bc_objects</span><span class="p">,</span> <span class="n">RT_bc_objects</span><span class="p">,</span> <span class="n">time_regex</span><span class="p">,</span> <span class="n">rep_regex</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">step1_path</span><span class="p">,</span>
+        <span class="n">AD_bc_objects</span><span class="p">,</span>
+        <span class="n">RT_bc_objects</span><span class="p">,</span>
+        <span class="n">step_name_suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">time_regex</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;(?:AD|RT)_\d+_(\d+)&quot;</span><span class="p">,</span>
+        <span class="n">rep_regex</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;(?:AD|RT)_(\d+)_&quot;</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compute activity scores from AD and RT experiment results using Step 1 mapping.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate per-barcode activity scores from UMI count files.</span>
 
-<span class="sd">        Calculates two complementary activity metrics by combining AD library UMI counts</span>
-<span class="sd">        (input) with RT library UMI counts (output) using the Step 1 barcode-to-gene</span>
-<span class="sd">        mapping as the linking table. Returns a consolidated table with both per-barcode</span>
-<span class="sd">        averaged activity and summed activity calculations.</span>
+<span class="sd">        Loads simple and (if available) directional UMI count TSVs produced by</span>
+<span class="sd">        :meth:`trebl_experiment_analysis`, merges them with the Step 1 barcode</span>
+<span class="sd">        map, and computes log10 activity scores (RT / AD UMI counts) per</span>
+<span class="sd">        replicate and timepoint.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            step1_path (str): Path to the Step 1 mapping CSV file containing the</span>
-<span class="sd">                canonical barcode-to-gene relationships.</span>
-<span class="sd">            AD_bc_objects (list[Barcode]): List of AD barcode objects with `.name`</span>
-<span class="sd">                attributes corresponding to columns in the Step 1 mapping.</span>
-<span class="sd">            RT_bc_objects (list[Barcode]): List of RT barcode objects with `.name`</span>
-<span class="sd">                attributes for reporter identification.</span>
-<span class="sd">            time_regex (str): Regular expression to extract timepoint values from</span>
-<span class="sd">                sample names. Should contain a capture group for the time value.</span>
-<span class="sd">                Example: r&quot;(\d+)h&quot; for &quot;2h&quot;, r&quot;t(\d+)&quot; for &quot;t24&quot;.</span>
-<span class="sd">            rep_regex (str): Regular expression to extract replicate identifiers</span>
-<span class="sd">                from sample names. Should contain a capture group for replicate number.</span>
-<span class="sd">                Example: r&quot;rep(\d+)&quot; for &quot;rep1&quot;, r&quot;r(\d+)&quot; for &quot;r2&quot;.</span>
+<span class="sd">            step1_path (str): Path to the Step 1 map CSV. Must contain all AD</span>
+<span class="sd">                and RT barcode columns.</span>
+<span class="sd">            AD_bc_objects (list): Barcode objects for the AD library. Must</span>
+<span class="sd">                contain at least two objects.</span>
+<span class="sd">            RT_bc_objects (list): Barcode objects for the RT library. Must</span>
+<span class="sd">                contain at least one object.</span>
+<span class="sd">            step_name_suffix (str, optional): Suffix used to locate the</span>
+<span class="sd">                ``trebl_experiment_{step_name_suffix}`` output directory.</span>
+<span class="sd">                Defaults to ``&quot;&quot;``.</span>
+<span class="sd">            time_regex (str, optional): Regular expression with one capture</span>
+<span class="sd">                group for extracting the timepoint integer from file base</span>
+<span class="sd">                names. Defaults to ``r&quot;(?:AD|RT)_\\d+_(\\d+)&quot;``.</span>
+<span class="sd">            rep_regex (str, optional): Regular expression with one capture</span>
+<span class="sd">                group for extracting the replicate integer from file base</span>
+<span class="sd">                names. Defaults to ``r&quot;(?:AD|RT)_(\\d+)_&quot;``.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            pd.DataFrame: Consolidated activity scores table with hierarchical columns:</span>
-<span class="sd">                - Index: (AD, replicate) multi-index</span>
-<span class="sd">                - Columns: Multi-level structure with:</span>
-<span class="sd">                    - Level 0: timepoint values (e.g., 0, 2, 24)</span>
-<span class="sd">                    - Level 1: metric types (&#39;mean_activity&#39;, &#39;std_activity&#39;, &#39;summed_activity&#39;)</span>
+<span class="sd">            pd.DataFrame: Activity score DataFrame with one row per unique</span>
+<span class="sd">                barcode combination × replicate × timepoint. Contains AD and</span>
+<span class="sd">                RT count columns plus:</span>
 
-<span class="sd">                Example structure::</span>
-
-<span class="sd">                                        0                    2                    24</span>
-<span class="sd">                            mean  std  sum      mean  std  sum      mean  std  sum</span>
-<span class="sd">                    AD    rep</span>
-<span class="sd">                    GENE1  1      0.45  0.12  0.52    1.23  0.34  1.15    2.10  0.67  1.98</span>
-<span class="sd">                        2      0.48  0.15  0.55    1.18  0.29  1.12    2.05  0.71  1.95</span>
-
-<span class="sd">        Note:</span>
-<span class="sd">            **Activity Score Calculations:**</span>
-
-<span class="sd">            1. **Averaged Activity (Per-Barcode)**:</span>
-<span class="sd">                - For each barcode: activity = RT_UMIs / AD_UMIs</span>
-<span class="sd">                - Mean and std calculated per (AD, time, rep) group</span>
-<span class="sd">                - Results show variability across barcodes within each gene</span>
-
-<span class="sd">            2. **Summed Activity (Per-Gene)**:</span>
-<span class="sd">                - For each (AD, time, rep): sum all AD_UMIs and RT_UMIs across barcodes</span>
-<span class="sd">                - activity = sum(RT_UMIs) / sum(AD_UMIs)</span>
-<span class="sd">                - Results show overall gene-level activity</span>
-
-<span class="sd">            **Output Files (if output_path configured):**</span>
-<span class="sd">            - `unaggregated_activities.csv`: Raw per-barcode activity scores</span>
-<span class="sd">            - `consolidated_activity_scores.csv`: Combined table with all metrics</span>
-
-<span class="sd">            **Data Integration Workflow:**</span>
-<span class="sd">            1. Load AD and RT experiment results from previous analysis</span>
-<span class="sd">            2. Extract time/replicate metadata using provided regex patterns</span>
-<span class="sd">            3. Merge with Step 1 mapping to link AD and RT measurements</span>
-<span class="sd">            4. Calculate per-barcode activity ratios</span>
-<span class="sd">            5. Aggregate using both averaging and summing strategies</span>
-<span class="sd">            6. Consolidate into single multi-level DataFrame</span>
-
-<span class="sd">        Example:</span>
-<span class="sd">            &gt;&gt;&gt; activity_df = pipeline.calculate_activity_scores(</span>
-<span class="sd">            ...     step1_path=&quot;results/step1.csv&quot;,</span>
-<span class="sd">            ...     AD_bc_objects=[ad_bc, adbc_bc],</span>
-<span class="sd">            ...     RT_bc_objects=[rt_bc],</span>
-<span class="sd">            ...     time_regex=r&quot;(\d+)h&quot;,          # Extract &quot;24&quot; from &quot;24h&quot;</span>
-<span class="sd">            ...     rep_regex=r&quot;rep(\d+)&quot;          # Extract &quot;1&quot; from &quot;rep1&quot;</span>
-<span class="sd">            ... )</span>
-<span class="sd">            &gt;&gt;&gt; print(&quot;Activity table shape:&quot;, activity_df.shape)</span>
-<span class="sd">            &gt;&gt;&gt; print(&quot;Available timepoints:&quot;, activity_df.columns.get_level_values(0).unique())</span>
-<span class="sd">            &gt;&gt;&gt; print(&quot;Available metrics:&quot;, activity_df.columns.get_level_values(1).unique())</span>
-<span class="sd">            &gt;&gt;&gt;</span>
-<span class="sd">            &gt;&gt;&gt; # Access specific metric for all timepoints</span>
-<span class="sd">            &gt;&gt;&gt; mean_activities = activity_df.xs(&#39;mean_activity&#39;, level=1, axis=1)</span>
-<span class="sd">            &gt;&gt;&gt; summed_activities = activity_df.xs(&#39;summed_activity&#39;, level=1, axis=1)</span>
+<span class="sd">                - ``activity_simple``: log10(RT_count_simple / AD_count_simple).</span>
+<span class="sd">                - ``activity_directional``: log10(RT_count_directional /</span>
+<span class="sd">                  AD_count_directional), present only when directional count</span>
+<span class="sd">                  files are found.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: If regex patterns fail to match sample names</span>
-<span class="sd">            FileNotFoundError: If required input CSV files are not found</span>
-<span class="sd">            KeyError: If expected columns are missing from input files</span>
+<span class="sd">            ValueError: If ``self.output_path`` is ``None``.</span>
+<span class="sd">            ValueError: If ``AD_bc_objects`` contains fewer than two objects.</span>
+<span class="sd">            ValueError: If ``RT_bc_objects`` contains fewer than one object.</span>
+<span class="sd">            ValueError: If the Step 1 map is missing required barcode columns.</span>
+<span class="sd">            ValueError: If no AD or RT simple count files are found under the</span>
+<span class="sd">                search root.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Activity scores are ``NaN`` for rows where either count is zero or</span>
+<span class="sd">            missing. The resulting DataFrame is saved to</span>
+<span class="sd">            ``{output_path}/trebl_experiment_activity_scores_per_barcode.csv``</span>
+<span class="sd">            (or a suffixed variant when ``step_name_suffix`` is set).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">extract_with_regex</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">regex</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">extracted</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">group</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">extracted</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Regex failed to match all values in column &#39;</span><span class="si">{</span><span class="n">column_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
-                    <span class="p">)</span>
-                <span class="k">return</span> <span class="n">extracted</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error extracting &#39;</span><span class="si">{</span><span class="n">column_name</span><span class="si">}</span><span class="s2">&#39; with regex &#39;</span><span class="si">{</span><span class="n">regex</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-                <span class="k">raise</span> <span class="n">e</span>
-
-        <span class="c1"># Load experiment results</span>
-        <span class="n">ad_results_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;AD_trebl_experiment_results.csv&quot;</span>
-        <span class="n">rt_results_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;RT_trebl_experiment_results.csv&quot;</span>
-
-        <span class="n">ad_column_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">bc</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="n">AD_bc_objects</span><span class="p">]</span>
-        <span class="n">rt_column_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">bc</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="n">RT_bc_objects</span><span class="p">]</span>
-
-        <span class="n">ad_bc_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ad_results_path</span><span class="p">)</span>
-        <span class="n">ad_bc_results</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extract_with_regex</span><span class="p">(</span>
-            <span class="n">ad_bc_results</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">time_regex</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="s2">&quot;time&quot;</span>
-        <span class="p">)</span>
-        <span class="n">ad_bc_results</span><span class="p">[</span><span class="s2">&quot;rep&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extract_with_regex</span><span class="p">(</span>
-            <span class="n">ad_bc_results</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">rep_regex</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="s2">&quot;rep&quot;</span>
-        <span class="p">)</span>
-
-        <span class="n">ad_bc_results</span> <span class="o">=</span> <span class="n">ad_bc_results</span><span class="p">[</span>
-            <span class="n">ad_column_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;rep&quot;</span><span class="p">,</span> <span class="s2">&quot;AD_umi_count_simple&quot;</span><span class="p">]</span>
-        <span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="n">rt_bc_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">rt_results_path</span><span class="p">)</span>
-        <span class="n">rt_bc_results</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extract_with_regex</span><span class="p">(</span>
-            <span class="n">rt_bc_results</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">time_regex</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="s2">&quot;time&quot;</span>
-        <span class="p">)</span>
-        <span class="n">rt_bc_results</span><span class="p">[</span><span class="s2">&quot;rep&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extract_with_regex</span><span class="p">(</span>
-            <span class="n">rt_bc_results</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">rep_regex</span><span class="p">,</span> <span class="n">column_name</span><span class="o">=</span><span class="s2">&quot;rep&quot;</span>
-        <span class="p">)</span>
-        <span class="n">rt_bc_results</span> <span class="o">=</span> <span class="n">rt_bc_results</span><span class="p">[</span>
-            <span class="n">rt_column_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;rep&quot;</span><span class="p">,</span> <span class="s2">&quot;RTBC_umi_count_simple&quot;</span><span class="p">]</span>
-        <span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="c1"># Load Step 1 mapping</span>
-        <span class="n">step1_map</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">step1_path</span><span class="p">)</span>
-        <span class="n">step1_map</span> <span class="o">=</span> <span class="n">step1_map</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ad_column_names</span> <span class="o">+</span> <span class="n">rt_column_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;AD&quot;</span><span class="p">]))]</span>
-
-        <span class="n">step1_map_with_ad</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">step1_map</span><span class="p">,</span> <span class="n">ad_bc_results</span><span class="p">)</span>
-        <span class="n">step1_map_with_rt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">step1_map</span><span class="p">,</span> <span class="n">rt_bc_results</span><span class="p">)</span>
-        <span class="n">step1_map_with_ad_rt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-            <span class="n">step1_map_with_ad</span><span class="p">,</span> <span class="n">step1_map_with_rt</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span>
-        <span class="p">)</span>
-
-        <span class="n">step1_map_with_ad_rt</span><span class="p">[</span><span class="s2">&quot;AD_umi_count_simple&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step1_map_with_ad_rt</span><span class="p">[</span>
-            <span class="s2">&quot;AD_umi_count_simple&quot;</span>
-        <span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">step1_map_with_ad_rt</span><span class="p">[</span><span class="s2">&quot;RTBC_umi_count_simple&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step1_map_with_ad_rt</span><span class="p">[</span>
-            <span class="s2">&quot;RTBC_umi_count_simple&quot;</span>
-        <span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-        <span class="c1"># Per-barcode activity</span>
-        <span class="n">step1_map_with_ad_rt</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">step1_map_with_ad_rt</span><span class="p">[</span><span class="s2">&quot;RTBC_umi_count_simple&quot;</span><span class="p">]</span>
-            <span class="o">/</span> <span class="n">step1_map_with_ad_rt</span><span class="p">[</span><span class="s2">&quot;AD_umi_count_simple&quot;</span><span class="p">]</span>
-        <span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">:</span>
-            <span class="n">step1_map_with_ad_rt</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;bc_activities.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
-
-        <span class="c1"># Calculate both averaged and summed activities</span>
-        <span class="c1"># Averaged activity across barcodes</span>
-        <span class="n">grouped_avg</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">step1_map_with_ad_rt</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;AD&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;rep&quot;</span><span class="p">])[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span>
-            <span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;std&quot;</span><span class="p">])</span>
-            <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Summed activity across barcodes</span>
-        <span class="n">grouped_sum</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">step1_map_with_ad_rt</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;AD&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;rep&quot;</span><span class="p">])</span>
-            <span class="o">.</span><span class="n">agg</span><span class="p">(</span>
-                <span class="n">summed_AD_UMIs</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;AD_umi_count_simple&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">),</span>
-                <span class="n">summed_RT_UMIs</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;RTBC_umi_count_simple&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">),</span>
-            <span class="p">)</span>
-            <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-        <span class="p">)</span>
-
-        <span class="n">grouped_sum</span><span class="p">[</span><span class="s2">&quot;summed_activity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">grouped_sum</span><span class="p">[</span><span class="s2">&quot;summed_RT_UMIs&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">grouped_sum</span><span class="p">[</span><span class="s2">&quot;summed_AD_UMIs&quot;</span><span class="p">]</span>
-        <span class="p">)</span>
-
-        <span class="c1"># --- Pivot each metric ---</span>
-        <span class="n">pivoted_mean</span> <span class="o">=</span> <span class="n">grouped_avg</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span>
-            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;AD&quot;</span><span class="p">,</span> <span class="s2">&quot;rep&quot;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span>
-        <span class="p">)</span>
-        <span class="n">pivoted_std</span> <span class="o">=</span> <span class="n">grouped_avg</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span>
-            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;AD&quot;</span><span class="p">,</span> <span class="s2">&quot;rep&quot;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;std&quot;</span>
-        <span class="p">)</span>
-        <span class="n">pivoted_summed</span> <span class="o">=</span> <span class="n">grouped_sum</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span>
-            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;AD&quot;</span><span class="p">,</span> <span class="s2">&quot;rep&quot;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;summed_activity&quot;</span>
-        <span class="p">)</span>
-
-        <span class="c1"># --- Ensure MultiIndex columns, even if only one timepoint ---</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">make_multiindex</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+    
+        <span class="k">def</span><span class="w"> </span><span class="nf">read_and_label</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+            <span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">df</span><span class="p">[</span><span class="s2">&quot;source_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">df</span><span class="p">[</span><span class="s2">&quot;file_base&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">dfs</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+        <span class="k">def</span><span class="w"> </span><span class="nf">require_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+            <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> missing required columns: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+        <span class="k">def</span><span class="w"> </span><span class="nf">add_rep_time</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
             <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-            <span class="c1"># If df.columns is not already MultiIndex, force it</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="p">):</span>
-                <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">([</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="p">[</span><span class="n">metric_name</span><span class="p">]])</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># If MultiIndex, rename the second level</span>
-                <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span>
-                    <span class="p">[(</span><span class="n">lvl0</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">lvl0</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-                <span class="p">)</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;rep&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;file_base&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">rep_regex</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;file_base&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">time_regex</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">df</span>
-
-        <span class="n">pivoted_mean</span> <span class="o">=</span> <span class="n">make_multiindex</span><span class="p">(</span><span class="n">pivoted_mean</span><span class="p">,</span> <span class="s2">&quot;bc_activity_avg&quot;</span><span class="p">)</span>
-        <span class="n">pivoted_std</span> <span class="o">=</span> <span class="n">make_multiindex</span><span class="p">(</span><span class="n">pivoted_std</span><span class="p">,</span> <span class="s2">&quot;bc_activity_std&quot;</span><span class="p">)</span>
-        <span class="n">pivoted_summed</span> <span class="o">=</span> <span class="n">make_multiindex</span><span class="p">(</span><span class="n">pivoted_summed</span><span class="p">,</span> <span class="s2">&quot;pooled_activity&quot;</span><span class="p">)</span>
-
-        <span class="c1"># --- Concatenate all metrics along columns ---</span>
-        <span class="n">consolidated_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pivoted_mean</span><span class="p">,</span> <span class="n">pivoted_std</span><span class="p">,</span> <span class="n">pivoted_summed</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="c1"># --- Sort columns by timepoint first, then metric ---</span>
-        <span class="n">consolidated_df</span> <span class="o">=</span> <span class="n">consolidated_df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-        <span class="c1"># --- Assign column level names ---</span>
-        <span class="n">consolidated_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;timepoint&quot;</span><span class="p">,</span> <span class="s2">&quot;metric&quot;</span><span class="p">]</span>
-
-        <span class="c1"># --- Optionally save ---</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">:</span>
-            <span class="n">consolidated_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;AD_activities.csv&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">consolidated_df</span></div>
+    
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;self.output_path must be set to calculate activity scores.&quot;</span><span class="p">)</span>
+    
+        <span class="n">ad_col_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">bc</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="n">AD_bc_objects</span><span class="p">]</span>
+        <span class="n">rt_col_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">bc</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="n">RT_bc_objects</span><span class="p">]</span>
+    
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ad_col_names</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;AD_bc_objects must contain at least two barcode objects.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rt_col_names</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;RT_bc_objects must contain at least one barcode object.&quot;</span><span class="p">)</span>
+    
+        <span class="c1"># Load Step 1 map</span>
+        <span class="n">step1_map</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">step1_path</span><span class="p">)</span>
+        <span class="n">step1_required_cols</span> <span class="o">=</span> <span class="n">ad_col_names</span> <span class="o">+</span> <span class="n">rt_col_names</span>
+        <span class="n">missing_step1_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">step1_required_cols</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">step1_map</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">missing_step1_cols</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step 1 map is missing required columns: </span><span class="si">{</span><span class="n">missing_step1_cols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">step1_map</span> <span class="o">=</span> <span class="n">step1_map</span><span class="p">[</span><span class="n">step1_required_cols</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+        <span class="c1"># Find files</span>
+        <span class="n">step_name_prefix</span> <span class="o">=</span> <span class="s2">&quot;trebl_experiment_&quot;</span> <span class="o">+</span> <span class="n">step_name_suffix</span>
+        <span class="n">trebl_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">)</span> <span class="o">/</span> <span class="n">step_name_prefix</span>
+        <span class="n">search_root</span> <span class="o">=</span> <span class="n">trebl_root</span> <span class="k">if</span> <span class="n">trebl_root</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">)</span>
+    
+        <span class="n">simple_AD_files</span>      <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">search_root</span> <span class="o">/</span> <span class="s2">&quot;**&quot;</span> <span class="o">/</span> <span class="s2">&quot;*_AD_*&quot;</span> <span class="o">/</span> <span class="s2">&quot;*simple_umi_counts.tsv&quot;</span><span class="p">),</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">directional_AD_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">search_root</span> <span class="o">/</span> <span class="s2">&quot;**&quot;</span> <span class="o">/</span> <span class="s2">&quot;*_AD_*&quot;</span> <span class="o">/</span> <span class="s2">&quot;*directional_umi_counts.tsv&quot;</span><span class="p">),</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">simple_RT_files</span>      <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">search_root</span> <span class="o">/</span> <span class="s2">&quot;**&quot;</span> <span class="o">/</span> <span class="s2">&quot;*_RT_*&quot;</span> <span class="o">/</span> <span class="s2">&quot;*simple_umi_counts.tsv&quot;</span><span class="p">),</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">directional_RT_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">search_root</span> <span class="o">/</span> <span class="s2">&quot;**&quot;</span> <span class="o">/</span> <span class="s2">&quot;*_RT_*&quot;</span> <span class="o">/</span> <span class="s2">&quot;*directional_umi_counts.tsv&quot;</span><span class="p">),</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">simple_AD_files</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No AD simple count files found under </span><span class="si">{</span><span class="n">search_root</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">simple_RT_files</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No RT simple count files found under </span><span class="si">{</span><span class="n">search_root</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+        <span class="c1"># Determine whether directional results exist</span>
+        <span class="n">has_directional</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">directional_AD_files</span> <span class="ow">and</span> <span class="n">directional_RT_files</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">has_directional</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No directional count files found — using simple deduplication only.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found both simple and directional count files — computing both.&quot;</span><span class="p">)</span>
+    
+        <span class="c1"># Load and label all files</span>
+        <span class="n">simple_AD_df</span> <span class="o">=</span> <span class="n">read_and_label</span><span class="p">(</span><span class="n">simple_AD_files</span><span class="p">,</span> <span class="s2">&quot;AD_simple&quot;</span><span class="p">)</span>
+        <span class="n">simple_RT_df</span> <span class="o">=</span> <span class="n">read_and_label</span><span class="p">(</span><span class="n">simple_RT_files</span><span class="p">,</span> <span class="s2">&quot;RT_simple&quot;</span><span class="p">)</span>
+    
+        <span class="n">require_columns</span><span class="p">(</span><span class="n">simple_AD_df</span><span class="p">,</span> <span class="n">ad_col_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">],</span> <span class="s2">&quot;AD simple files&quot;</span><span class="p">)</span>
+        <span class="n">require_columns</span><span class="p">(</span><span class="n">simple_RT_df</span><span class="p">,</span> <span class="n">rt_col_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">],</span> <span class="s2">&quot;RT simple files&quot;</span><span class="p">)</span>
+    
+        <span class="n">simple_AD_df</span> <span class="o">=</span> <span class="n">add_rep_time</span><span class="p">(</span><span class="n">simple_AD_df</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;AD_count_simple&quot;</span><span class="p">})</span>
+        <span class="n">simple_RT_df</span> <span class="o">=</span> <span class="n">add_rep_time</span><span class="p">(</span><span class="n">simple_RT_df</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;RT_count_simple&quot;</span><span class="p">})</span>
+    
+        <span class="k">if</span> <span class="n">has_directional</span><span class="p">:</span>
+            <span class="n">directional_AD_df</span> <span class="o">=</span> <span class="n">read_and_label</span><span class="p">(</span><span class="n">directional_AD_files</span><span class="p">,</span> <span class="s2">&quot;AD_directional&quot;</span><span class="p">)</span>
+            <span class="n">directional_RT_df</span> <span class="o">=</span> <span class="n">read_and_label</span><span class="p">(</span><span class="n">directional_RT_files</span><span class="p">,</span> <span class="s2">&quot;RT_directional&quot;</span><span class="p">)</span>
+            <span class="n">require_columns</span><span class="p">(</span><span class="n">directional_AD_df</span><span class="p">,</span> <span class="n">ad_col_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">],</span> <span class="s2">&quot;AD directional files&quot;</span><span class="p">)</span>
+            <span class="n">require_columns</span><span class="p">(</span><span class="n">directional_RT_df</span><span class="p">,</span> <span class="n">rt_col_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">],</span> <span class="s2">&quot;RT directional files&quot;</span><span class="p">)</span>
+            <span class="n">directional_AD_df</span> <span class="o">=</span> <span class="n">add_rep_time</span><span class="p">(</span><span class="n">directional_AD_df</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;AD_count_directional&quot;</span><span class="p">})</span>
+            <span class="n">directional_RT_df</span> <span class="o">=</span> <span class="n">add_rep_time</span><span class="p">(</span><span class="n">directional_RT_df</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;RT_count_directional&quot;</span><span class="p">})</span>
+    
+        <span class="c1"># Start from step1 map and inner-merge everything so no barcodes are silently dropped</span>
+        <span class="n">activity_df</span> <span class="o">=</span> <span class="n">step1_map</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+        <span class="n">activity_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+            <span class="n">activity_df</span><span class="p">,</span>
+            <span class="n">simple_AD_df</span><span class="p">[</span><span class="n">ad_col_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;rep&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;AD_count_simple&quot;</span><span class="p">]],</span>
+            <span class="n">on</span><span class="o">=</span><span class="n">ad_col_names</span><span class="p">,</span>
+            <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">activity_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+            <span class="n">activity_df</span><span class="p">,</span>
+            <span class="n">simple_RT_df</span><span class="p">[</span><span class="n">rt_col_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;rep&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;RT_count_simple&quot;</span><span class="p">]],</span>
+            <span class="n">on</span><span class="o">=</span><span class="n">rt_col_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;rep&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">],</span>
+            <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    
+        <span class="k">if</span> <span class="n">has_directional</span><span class="p">:</span>
+            <span class="n">activity_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                <span class="n">activity_df</span><span class="p">,</span>
+                <span class="n">directional_AD_df</span><span class="p">[</span><span class="n">ad_col_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;rep&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;AD_count_directional&quot;</span><span class="p">]],</span>
+                <span class="n">on</span><span class="o">=</span><span class="n">ad_col_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;rep&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">],</span>
+                <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">activity_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                <span class="n">activity_df</span><span class="p">,</span>
+                <span class="n">directional_RT_df</span><span class="p">[</span><span class="n">rt_col_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;rep&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;RT_count_directional&quot;</span><span class="p">]],</span>
+                <span class="n">on</span><span class="o">=</span><span class="n">rt_col_names</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;rep&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">],</span>
+                <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+    
+        <span class="c1"># Calculate log10 activity scores, NaN where counts are 0 or missing</span>
+        <span class="n">activity_df</span><span class="p">[</span><span class="s2">&quot;activity_simple&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">valid_simple</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">activity_df</span><span class="p">[</span><span class="s2">&quot;AD_count_simple&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+            <span class="o">&amp;</span> <span class="n">activity_df</span><span class="p">[</span><span class="s2">&quot;RT_count_simple&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+            <span class="o">&amp;</span> <span class="p">(</span><span class="n">activity_df</span><span class="p">[</span><span class="s2">&quot;AD_count_simple&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="p">(</span><span class="n">activity_df</span><span class="p">[</span><span class="s2">&quot;RT_count_simple&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">activity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">valid_simple</span><span class="p">,</span> <span class="s2">&quot;activity_simple&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span>
+            <span class="n">activity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">valid_simple</span><span class="p">,</span> <span class="s2">&quot;RT_count_simple&quot;</span><span class="p">]</span>
+            <span class="o">/</span> <span class="n">activity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">valid_simple</span><span class="p">,</span> <span class="s2">&quot;AD_count_simple&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+    
+        <span class="k">if</span> <span class="n">has_directional</span><span class="p">:</span>
+            <span class="n">activity_df</span><span class="p">[</span><span class="s2">&quot;activity_directional&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">valid_directional</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">activity_df</span><span class="p">[</span><span class="s2">&quot;AD_count_directional&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+                <span class="o">&amp;</span> <span class="n">activity_df</span><span class="p">[</span><span class="s2">&quot;RT_count_directional&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">activity_df</span><span class="p">[</span><span class="s2">&quot;AD_count_directional&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">activity_df</span><span class="p">[</span><span class="s2">&quot;RT_count_directional&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">activity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">valid_directional</span><span class="p">,</span> <span class="s2">&quot;activity_directional&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span>
+                <span class="n">activity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">valid_directional</span><span class="p">,</span> <span class="s2">&quot;RT_count_directional&quot;</span><span class="p">]</span>
+                <span class="o">/</span> <span class="n">activity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">valid_directional</span><span class="p">,</span> <span class="s2">&quot;AD_count_directional&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+    
+        <span class="c1"># Save output</span>
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">)</span>
+        <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">output_filename</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;trebl_experiment_</span><span class="si">{</span><span class="n">step_name_prefix</span><span class="si">}</span><span class="s2">activity_scores_per_barcode.csv&quot;</span>
+            <span class="k">if</span> <span class="n">step_name_suffix</span>
+            <span class="k">else</span> <span class="s2">&quot;trebl_experiment_activity_scores_per_barcode.csv&quot;</span>
+        <span class="p">)</span>
+        <span class="n">activity_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="n">output_filename</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved activity scores (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">activity_df</span><span class="p">)</span><span class="si">}</span><span class="s2"> rows) → </span><span class="si">{</span><span class="n">output_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">output_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+        <span class="k">return</span> <span class="n">activity_df</span></div>
 </div>
 
 </pre></div>

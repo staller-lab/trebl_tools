@@ -198,6 +198,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide/step1.html">Step 1: TREBL Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide/step2.html">Step 2: TREBL Step 2 Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide/trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/savio_jobs.html">Running on Savio (Cluster Jobs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide/advanced_usage.html">Advanced Usage</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
@@ -583,28 +584,27 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">run_umi_tools_deduplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run umi_tools count_tab on preprocessed DuckDB table instead of FASTQ/BAM.</span>
-<span class="sd">        Exports TSV and produces count_tab output in the same location as previous outputs.</span>
+<span class="sd">        Exports TSV and produces normalized directional counts output with barcode columns.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
     
-        <span class="c1"># Ensure output directory exists</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     
-        <span class="c1"># Step 1: Export TSV</span>
         <span class="n">tsv_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">_umi_count_input.tsv&quot;</span><span class="p">)</span>
         <span class="n">concat_cols</span> <span class="o">=</span> <span class="s2">&quot; || &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>
+    
         <span class="bp">self</span><span class="o">.</span><span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">            COPY (</span>
 <span class="s2">                SELECT &#39;_&#39; || UMI AS umi_col,</span>
 <span class="s2">                       </span><span class="si">{</span><span class="n">concat_cols</span><span class="si">}</span><span class="s2"> AS gene</span>
 <span class="s2">                FROM </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">table_prefix</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">refined_map_suffix</span><span class="si">}</span>
-<span class="s2">                ORDER BY </span><span class="si">{</span><span class="n">concat_cols</span><span class="si">}</span><span class="s2">  </span>
+<span class="s2">                ORDER BY </span><span class="si">{</span><span class="n">concat_cols</span><span class="si">}</span>
 <span class="s2">            ) TO &#39;</span><span class="si">{</span><span class="n">tsv_path</span><span class="si">}</span><span class="s2">&#39;</span>
 <span class="s2">            WITH (FORMAT &#39;csv&#39;, DELIMITER E&#39;</span><span class="se">\t</span><span class="s2">&#39;, HEADER FALSE)</span>
 <span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exported TSV for count_tab to </span><span class="si">{</span><span class="n">tsv_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     
-        <span class="c1"># Step 2: Run umi_tools count_tab</span>
         <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">_directional_umi_counts.tsv&quot;</span><span class="p">)</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;umi_tools&quot;</span><span class="p">,</span>
@@ -615,8 +615,24 @@
         <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count_tab_output</span> <span class="o">=</span> <span class="n">output_path</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Count_tab output saved to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Step 3: Delete intermediate TSV</span>
+    
+        <span class="c1"># Normalize output: split gene back into barcode columns</span>
+        <span class="n">directional_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+        <span class="k">if</span> <span class="s2">&quot;gene&quot;</span> <span class="ow">in</span> <span class="n">directional_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bc_objects</span><span class="p">:</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">bc</span><span class="o">.</span><span class="n">length</span>
+                <span class="n">directional_df</span><span class="p">[</span><span class="n">bc</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">directional_df</span><span class="p">[</span><span class="s2">&quot;gene&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+    
+        <span class="c1"># remaining_cols = [c for c in directional_df.columns if c not in ordered_cols]</span>
+        <span class="c1"># directional_df = directional_df[ordered_cols + remaining_cols]</span>
+        <span class="n">directional_df</span> <span class="o">=</span> <span class="n">directional_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="s2">&quot;gene&quot;</span><span class="p">)</span>
+    
+        <span class="n">directional_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Normalized directional output saved to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">tsv_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tsv_path</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deleted intermediate file </span><span class="si">{</span><span class="n">tsv_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>

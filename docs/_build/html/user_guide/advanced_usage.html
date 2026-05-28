@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="trebl_tools" href="../modules.html"><link rel="prev" title="TREBL Experiment with UMIs" href="trebl_experiment.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="trebl_tools" href="../modules.html"><link rel="prev" title="Running on Savio (Cluster Jobs)" href="savio_jobs.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>Advanced Usage - TREBL Tools 0.1.0 documentation</title>
@@ -199,6 +199,7 @@
 <li class="toctree-l1"><a class="reference internal" href="step1.html">Step 1: TREBL Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step2.html">Step 2: TREBL Step 2 Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="savio_jobs.html">Running on Savio (Cluster Jobs)</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Advanced Usage</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
@@ -283,14 +284,13 @@
 <span class="n">trebl_AD_seq_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;/path/to/AD_Assembled/*&quot;</span><span class="p">)</span>   <span class="c1"># ← update with your path</span>
 <span class="n">trebl_RT_seq_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;/path/to/RPTR_Assembled/*&quot;</span><span class="p">)</span>  <span class="c1"># ← update with your path</span>
 
-<span class="c1"># (Optional) Check reads distributions to pick threshold values</span>
-<span class="n">pipeline</span><span class="o">.</span><span class="n">trebl_experiment_reads_distribution</span><span class="p">(</span>
-    <span class="n">AD_seq_files</span><span class="o">=</span><span class="n">trebl_AD_seq_files</span><span class="p">,</span>
-    <span class="n">AD_bc_objects</span><span class="o">=</span><span class="n">AD_bc_objects</span><span class="p">,</span>
-    <span class="n">RT_seq_files</span><span class="o">=</span><span class="n">trebl_RT_seq_files</span><span class="p">,</span>
-    <span class="n">RT_bc_objects</span><span class="o">=</span><span class="n">RT_bc_objects</span><span class="p">,</span>
-    <span class="n">reverse_complement</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
+<span class="c1"># (Optional) Check reads distributions per file to pick threshold values</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">trebl_AD_seq_files</span><span class="p">:</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">pipeline</span><span class="o">.</span><span class="n">reads_distribution</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">AD_bc_objects</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;trebl_experiment_</span><span class="si">{</span><span class="n">sample</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">trebl_RT_seq_files</span><span class="p">:</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">pipeline</span><span class="o">.</span><span class="n">reads_distribution</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">RT_bc_objects</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;trebl_experiment_</span><span class="si">{</span><span class="n">sample</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Run TREBL experiment — no UMI objects, use reads thresholds instead</span>
 <span class="n">pipeline</span><span class="o">.</span><span class="n">trebl_experiment_analysis</span><span class="p">(</span>
@@ -307,7 +307,7 @@
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Use the reads distribution histograms to pick appropriate <code class="docutils literal notranslate"><span class="pre">reads_threshold_AD</span></code> and <code class="docutils literal notranslate"><span class="pre">reads_threshold_RT</span></code> values before running the analysis.</p>
+<p>Use these per-file reads distribution histograms to pick appropriate <code class="docutils literal notranslate"><span class="pre">reads_threshold_AD</span></code> and <code class="docutils literal notranslate"><span class="pre">reads_threshold_RT</span></code> values before running the analysis.</p>
 </section>
 </section>
 <section id="repeating-an-analysis-step-with-multiple-datasets">
@@ -364,14 +364,14 @@
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="trebl_experiment.html">
+          <a class="prev-page" href="savio_jobs.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">TREBL Experiment with UMIs</div>
+                <div class="title">Running on Savio (Cluster Jobs)</div>
                 
               </div>
             </a>

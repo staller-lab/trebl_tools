@@ -105,9 +105,10 @@ AD_bc_objects = [AD, AD_BC]
 RT_bc_objects = [RT_BC]
 ```
 
-Each barcode object defines what TREBL should extract from reads. `preceder` and `post` sequences help locate the barcode/AD in the read.
+Each barcode object defines what TREBL should extract from reads. `preceder` and `post` sequences help locate the barcode/AD in the read. 
 
 **Extraction rules:**
+- If specified, the read is reverse-complemented before searching for `preceder` and `post`.
 - If both `preceder` and `post` are provided, I extract the sequence between them.
 - If only one of `preceder` or `post` is provided, I extract a sequence starting from the provided flanking sequence and extending `length` bases.
 - If both `preceder` and `post` are empty, TREBL extracts the last `length` bases of the read.

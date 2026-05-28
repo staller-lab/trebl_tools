@@ -199,6 +199,7 @@
 <li class="toctree-l1"><a class="reference internal" href="step1.html">Step 1: TREBL Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step2.html">Step 2: TREBL Step 2 Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="savio_jobs.html">Running on Savio (Cluster Jobs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced_usage.html">Advanced Usage</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
@@ -254,9 +255,23 @@ matching example notebook on GitHub:
 <a class="reference external" href="https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/quick_start_example.ipynb"><code class="docutils literal notranslate"><span class="pre">quick_start_example.ipynb</span></code></a> |
 <a class="reference external" href="https://github.com/staller-lab/trebl_tools/blob/main/examples/notebooks/full_analysis_example.ipynb"><code class="docutils literal notranslate"><span class="pre">full_analysis_example.ipynb</span></code></a></p>
 <p><strong>Both presets always use <code class="docutils literal notranslate"><span class="pre">umi_deduplication=&quot;both&quot;</span></code></strong> (simple + directional deduplication). The only thing you choose is whether to enable error correction.</p>
-<section id="quick-start-no-error-correction-faster">
-<h3>Quick Start (no error correction, faster)<a class="headerlink" href="#quick-start-no-error-correction-faster" title="Link to this heading">¶</a></h3>
-<p>Use when you want rapid turnaround, are testing a new dataset, or when data quality is high.</p>
+<section id="what-are-the-umi-deduplication-options">
+<h3>What are the UMI deduplication options?<a class="headerlink" href="#what-are-the-umi-deduplication-options" title="Link to this heading">¶</a></h3>
+<p><strong>UMI deduplication</strong> determines how UMIs are collapsed into counts.</p>
+<ul class="simple">
+<li><p><strong>Simple deduplication</strong> counts every unique UMI independently.</p></li>
+<li><p><strong>Directional deduplication</strong> follows the approach implemented in <a class="reference external" href="https://umi-tools.readthedocs.io/en/latest/reference/dedup.html">UMI-tools</a>, using both UMI sequence similarity and read counts to collapse likely sequencing errors into a single UMI.</p></li>
+</ul>
+<p>Directional deduplication is generally more accurate and is recommended for most analyses. It adds only a modest amount of runtime.</p>
+</section>
+<section id="what-are-the-error-correction-options">
+<h3>What are the error correction options?<a class="headerlink" href="#what-are-the-error-correction-options" title="Link to this heading">¶</a></h3>
+<p><strong>Error correction</strong> attempts to rescue low-count reads that are likely caused by sequencing errors. The method assumes that high-count sequences (above a selected read-count threshold) represent real sequences, while low-count sequences below the threshold may be erroneous variants. Similar low-count sequences are then corrected to their higher-count counterparts.</p>
+<p>Error correction is especially useful for libraries containing many highly similar sequences and can increase the number of usable reads. However, it works best with deeply sequenced datasets. In practice, a clear threshold often requires &gt;100 reads per sequence, which may not always be achievable. You can either specify the read-count threshold manually or allow the tool to determine it automatically, as described in <code class="docutils literal notranslate"><span class="pre">advanced_usage.md</span></code>.</p>
+</section>
+<section id="quick-start-no-error-correction-faster-recommended">
+<h3>Quick Start (no error correction, faster, recommended)<a class="headerlink" href="#quick-start-no-error-correction-faster-recommended" title="Link to this heading">¶</a></h3>
+<p>This is the standard and recommended pipeline.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">pipelines</span><span class="o">.</span><span class="n">TreblPipeline</span><span class="p">(</span>
     <span class="n">db_path</span><span class="o">=</span><span class="s2">&quot;quick_start.db&quot;</span><span class="p">,</span>
     <span class="n">design_file_path</span><span class="o">=</span><span class="s2">&quot;design_file.txt&quot;</span><span class="p">,</span>
@@ -271,9 +286,9 @@ matching example notebook on GitHub:
 </pre></div>
 </div>
 </section>
-<section id="full-analysis-with-error-correction-publication-quality">
-<h3>Full Analysis (with error correction, publication-quality)<a class="headerlink" href="#full-analysis-with-error-correction-publication-quality" title="Link to this heading">¶</a></h3>
-<p>Use when preparing final results or when data quality is variable.</p>
+<section id="full-analysis-with-error-correction">
+<h3>Full Analysis (with error correction)<a class="headerlink" href="#full-analysis-with-error-correction" title="Link to this heading">¶</a></h3>
+<p>Use for error correction to attempt to salvage more reads. Usually not preferred.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">pipelines</span><span class="o">.</span><span class="n">TreblPipeline</span><span class="p">(</span>
     <span class="n">db_path</span><span class="o">=</span><span class="s2">&quot;full_analysis.db&quot;</span><span class="p">,</span>
     <span class="n">design_file_path</span><span class="o">=</span><span class="s2">&quot;design_file.txt&quot;</span><span class="p">,</span>
@@ -320,7 +335,7 @@ matching example notebook on GitHub:
 <h2>Tips<a class="headerlink" href="#tips" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Test with a small number of reads first using <code class="docutils literal notranslate"><span class="pre">test_n_reads</span></code>, and when switching to the full dataset, either use a separate <code class="docutils literal notranslate"><span class="pre">db_path</span></code> or delete the test <code class="docutils literal notranslate"><span class="pre">db_path</span></code> first—this prevents conflicts since the DuckDB database stores intermediate results and can’t safely be reused with different parameters or more reads.</p></li>
-<li><p>Error correction will take longer, but it may salvage more reads. If you are time constrained, I would recommend skipping error correction.</p></li>
+<li><p>Error correction will take longer, but it may salvage more reads. I would usually recommend skipping error correction.</p></li>
 <li><p>Make sure all paths (<code class="docutils literal notranslate"><span class="pre">db_path</span></code>, <code class="docutils literal notranslate"><span class="pre">design_file_path</span></code>, <code class="docutils literal notranslate"><span class="pre">output_path</span></code>) exist and are writable.</p></li>
 </ul>
 </section>
@@ -383,8 +398,10 @@ matching example notebook on GitHub:
             <ul>
 <li><a class="reference internal" href="#">Analysis Setup</a><ul>
 <li><a class="reference internal" href="#recommended-presets">Recommended Presets</a><ul>
-<li><a class="reference internal" href="#quick-start-no-error-correction-faster">Quick Start (no error correction, faster)</a></li>
-<li><a class="reference internal" href="#full-analysis-with-error-correction-publication-quality">Full Analysis (with error correction, publication-quality)</a></li>
+<li><a class="reference internal" href="#what-are-the-umi-deduplication-options">What are the UMI deduplication options?</a></li>
+<li><a class="reference internal" href="#what-are-the-error-correction-options">What are the error correction options?</a></li>
+<li><a class="reference internal" href="#quick-start-no-error-correction-faster-recommended">Quick Start (no error correction, faster, recommended)</a></li>
+<li><a class="reference internal" href="#full-analysis-with-error-correction">Full Analysis (with error correction)</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#initialize-the-pipeline">Initialize the Pipeline</a></li>

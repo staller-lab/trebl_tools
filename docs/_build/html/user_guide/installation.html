@@ -249,11 +249,21 @@
           <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
 <p>This analysis is designed to run on Savio to handle large data and computations. You can either run the code in a jupyter notebook on OOD or submit a job (see <a class="reference internal" href="advanced_usage.html"><span class="std std-doc">Advanced Usage</span></a> for submitting as a job).</p>
-<section id="recommended-create-your-own-conda-environment">
-<h2>Recommended: Create Your Own Conda Environment<a class="headerlink" href="#recommended-create-your-own-conda-environment" title="Link to this heading">¶</a></h2>
-<p>We recommend creating your own conda environment for better package management and easier Jupyter integration:</p>
+<section id="option-1-savio-use-the-shared-lab-environment">
+<h2>Option 1 (Savio): Use the shared lab environment<a class="headerlink" href="#option-1-savio-use-the-shared-lab-environment" title="Link to this heading">¶</a></h2>
+<p>You can use the prebuilt lab conda environment directly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>activate<span class="w"> </span>/global/scratch/projects/fc_mvslab/conda/trebl_tools
+
+<span class="c1"># register a Jupyter kernel for this env (run once)</span>
+python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--name<span class="w"> </span>trebl_tools_shared<span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;trebl_tools (v1.0.0)&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="option-2-create-your-own-conda-environment">
+<h2>Option 2: Create your own conda environment<a class="headerlink" href="#option-2-create-your-own-conda-environment" title="Link to this heading">¶</a></h2>
+<p>We still recommend creating your own conda environment for reproducibility and package isolation:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># clone the latest release </span>
-git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>v0.1.5<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span><span class="w"> </span>https://github.com/staller-lab/trebl_tools.git
+git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>v1.0.0<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span><span class="w"> </span>https://github.com/staller-lab/trebl_tools.git
 <span class="nb">cd</span><span class="w"> </span>trebl_tools
 
 <span class="c1"># create and activate conda env from the repo YAML</span>
@@ -264,7 +274,7 @@ conda<span class="w"> </span>activate<span class="w"> </span>trebl_tools_env<spa
 pip<span class="w"> </span>install<span class="w"> </span>.
 
 <span class="c1"># install Jupyter kernel for this env</span>
-python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--name<span class="w"> </span>trebl_tools_env<span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;trebl_tools (v0.1.5)&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--name<span class="w"> </span>trebl_tools_env<span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;trebl_tools_env&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -272,7 +282,12 @@ python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"
 <h2>Using Jupyter on Savio<a class="headerlink" href="#using-jupyter-on-savio" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Start a jupyter server session on Savio OOD</p></li>
-<li><p>Open a notebook and select “trebl_tools_env” as the kernel</p></li>
+<li><p>Open a notebook and select either:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">trebl_tools</span> <span class="pre">(v1.0.0)</span></code> (shared lab environment), or</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">trebl_tools_env</span></code> (your own environment)</p></li>
+</ul>
+</li>
 <li><p>The trebl_tools package will be available to import directly:</p></li>
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
@@ -358,7 +373,8 @@ python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Installation</a><ul>
-<li><a class="reference internal" href="#recommended-create-your-own-conda-environment">Recommended: Create Your Own Conda Environment</a></li>
+<li><a class="reference internal" href="#option-1-savio-use-the-shared-lab-environment">Option 1 (Savio): Use the shared lab environment</a></li>
+<li><a class="reference internal" href="#option-2-create-your-own-conda-environment">Option 2: Create your own conda environment</a></li>
 <li><a class="reference internal" href="#using-jupyter-on-savio">Using Jupyter on Savio</a></li>
 </ul>
 </li>

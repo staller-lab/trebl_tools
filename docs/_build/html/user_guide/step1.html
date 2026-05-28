@@ -199,6 +199,7 @@
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Step 1: TREBL Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step2.html">Step 2: TREBL Step 2 Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trebl_experiment.html">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="savio_jobs.html">Running on Savio (Cluster Jobs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced_usage.html">Advanced Usage</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
@@ -353,6 +354,7 @@
 <p>Each barcode object defines what TREBL should extract from reads. <code class="docutils literal notranslate"><span class="pre">preceder</span></code> and <code class="docutils literal notranslate"><span class="pre">post</span></code> sequences help locate the barcode/AD in the read.</p>
 <p><strong>Extraction rules:</strong></p>
 <ul class="simple">
+<li><p>If specified, the read is reverse-complemented before searching for <code class="docutils literal notranslate"><span class="pre">preceder</span></code> and <code class="docutils literal notranslate"><span class="pre">post</span></code>.</p></li>
 <li><p>If both <code class="docutils literal notranslate"><span class="pre">preceder</span></code> and <code class="docutils literal notranslate"><span class="pre">post</span></code> are provided, I extract the sequence between them.</p></li>
 <li><p>If only one of <code class="docutils literal notranslate"><span class="pre">preceder</span></code> or <code class="docutils literal notranslate"><span class="pre">post</span></code> is provided, I extract a sequence starting from the provided flanking sequence and extending <code class="docutils literal notranslate"><span class="pre">length</span></code> bases.</p></li>
 <li><p>If both <code class="docutils literal notranslate"><span class="pre">preceder</span></code> and <code class="docutils literal notranslate"><span class="pre">post</span></code> are empty, TREBL extracts the last <code class="docutils literal notranslate"><span class="pre">length</span></code> bases of the read.</p></li>

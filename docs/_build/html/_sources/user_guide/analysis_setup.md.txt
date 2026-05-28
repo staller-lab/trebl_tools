@@ -9,9 +9,23 @@ matching example notebook on GitHub:
 
 **Both presets always use `umi_deduplication="both"`** (simple + directional deduplication). The only thing you choose is whether to enable error correction.
 
-### Quick Start (no error correction, faster)
+### What are the UMI deduplication options?
+**UMI deduplication** determines how UMIs are collapsed into counts.  
 
-Use when you want rapid turnaround, are testing a new dataset, or when data quality is high.
+- **Simple deduplication** counts every unique UMI independently.  
+- **Directional deduplication** follows the approach implemented in [UMI-tools](https://umi-tools.readthedocs.io/en/latest/reference/dedup.html), using both UMI sequence similarity and read counts to collapse likely sequencing errors into a single UMI.  
+
+Directional deduplication is generally more accurate and is recommended for most analyses. It adds only a modest amount of runtime.
+
+### What are the error correction options?
+
+**Error correction** attempts to rescue low-count reads that are likely caused by sequencing errors. The method assumes that high-count sequences (above a selected read-count threshold) represent real sequences, while low-count sequences below the threshold may be erroneous variants. Similar low-count sequences are then corrected to their higher-count counterparts.
+
+Error correction is especially useful for libraries containing many highly similar sequences and can increase the number of usable reads. However, it works best with deeply sequenced datasets. In practice, a clear threshold often requires >100 reads per sequence, which may not always be achievable. You can either specify the read-count threshold manually or allow the tool to determine it automatically, as described in `advanced_usage.md`.
+
+### Quick Start (no error correction, faster, recommended)
+
+This is the standard and recommended pipeline. 
 
 ```python
 pipeline = pipelines.TreblPipeline(
@@ -29,9 +43,9 @@ Later, when calling `trebl_experiment_analysis`, always use:
 umi_deduplication="both"             # Simple + directional (complex) deduplication
 ```
 
-### Full Analysis (with error correction, publication-quality)
+### Full Analysis (with error correction)
 
-Use when preparing final results or when data quality is variable.
+Use for error correction to attempt to salvage more reads. Usually not preferred. 
 
 ```python
 pipeline = pipelines.TreblPipeline(
@@ -78,5 +92,5 @@ pipeline = pipelines.TreblPipeline(
 ## Tips
 
 - Test with a small number of reads first using `test_n_reads`, and when switching to the full dataset, either use a separate `db_path` or delete the test `db_path` first—this prevents conflicts since the DuckDB database stores intermediate results and can't safely be reused with different parameters or more reads.
-- Error correction will take longer, but it may salvage more reads. If you are time constrained, I would recommend skipping error correction.
+- Error correction will take longer, but it may salvage more reads. I would usually recommend skipping error correction.
 - Make sure all paths (`db_path`, `design_file_path`, `output_path`) exist and are writable.

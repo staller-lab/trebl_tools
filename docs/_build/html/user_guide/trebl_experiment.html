@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Advanced Usage" href="advanced_usage.html"><link rel="prev" title="Step 2: TREBL Step 2 Mapping" href="step2.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Running on Savio (Cluster Jobs)" href="savio_jobs.html"><link rel="prev" title="Step 2: TREBL Step 2 Mapping" href="step2.html">
 
     <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
         <title>TREBL Experiment with UMIs - TREBL Tools 0.1.0 documentation</title>
@@ -199,6 +199,7 @@
 <li class="toctree-l1"><a class="reference internal" href="step1.html">Step 1: TREBL Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="step2.html">Step 2: TREBL Step 2 Mapping</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">TREBL Experiment with UMIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="savio_jobs.html">Running on Savio (Cluster Jobs)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="advanced_usage.html">Advanced Usage</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
@@ -264,7 +265,7 @@
 <span class="c1"># Define barcodes (same as previous steps)</span>
 <span class="n">AD</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;AD&quot;</span><span class="p">,</span> <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;GGCTAGC&quot;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="s2">&quot;TGACTAG&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
 <span class="n">AD_BC</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;AD_BC&quot;</span><span class="p">,</span> <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;CGCGCC&quot;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="s2">&quot;GGGCCC&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
-<span class="n">RPTR_BC</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;RPTR_BC&quot;</span><span class="p">,</span> <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;CTCGAG&quot;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="s2">&quot;GGCCGC&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">RPTR_BC</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;RT_BC&quot;</span><span class="p">,</span> <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;CTCGAG&quot;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="s2">&quot;GGCCGC&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 
 <span class="n">AD_bc_objects</span> <span class="o">=</span> <span class="p">[</span><span class="n">AD</span><span class="p">,</span> <span class="n">AD_BC</span><span class="p">]</span>
 <span class="n">RT_bc_objects</span> <span class="o">=</span> <span class="p">[</span><span class="n">RPTR_BC</span><span class="p">]</span>
@@ -274,15 +275,6 @@
 
 <span class="n">trebl_AD_seq_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;/path/to/AD_Assembled/*&quot;</span><span class="p">)</span>   <span class="c1"># ← update with your path</span>
 <span class="n">trebl_RT_seq_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;/path/to/RPTR_Assembled/*&quot;</span><span class="p">)</span>  <span class="c1"># ← update with your path</span>
-
-<span class="c1"># Check reads distributions to pick threshold values</span>
-<span class="n">pipeline</span><span class="o">.</span><span class="n">trebl_experiment_reads_distribution</span><span class="p">(</span>
-    <span class="n">AD_seq_files</span><span class="o">=</span><span class="n">trebl_AD_seq_files</span><span class="p">,</span>
-    <span class="n">AD_bc_objects</span><span class="o">=</span><span class="n">AD_bc_objects</span><span class="p">,</span>
-    <span class="n">RT_seq_files</span><span class="o">=</span><span class="n">trebl_RT_seq_files</span><span class="p">,</span>
-    <span class="n">RT_bc_objects</span><span class="o">=</span><span class="n">RT_bc_objects</span><span class="p">,</span>
-    <span class="n">reverse_complement</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
 
 <span class="c1"># Run full TREBL experiment — always use umi_deduplication=&quot;both&quot;</span>
 <span class="n">pipeline</span><span class="o">.</span><span class="n">trebl_experiment_analysis</span><span class="p">(</span>
@@ -306,7 +298,7 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define AD and reporter barcodes (same as previous steps)</span>
 <span class="n">AD</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;AD&quot;</span><span class="p">,</span> <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;GGCTAGC&quot;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="s2">&quot;TGACTAG&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
 <span class="n">AD_BC</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;AD_BC&quot;</span><span class="p">,</span> <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;CGCGCC&quot;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="s2">&quot;GGGCCC&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
-<span class="n">RPTR_BC</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;RPTR_BC&quot;</span><span class="p">,</span> <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;CTCGAG&quot;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="s2">&quot;GGCCGC&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">RPTR_BC</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">Barcode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;RT_BC&quot;</span><span class="p">,</span> <span class="n">preceder</span><span class="o">=</span><span class="s2">&quot;CTCGAG&quot;</span><span class="p">,</span> <span class="n">post</span><span class="o">=</span><span class="s2">&quot;GGCCGC&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 
 <span class="c1"># Group barcodes for convenience</span>
 <span class="n">AD_bc_objects</span> <span class="o">=</span> <span class="p">[</span><span class="n">AD</span><span class="p">,</span> <span class="n">AD_BC</span><span class="p">]</span>  <span class="c1"># AD barcodes</span>
@@ -335,24 +327,8 @@
 <li><p>Allows multiple sequencing runs to be analyzed together.</p></li>
 </ul>
 </section>
-<section id="reads-distribution">
-<h3>3. Reads Distribution<a class="headerlink" href="#reads-distribution" title="Link to this heading">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">trebl_experiment_reads_distribution</span><span class="p">(</span>
-    <span class="n">AD_seq_files</span><span class="o">=</span><span class="n">trebl_AD_seq_files</span><span class="p">,</span>
-    <span class="n">AD_bc_objects</span><span class="o">=</span><span class="p">[</span><span class="n">AD</span><span class="p">,</span> <span class="n">AD_BC</span><span class="p">],</span>
-    <span class="n">RT_seq_files</span><span class="o">=</span><span class="n">trebl_RT_seq_files</span><span class="p">,</span>
-    <span class="n">RT_bc_objects</span><span class="o">=</span><span class="p">[</span><span class="n">RPTR_BC</span><span class="p">],</span>
-    <span class="n">reverse_complement</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>Produces reads histograms for all AD and RT files.</p></li>
-<li><p>Quick QC: check read counts.</p></li>
-</ul>
-</section>
 <section id="trebl-experiment-analysis">
-<h3>4. TREBL Experiment Analysis<a class="headerlink" href="#trebl-experiment-analysis" title="Link to this heading">¶</a></h3>
+<h3>3. TREBL Experiment Analysis<a class="headerlink" href="#trebl-experiment-analysis" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">trebl_experiment_analysis</span><span class="p">(</span>
     <span class="n">AD_seq_files</span><span class="o">=</span><span class="n">trebl_AD_seq_files</span><span class="p">,</span>            <span class="c1"># AD sequencing files</span>
     <span class="n">AD_bc_objects</span><span class="o">=</span><span class="n">AD_bc_objects</span><span class="p">,</span>                <span class="c1"># AD barcodes</span>
@@ -380,7 +356,7 @@
 </ul>
 </section>
 <section id="tips">
-<h3>5. Tips<a class="headerlink" href="#tips" title="Link to this heading">¶</a></h3>
+<h3>4. Tips<a class="headerlink" href="#tips" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Keep <code class="docutils literal notranslate"><span class="pre">step1_map_csv_path</span></code> pointing to the correct Step 1 CSV → ensures TREBL experiment maps correctly to Step 1.</p></li>
 <li><p>Figures help verify mappings, read distributions, and detect barcode collisions.</p></li>
@@ -392,9 +368,9 @@
 <h2>Final Steps<a class="headerlink" href="#final-steps" title="Link to this heading">¶</a></h2>
 <section id="calculating-activity-scores">
 <h3>Calculating Activity Scores<a class="headerlink" href="#calculating-activity-scores" title="Link to this heading">¶</a></h3>
-<p>After completing the TREBL experiment analysis, calculate final activity scores by integrating AD and RT data through the Step 1 mapping. This produces gene-level activity metrics across timepoints and replicates.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate activity scores</span>
-<span class="n">activity_scores</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">calculate_activity_scores</span><span class="p">(</span>
+<p>After completing TREBL experiment analysis with <code class="docutils literal notranslate"><span class="pre">umi_deduplication=&quot;both&quot;</span></code>, calculate activity scores from AD simple vs directional counts.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate activity scores from AD simple + directional count tables</span>
+<span class="n">ad_activity_per_barcode_df</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">calculate_activity_scores</span><span class="p">(</span>
     <span class="n">step1_path</span><span class="o">=</span><span class="s2">&quot;output/step1.csv&quot;</span><span class="p">,</span>          <span class="c1"># Path to Step 1 mapping CSV</span>
     <span class="n">AD_bc_objects</span><span class="o">=</span><span class="n">AD_bc_objects</span><span class="p">,</span>            <span class="c1"># AD barcode objects</span>
     <span class="n">RT_bc_objects</span><span class="o">=</span><span class="n">RT_bc_objects</span><span class="p">,</span>            <span class="c1"># RT barcode objects</span>
@@ -410,6 +386,10 @@
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">AD_bc_objects</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">RT_bc_objects</span></code></strong>: Same barcode objects used in previous steps</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">time_regex</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">rep_regex</span></code></strong>: Regular expressions to extract metadata from sample names</p></li>
 </ul>
+<p>Activity score is computed as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">count_directional</span> <span class="o">/</span> <span class="n">count_simple</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="regex-convention-for-time-and-replicate-extraction">
 <h4>Regex Convention for Time and Replicate Extraction<a class="headerlink" href="#regex-convention-for-time-and-replicate-extraction" title="Link to this heading">¶</a></h4>
@@ -440,25 +420,129 @@
 <li><p>For <code class="docutils literal notranslate"><span class="pre">sample_T10_R2.fastq</span></code> use: <code class="docutils literal notranslate"><span class="pre">time_regex=r&quot;_T(\d+)&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">rep_regex=r&quot;_R(\d+)&quot;</span></code></p></li>
 </ul>
 </section>
+</section>
+</section>
 <section id="output">
-<h4>Output<a class="headerlink" href="#output" title="Link to this heading">¶</a></h4>
-<p>The function returns a multi-indexed DataFrame with:</p>
+<h2>Output<a class="headerlink" href="#output" title="Link to this heading">¶</a></h2>
+<p>The TREBL experiment analysis saves several per-sample and experiment-level files automatically inside <code class="docutils literal notranslate"><span class="pre">output_path</span></code>.</p>
+<section id="per-sample-outputs">
+<h3>Per-sample outputs<a class="headerlink" href="#per-sample-outputs" title="Link to this heading">¶</a></h3>
+<p>For each sequencing file, a folder is created:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>output_path/
+└── trebl_experiment_&lt;suffix&gt;/
+    └── trebl_experiment_&lt;suffix&gt;&lt;sample_name&gt;/
+</pre></div>
+</div>
+<p>Inside each sample folder, the following files are saved:</p>
+<section id="umi-count-tables">
+<h4>UMI count tables<a class="headerlink" href="#umi-count-tables" title="Link to this heading">¶</a></h4>
 <ul class="simple">
-<li><p><strong>Index</strong>: (AD sequence, replicate) pairs</p></li>
-<li><p><strong>Columns</strong>: Hierarchical structure with (timepoint, metric)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*_simple_umi_counts.tsv</span></code></p>
+<ul>
+<li><p>Counts each unique UMI separately.</p></li>
+<li><p>Fast baseline deduplication.</p></li>
 </ul>
-<p><strong>Metrics calculated per timepoint</strong>:</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*_directional_umi_counts.tsv</span></code></p>
+<ul>
+<li><p>Generated by UMI-tools directional deduplication.</p></li>
+<li><p>Collapses related UMIs using sequence similarity and read counts.</p></li>
+<li><p>Recommended for downstream analysis.</p></li>
+</ul>
+</li>
+</ul>
+<p>Both are generated automatically when:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">umi_deduplication</span><span class="o">=</span><span class="s2">&quot;both&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="reads-per-umi-diagnostics">
+<h4>Reads-per-UMI diagnostics<a class="headerlink" href="#reads-per-umi-diagnostics" title="Link to this heading">¶</a></h4>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">bc_activity_avg</span></code>: Mean per-barcode activity (RT_UMI / AD_UMI)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">bc_activity_std</span></code>: Standard deviation of per-barcode activity</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pooled_activity</span></code>: AD-level activity (sum of RT_UMI / sum of AD_UMI)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*_reads_per_umi.tsv</span></code></p>
+<ul>
+<li><p>Number of reads observed per UMI.</p></li>
+<li><p>Useful for assessing PCR duplication and sequencing saturation.</p></li>
 </ul>
-<p><strong>Files saved</strong> (if <code class="docutils literal notranslate"><span class="pre">output_path</span></code> configured):</p>
+</li>
+</ul>
+</section>
+<section id="qc-figures">
+<h4>QC figures<a class="headerlink" href="#qc-figures" title="Link to this heading">¶</a></h4>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">bc_activities.csv</span></code>: Raw per-barcode activity scores</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">AD_activities.csv</span></code>: Consolidated activity scores table</p></li>
+<li><p>Mapping/refinement loss plots</p></li>
+<li><p>Error-correction diagnostic plots (if <code class="docutils literal notranslate"><span class="pre">error_correction=True</span></code>)</p></li>
 </ul>
-<p>The function integrates AD and RT experiment results to calculate activity ratios, providing both barcode-level (averaged) and gene-level (pooled) activity assessments.</p>
+<p>These help visualize:</p>
+<ul class="simple">
+<li><p>total reads</p></li>
+<li><p>reads passing barcode quality filters</p></li>
+<li><p>reads retained after error correction</p></li>
+<li><p>reads retained after thresholding</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="experiment-level-outputs">
+<h3>Experiment-level outputs<a class="headerlink" href="#experiment-level-outputs" title="Link to this heading">¶</a></h3>
+<p>Saved directly in <code class="docutils literal notranslate"><span class="pre">output_path/</span></code>.</p>
+<section id="activity-score-table">
+<h4>Activity score table<a class="headerlink" href="#activity-score-table" title="Link to this heading">¶</a></h4>
+<p>After running:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">calculate_activity_scores</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>the pipeline saves:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>trebl_experiment_activity_scores_per_barcode.csv
+</pre></div>
+</div>
+<p>This file contains:</p>
+<ul class="simple">
+<li><p>AD and RT barcode identities</p></li>
+<li><p>replicate and timepoint information</p></li>
+<li><p>simple deduplicated counts</p></li>
+<li><p>directional deduplicated counts</p></li>
+<li><p>calculated activity scores</p></li>
+</ul>
+<p>Key columns include:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>AD_count_simple
+RT_count_simple
+activity_simple
+AD_count_directional
+RT_count_directional
+activity_directional
+rep
+time
+</pre></div>
+</div>
+<p>Where “AD_count_simple” and “RT_count_simple” are the UMI counts from simple UMI deduplication, and “activity_simple” is the corresponding log10(RT/AD) activity score. “AD_count_directional” and “RT_count_directional” are the UMI counts from directional UMI deduplication, and “activity_directional” is the corresponding log10(RT/AD) activity score.</p>
+</section>
+<section id="trebl-experiment-loss-summary">
+<h4>TREBL experiment loss summary<a class="headerlink" href="#trebl-experiment-loss-summary" title="Link to this heading">¶</a></h4>
+<p>If <code class="docutils literal notranslate"><span class="pre">step1_map_csv_path</span></code> is provided, the pipeline also saves experiment-wide QC figures in:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>output_path/figures/
+</pre></div>
+</div>
+<p>including plots showing:</p>
+<ul class="simple">
+<li><p>total reads</p></li>
+<li><p>reads passing barcode quality checks</p></li>
+<li><p>reads matching the Step 1 map</p></li>
+</ul>
+<p>across all sequencing files.</p>
+</section>
+<section id="duckdb-intermediate-tables">
+<h4>DuckDB intermediate tables<a class="headerlink" href="#duckdb-intermediate-tables" title="Link to this heading">¶</a></h4>
+<p>The pipeline also stores many intermediate refinement tables inside the DuckDB database file (<code class="docutils literal notranslate"><span class="pre">db_path</span></code>), including tables for:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>_initial
+_quality
+_error_corrected
+_grouped
+_thresholded
+_designed
+</pre></div>
+</div>
+<p>These are useful for debugging or inspecting intermediate filtering steps.</p>
 </section>
 </section>
 <section id="cleanup">
@@ -477,12 +561,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="advanced_usage.html">
+          <a class="next-page" href="savio_jobs.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Advanced Usage</div>
+                <div class="title">Running on Savio (Cluster Jobs)</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -532,16 +616,29 @@
 <li><a class="reference internal" href="#code-blocks-explained">Code Blocks Explained</a><ul>
 <li><a class="reference internal" href="#define-barcodes">1. Define Barcodes</a></li>
 <li><a class="reference internal" href="#sequencing-files">2. Sequencing Files</a></li>
-<li><a class="reference internal" href="#reads-distribution">3. Reads Distribution</a></li>
-<li><a class="reference internal" href="#trebl-experiment-analysis">4. TREBL Experiment Analysis</a></li>
-<li><a class="reference internal" href="#tips">5. Tips</a></li>
+<li><a class="reference internal" href="#trebl-experiment-analysis">3. TREBL Experiment Analysis</a></li>
+<li><a class="reference internal" href="#tips">4. Tips</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#final-steps">Final Steps</a><ul>
 <li><a class="reference internal" href="#calculating-activity-scores">Calculating Activity Scores</a><ul>
 <li><a class="reference internal" href="#understanding-the-parameters">Understanding the Parameters</a></li>
 <li><a class="reference internal" href="#regex-convention-for-time-and-replicate-extraction">Regex Convention for Time and Replicate Extraction</a></li>
-<li><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#output">Output</a><ul>
+<li><a class="reference internal" href="#per-sample-outputs">Per-sample outputs</a><ul>
+<li><a class="reference internal" href="#umi-count-tables">UMI count tables</a></li>
+<li><a class="reference internal" href="#reads-per-umi-diagnostics">Reads-per-UMI diagnostics</a></li>
+<li><a class="reference internal" href="#qc-figures">QC figures</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#experiment-level-outputs">Experiment-level outputs</a><ul>
+<li><a class="reference internal" href="#activity-score-table">Activity score table</a></li>
+<li><a class="reference internal" href="#trebl-experiment-loss-summary">TREBL experiment loss summary</a></li>
+<li><a class="reference internal" href="#duckdb-intermediate-tables">DuckDB intermediate tables</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#cleanup">Cleanup</a></li>

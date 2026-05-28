@@ -69,8 +69,7 @@ MAP_ORDERS = {
 
 
 class TreblPipeline:
-    """
-    End-to-end TREBL analysis pipeline orchestrator.
+    """End-to-end TREBL analysis pipeline orchestrator.
 
     This class coordinates the complete TREBL workflow including initial barcode
     mapping, quality filtering, error correction, UMI deduplication, and activity
@@ -142,8 +141,7 @@ class TreblPipeline:
         output_path=None,
         test_n_reads=False,
     ):
-        """
-        Initialize a TREBL pipeline run.
+        """Initialize a TREBL pipeline run.
 
         Sets up database connection, output directories, and processing configuration.
         Creates necessary directory structure for results and figures if output_path
@@ -165,8 +163,9 @@ class TreblPipeline:
 
         Note:
             When output_path is provided, creates subdirectories:
-            - {output_path}/figures/ for all plots and visualizations
-            - {output_path}/{sample_name}/ for per-sample intermediate files
+
+            - ``{output_path}/figures/`` for all plots and visualizations.
+            - ``{output_path}/{sample_name}/`` for per-sample intermediate files.
         """
         self.con = duckdb.connect(db_path)
         self.db_path = db_path
@@ -184,23 +183,23 @@ class TreblPipeline:
             self.output_figures_path = None
 
     def _run_initial_mappers(self, mapper_specs):
-        """
-        Execute one or more InitialMapper instances with specified configurations.
+        """Execute one or more InitialMapper instances with specified configurations.
 
         Internal helper method that creates and runs InitialMapper objects based
         on the provided specifications. Automatically handles test mode if enabled.
 
         Args:
             mapper_specs (list[dict]): List of mapper specifications. Each dict
-                must contain:
-                    - seq_file (str): FASTQ file path for barcode extraction
-                    - step_name (str): Step name prefix for DuckDB table naming
-                    - bc_objects (list): Barcode objects defining extraction patterns
-                    - reverse_complement (bool): Whether to reverse complement reads
-                    - design_file_path (str or None): Design validation file path
+                must contain the following keys:
+
+                - ``seq_file`` (str): FASTQ file path for barcode extraction.
+                - ``step_name`` (str): Step name prefix for DuckDB table naming.
+                - ``bc_objects`` (list): Barcode objects defining extraction patterns.
+                - ``reverse_complement`` (bool): Whether to reverse complement reads.
+                - ``design_file_path`` (str or None): Design validation file path.
 
         Note:
-            Respects the test_n_reads setting for rapid testing. Each mapper
+            Respects the ``test_n_reads`` setting for rapid testing. Each mapper
             creates its own initial mapping table in the connected database.
         """
         for spec in mapper_specs:
@@ -218,8 +217,7 @@ class TreblPipeline:
                 mapper.create_map()
 
     def _run_refiners(self, refiners, plot_titles):
-        """
-        Execute MapRefiner instances and optionally generate loss plots.
+        """Execute MapRefiner instances and optionally generate loss plots.
 
         Internal helper method that runs refinement pipelines and creates
         standardized loss visualization plots if output path is configured.
@@ -228,8 +226,8 @@ class TreblPipeline:
             refiners (list[MapRefiner]): List of MapRefiner instances to execute.
                 Each refiner should be fully configured with processing parameters.
             plot_titles (list[str or None]): Titles for generated loss plots.
-                Must match the length of refiners list. Use None to skip plotting
-                for a particular refiner.
+                Must match the length of ``refiners``. Use ``None`` to skip
+                plotting for a particular refiner.
 
         Returns:
             list[MapRefiner]: The same refiner objects after execution, allowing
@@ -237,7 +235,7 @@ class TreblPipeline:
 
         Note:
             Loss plots show processing efficiency across refinement steps and
-            are saved automatically if output_figures_path is configured.
+            are saved automatically if ``output_figures_path`` is configured.
         """
         for refiner, plot_title in zip(refiners, plot_titles):
             refiner.refine_map_from_db()
@@ -249,8 +247,7 @@ class TreblPipeline:
         return refiners
 
     def reads_distribution(self, seq_file, bc_objects, step_name, reverse_complement):
-        """
-        Visualize read-count distributions for threshold determination.
+        """Visualize read-count distributions for threshold determination.
 
         Performs initial mapping and grouping for a single FASTQ file and generates
         a histogram showing the distribution of read counts per barcode combination.
@@ -267,7 +264,7 @@ class TreblPipeline:
 
         Note:
             Creates grouped barcode combinations table and generates a read count
-            histogram. Useful for determining reads_threshold parameters before
+            histogram. Useful for determining ``reads_threshold`` parameters before
             running full refinement pipelines.
 
         Example:
@@ -309,14 +306,14 @@ class TreblPipeline:
     def step1_reads_distribution(
         self, seq_file, bc_objects, reverse_complement, step_suffix=""
     ):
-        """
-        Convenience wrapper for Step 1 read distributions.
+        """Convenience wrapper for Step 1 read distributions.
 
         Args:
             seq_file (str): FASTQ file path.
             bc_objects (list): Barcode objects.
             reverse_complement (bool): Whether to reverse complement reads.
             step_suffix (str, optional): Suffix appended to the step name.
+                Defaults to ``""``.
         """
         step_name = "step1" + step_suffix
         self.reads_distribution(seq_file, bc_objects, step_name, reverse_complement)
@@ -330,8 +327,7 @@ class TreblPipeline:
         reverse_complement,
         step_suffix="",
     ):
-        """
-        Convenience wrapper for Step 2 AD and RT libraries.
+        """Convenience wrapper for Step 2 AD and RT read distributions.
 
         Args:
             AD_seq_file (str): FASTQ file for AD reads.
@@ -340,6 +336,7 @@ class TreblPipeline:
             RT_bc_objects (list): RT barcode objects.
             reverse_complement (bool): Whether to reverse complement reads.
             step_suffix (str, optional): Suffix appended to the step name.
+                Defaults to ``""``.
         """
 
         step_name = "step2" + step_suffix
@@ -362,8 +359,7 @@ class TreblPipeline:
         min_fraction_major_target = 0.9,  
         custom_map_order = None
     ):
-        """
-        Run TREBL Step 1: map reads to designed AD barcodes.
+        """Run TREBL Step 1: map reads to designed AD barcodes.
 
         Performs initial mapping, refinement, optional error correction,
         and outputs the final designed map.
@@ -371,29 +367,22 @@ class TreblPipeline:
         Args:
             seq_file (str): FASTQ file containing Step 1 reads.
             bc_objects (list): Barcode objects defining extraction rules.
-            column_pairs (list[tuple]): Column-pair checks used
-                to remove barcode collisions.
+            column_pairs (list[tuple]): Column-pair checks used to remove barcode
+                collisions. Each tuple has the form ``(key_column(s), target_column(s))``
+                where each element can be a single column name (str) or a
+                tuple/list of column names.
 
-                Each tuple has the form:
-
-                    (key_column(s), target_column(s))
-
-                where `key_column(s)` and `target_column(s)` can be either
-                a single column name (str) or a tuple/list of column names.
-
-                The constraint enforces that, for each **key**, at least
-                90% of its reads must map to a single **target**. If a key
-                value maps to multiple targets without one reaching the 90%
-                threshold, the key is considered ambiguous and discarded.
+                The constraint enforces that, for each **key**, at least 90% of
+                its reads must map to a single **target**. Ambiguous keys are
+                discarded.
 
                 **Single-column example**::
 
                     column_pairs = [("RPTR_BC", "AD")]
 
-                This ensures that each reporter barcode (``RPTR_BC``) maps
-                predominantly to a single AD. If a reporter barcode has
-                reads mapping to multiple ADs without one exceeding 90%,
-                that reporter barcode is removed.
+                This ensures each reporter barcode maps predominantly to a single
+                AD. If a reporter barcode maps to multiple ADs without one
+                exceeding 90%, it is removed.
 
                 **Multi-column example**::
 
@@ -401,9 +390,8 @@ class TreblPipeline:
                         (("RPTR_BC"), ("Hawk_BC", "AD_BC"))
                     ]
 
-                This checks that each RPTR BC
-                maps to a single Hawkins AD barcode and AD barcode combination
-                with ≥90% of reads. Ambiguous key combinations are removed.
+                This checks that each RPTR BC maps to a single Hawkins AD
+                barcode and AD barcode combination with ≥90% of reads.
 
                 Multiple constraints may be applied sequentially::
 
@@ -418,21 +406,19 @@ class TreblPipeline:
             reverse_complement (bool, optional): Whether reads should be
                 reverse complemented prior to barcode extraction.
                 Defaults to False.
-            step_suffix (str, optional): Suffix appended to the step name
-                for DuckDB table naming. This is useful when you want
-                to distinguish multiple runs or subsets of the same step.
-
-                Example:
-                    "_spike_in" — if processing spike-in samples separately
-                    from your main dataset.
-                    "_new_data" — for data from new sequencing run.
-            min_fraction_major_target (float): Fraction threshold for target filtering.
-            custom_map_order (list): List of strings with a custom intermediate order 
-                if preferred.
+            step_suffix (str, optional): Suffix appended to the step name for
+                DuckDB table naming. Useful when distinguishing multiple runs
+                or subsets of the same step. For example, ``"_spike_in"`` or
+                ``"_new_data"``. Defaults to ``""``.
+            min_fraction_major_target (float, optional): Fraction threshold for
+                target filtering. Defaults to ``0.9``.
+            custom_map_order (list, optional): List of strings specifying a
+                custom intermediate refinement order. If ``None``, the default
+                order from ``MAP_ORDERS`` is used. Defaults to ``None``.
 
         Returns:
             pd.DataFrame: Final designed Step 1 mapping after all refinement
-            steps have been applied.
+                steps have been applied.
         """
 
         step_name = "step1" + step_suffix
@@ -497,8 +483,7 @@ class TreblPipeline:
         step1_map_csv_path,  # Updated argument to accept CSV path
         step_suffix="",
     ):
-        """
-        Run TREBL Step 2: Analyze intermediate complexity.
+        """Run TREBL Step 2: analyze intermediate complexity.
 
         Performs separate refinement for AD and RT libraries and computes
         overlap with the Step 1 map.
@@ -513,12 +498,15 @@ class TreblPipeline:
             reads_threshold_RT (int): Minimum reads per RT barcode.
             step1_map_csv_path (str): Path to the Step 1 map CSV file.
             step_suffix (str, optional): Suffix appended to the step name.
+                Defaults to ``""``.
 
         Returns:
-            dict: Dictionary with keys:
-                - "AD_step2": AD DataFrame
-                - "RT_step2": RT DataFrame
-                - "step1_overlap": Overlap statistics
+            dict: A dictionary with the following keys:
+
+                - ``"AD_step2"`` (pd.DataFrame): Refined AD barcode DataFrame.
+                - ``"RT_step2"`` (pd.DataFrame): Refined RT barcode DataFrame.
+                - ``"step1_overlap"`` (pd.DataFrame): Overlap statistics between
+                  the Step 2 barcodes and the Step 1 map.
         """
         step_name = "step2" + step_suffix
 
@@ -603,8 +591,7 @@ class TreblPipeline:
         return {"AD_step2": AD_df, "RT_step2": RT_df, "step1_overlap": overlap}
 
     def _duckdb_safe_name(self, base_name):
-        """
-        Convert a filename to a DuckDB-safe table name.
+        """Convert a filename to a DuckDB-safe table name.
 
         Replaces periods, hyphens, and spaces with underscores, removes special
         characters, and ensures the name doesn't start with a digit.
@@ -635,9 +622,56 @@ class TreblPipeline:
         concat_gene=False,
         umi_deduplication="both",
     ):
-        """
-        Memory-efficient TREBL experiment runner. Writes everything to disk in the
-        original output paths, no DataFrames are returned.
+        """Run the core per-sample processing loop for a TREBL experiment.
+
+        Memory-efficient internal helper that processes each FASTQ file
+        individually, writing all outputs directly to disk. No DataFrames
+        are held in memory across samples.
+
+        For each sample the method performs:
+
+        1. Initial barcode mapping via ``InitialMapper``.
+        2. Optional quality filtering and error correction via ``MapRefiner``.
+        3. UMI deduplication (simple and/or directional) when a ``umi_object``
+           is supplied, or thresholded count export otherwise.
+
+        Args:
+            seq_files (list[str]): Paths to FASTQ files to process, one per
+                sample.
+            bc_objects (list): Barcode objects defining extraction rules for
+                this library (AD or RT).
+            reverse_complement (bool): Whether reads should be reverse
+                complemented prior to barcode extraction.
+            reads_threshold (int, optional): Minimum read count per barcode
+                combination. Defaults to ``1``.
+            umi_object (UMI or None, optional): UMI object used during mapping
+                and deduplication. If ``None``, the non-UMI thresholded workflow
+                is used. Defaults to ``None``.
+            step_name_suffix (str, optional): Suffix appended to the
+                ``"trebl_experiment_"`` prefix for DuckDB table and directory
+                naming. Defaults to ``""``.
+            count_col_name (str or None, optional): Name for the UMI count
+                output column. Not used in the current implementation but
+                reserved for future use. Defaults to ``None``.
+            gene_col_name (str or None, optional): Name of the gene identifier
+                column. Not used in the current implementation but reserved for
+                future use. Defaults to ``None``.
+            concat_gene (bool, optional): Whether to concatenate barcode columns
+                into a single gene identifier. Not used in the current
+                implementation but reserved for future use. Defaults to ``False``.
+            umi_deduplication (str, optional): Deduplication strategy to run.
+                One of:
+
+                - ``"simple"``: run simple deduplication only.
+                - ``"both"``: run both simple and directional deduplication.
+
+                Defaults to ``"both"``.
+
+        Note:
+            All per-sample outputs are written to
+            ``{output_path}/trebl_experiment_{step_name_suffix}/{step_name}/``.
+            Errors for individual samples are caught and printed; processing
+            continues with remaining samples.
         """
         step_name_prefix = "trebl_experiment_" + step_name_suffix
     
@@ -788,9 +822,46 @@ class TreblPipeline:
         step_name_suffix="",
         umi_deduplication="both",
     ):
-        """
-        Memory-efficient TREBL experiment analysis for AD and RT libraries.
-        Saves all outputs to the same locations as the original pipeline.
+        """Run memory-efficient TREBL experiment analysis for AD and RT libraries.
+
+        Processes AD and RT FASTQ files through the full per-sample pipeline
+        (mapping → refinement → UMI deduplication) and saves all outputs to
+        disk in the standard directory layout. Optionally generates loss plots
+        relative to the Step 1 map.
+
+        Args:
+            AD_seq_files (list[str]): Paths to AD FASTQ files, one per sample.
+            AD_bc_objects (list): Barcode objects defining AD extraction rules.
+            RT_seq_files (list[str]): Paths to RT FASTQ files, one per sample.
+            RT_bc_objects (list): Barcode objects defining RT extraction rules.
+            reverse_complement (bool): Whether reads should be reverse
+                complemented prior to barcode extraction.
+            step1_map_csv_path (str or None, optional): Path to the Step 1 map
+                CSV. If provided, loss plots comparing experiment barcodes
+                against the Step 1 map are generated for both AD and RT
+                libraries. Defaults to ``None``.
+            AD_umi_object (UMI or None, optional): UMI object for AD libraries.
+                If ``None``, UMI deduplication is skipped for AD. Defaults to
+                ``None``.
+            RT_umi_object (UMI or None, optional): UMI object for RT libraries.
+                If ``None``, UMI deduplication is skipped for RT. Defaults to
+                ``None``.
+            reads_threshold_AD (int, optional): Minimum reads per AD barcode
+                combination. Defaults to ``1``.
+            reads_threshold_RT (int, optional): Minimum reads per RT barcode
+                combination. Defaults to ``1``.
+            step_name_suffix (str, optional): Suffix appended to
+                ``"trebl_experiment_"`` for table and directory naming.
+                Defaults to ``""``.
+            umi_deduplication (str, optional): Deduplication strategy passed
+                to the helper. One of ``"simple"`` or ``"both"``.
+                Defaults to ``"both"``.
+
+        Note:
+            All outputs are written to
+            ``{output_path}/trebl_experiment_{step_name_suffix}/`` and
+            subdirectories therein. No DataFrames are returned; use
+            :meth:`calculate_activity_scores` to aggregate results afterwards.
         """
         experiments = {
             "AD": {
@@ -845,6 +916,33 @@ class TreblPipeline:
                                        table_type="AD",
                                         rep_regex="AD_(\d+)",
                                         time_regex="AD_\d+_(\d+)"):
+        """Plot per-replicate and per-timepoint TREBL experiment loss.
+
+        Delegates to ``plotting.plot_trebl_experiment_loss`` to generate
+        structured loss plots that are broken down by replicate and time
+        using regex-extracted labels from table names.
+
+        Args:
+            bc_objects (list): Barcode objects for the library being plotted.
+            step1_map_csv_path (str): Path to the Step 1 map CSV used as the
+                reference for computing overlap loss.
+            step_name_prefix (str): Prefix identifying the relevant DuckDB
+                tables, e.g. ``"trebl_experiment_"`` or
+                ``"trebl_experiment_mysuffix_"``.
+            table_type (str, optional): Label indicating the library type
+                (``"AD"`` or ``"RT"``). Passed through to the plotting
+                function. Defaults to ``"AD"``.
+            rep_regex (str, optional): Regular expression with one capture
+                group used to extract the replicate identifier from table
+                names. Defaults to ``"AD_(\\d+)"``.
+            time_regex (str, optional): Regular expression with one capture
+                group used to extract the timepoint identifier from table
+                names. Defaults to ``"AD_\\d+_(\\d+)"``.
+
+        Note:
+            The generated figure is saved to ``self.output_figures_path`` by
+            the underlying ``plotting.plot_trebl_experiment_loss`` function.
+        """
 
         bc_names_str = "_".join([bc.name for bc in bc_objects])
 
@@ -866,30 +964,34 @@ class TreblPipeline:
         step1_map_csv_path=None,
         step_name_prefix="trebl_experiment_",
     ):
-        """
-        Plot barcode quality and mapping loss for a TREBL experiment.
+        """Plot barcode quality and mapping loss for a TREBL experiment.
 
         Generates bar plots showing:
-            1. Total number of reads in each initial mapping table.
-            2. Number of reads passing barcode quality checks (`_qual` columns).
-            3. Number of reads that match the Step 1 map for all barcodes.
 
-        Plots are saved as a PNG file in `self.output_figures_path` and
-        returned as Matplotlib figure and axes objects.
+        1. Total number of reads in each initial mapping table.
+        2. Number of reads passing barcode quality checks (``_qual`` columns).
+        3. Number of reads that match the Step 1 map for all barcodes.
+
+        Plots are saved as a PNG file in ``self.output_figures_path``.
 
         Args:
             bc_objects (list): List of barcode objects to evaluate.
-            step1_map_csv_path (str, optional): Path to Step 1 map CSV for 
-                computing overlap plots.
+            step1_map_csv_path (str or None, optional): Path to the Step 1 map
+                CSV for computing overlap plots. If ``None``, Step 1 overlap
+                bars are set to zero. Defaults to ``None``.
             step_name_prefix (str, optional): Prefix used to identify TREBL
-                experiment tables in DuckDB. Defaults to ``"trebl_experiment_"``.
+                experiment tables in DuckDB. Defaults to
+                ``"trebl_experiment_"``.
 
         Returns:
-            tuple: (fig, axes)
-                - fig (matplotlib.figure.Figure): Figure object containing all subplots.
-                - axes (list[matplotlib.axes._subplots.AxesSubplot]): Flattened list of subplot axes.
-                  Returns None, None if no matching tables are found.
+            tuple: A ``(fig, axes)`` pair where:
 
+                - ``fig`` (matplotlib.figure.Figure): Figure containing all
+                  subplots.
+                - ``axes`` (list[matplotlib.axes.Axes]): Flattened list of
+                  subplot axes.
+
+            Returns ``(None, None)`` if no matching tables are found.
         """
 
         # Connect to DuckDB
@@ -1037,6 +1139,54 @@ class TreblPipeline:
         time_regex=r"(?:AD|RT)_\d+_(\d+)",
         rep_regex=r"(?:AD|RT)_(\d+)_",
     ):
+        """Calculate per-barcode activity scores from UMI count files.
+
+        Loads simple and (if available) directional UMI count TSVs produced by
+        :meth:`trebl_experiment_analysis`, merges them with the Step 1 barcode
+        map, and computes log10 activity scores (RT / AD UMI counts) per
+        replicate and timepoint.
+
+        Args:
+            step1_path (str): Path to the Step 1 map CSV. Must contain all AD
+                and RT barcode columns.
+            AD_bc_objects (list): Barcode objects for the AD library. Must
+                contain at least two objects.
+            RT_bc_objects (list): Barcode objects for the RT library. Must
+                contain at least one object.
+            step_name_suffix (str, optional): Suffix used to locate the
+                ``trebl_experiment_{step_name_suffix}`` output directory.
+                Defaults to ``""``.
+            time_regex (str, optional): Regular expression with one capture
+                group for extracting the timepoint integer from file base
+                names. Defaults to ``r"(?:AD|RT)_\\d+_(\\d+)"``.
+            rep_regex (str, optional): Regular expression with one capture
+                group for extracting the replicate integer from file base
+                names. Defaults to ``r"(?:AD|RT)_(\\d+)_"``.
+
+        Returns:
+            pd.DataFrame: Activity score DataFrame with one row per unique
+                barcode combination × replicate × timepoint. Contains AD and
+                RT count columns plus:
+
+                - ``activity_simple``: log10(RT_count_simple / AD_count_simple).
+                - ``activity_directional``: log10(RT_count_directional /
+                  AD_count_directional), present only when directional count
+                  files are found.
+
+        Raises:
+            ValueError: If ``self.output_path`` is ``None``.
+            ValueError: If ``AD_bc_objects`` contains fewer than two objects.
+            ValueError: If ``RT_bc_objects`` contains fewer than one object.
+            ValueError: If the Step 1 map is missing required barcode columns.
+            ValueError: If no AD or RT simple count files are found under the
+                search root.
+
+        Note:
+            Activity scores are ``NaN`` for rows where either count is zero or
+            missing. The resulting DataFrame is saved to
+            ``{output_path}/trebl_experiment_activity_scores_per_barcode.csv``
+            (or a suffixed variant when ``step_name_suffix`` is set).
+        """
         from pathlib import Path
         import glob
         import os
