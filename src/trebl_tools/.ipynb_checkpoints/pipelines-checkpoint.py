@@ -1138,6 +1138,7 @@ class TreblPipeline:
         step_name_suffix="",
         time_regex=r"(?:AD|RT)_\d+_(\d+)",
         rep_regex=r"(?:AD|RT)_(\d+)_",
+        reporter_abbrev="RT"
     ):
         """Calculate per-barcode activity scores from UMI count files.
 
@@ -1162,6 +1163,9 @@ class TreblPipeline:
             rep_regex (str, optional): Regular expression with one capture
                 group for extracting the replicate integer from file base
                 names. Defaults to ``r"(?:AD|RT)_(\\d+)_"``.
+            reporter_abbrev (str, optional): String with abbrevition 
+                used for reporter file name, either "RP" or "RT" or "RPTR"
+                for example. Used to look for reporter results. 
 
         Returns:
             pd.DataFrame: Activity score DataFrame with one row per unique
@@ -1241,8 +1245,8 @@ class TreblPipeline:
     
         simple_AD_files      = glob.glob(str(search_root / "**" / "*_AD_*" / "*simple_umi_counts.tsv"), recursive=True)
         directional_AD_files = glob.glob(str(search_root / "**" / "*_AD_*" / "*directional_umi_counts.tsv"), recursive=True)
-        simple_RT_files      = glob.glob(str(search_root / "**" / "*_RT_*" / "*simple_umi_counts.tsv"), recursive=True)
-        directional_RT_files = glob.glob(str(search_root / "**" / "*_RT_*" / "*directional_umi_counts.tsv"), recursive=True)
+        simple_RT_files      = glob.glob(str(search_root / "**" / f"*_{reporter_abbrev}_*" / "*simple_umi_counts.tsv"), recursive=True)
+        directional_RT_files = glob.glob(str(search_root / "**" / f"*_{reporter_abbrev}_*" / "*directional_umi_counts.tsv"), recursive=True)
     
         if not simple_AD_files:
             raise ValueError(f"No AD simple count files found under {search_root}")
