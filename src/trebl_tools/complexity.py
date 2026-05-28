@@ -1,8 +1,9 @@
 import sys
 
-sys.path = [
-    p for p in sys.path if "/.local/lib" not in p
-]  # Use conda env installation of duckdb
+if "sphinx" not in sys.modules:
+    sys.path = [
+        p for p in sys.path if "/.local/lib" not in p
+    ]  # Use conda env installation of duckdb
 
 import duckdb                # For connecting to your DuckDB database
 import pandas as pd          # For DataFrame manipulation

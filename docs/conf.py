@@ -59,7 +59,9 @@ autodoc_mock_imports = [
     "matplotlib.pyplot",
     "seaborn",
     "pyarrow",
-    "tqdm"
+    "tqdm",
+    "IPython",
+    "IPython.display",
 ]
 
 todo_include_todos = True
